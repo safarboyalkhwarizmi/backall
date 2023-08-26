@@ -1,23 +1,46 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/jwt_security
-    username: username
-    password: password
+    url: jdbc:postgresql://localhost:5432/backall_db
+    username: postgres
+    password: root
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  servlet:
+    multipart:
+      max-file-size:
+        10MB
+      max-request-size:
+        10MB
+  profiles:
+    active:
+      dev
 
 application:
   security:
     jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 86400000 # a day
+      secret-key:
+        404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration:
+        86400000 # a day
       refresh-token:
-        expiration: 604800000 # 7 days
+        expiration:
+          604800000 # 7 days
+
+
+
+attach:
+  upload:
+    folder:
+      attaches/
+
+  download:
+    url:
+      ${app.url}/attach/public/open/

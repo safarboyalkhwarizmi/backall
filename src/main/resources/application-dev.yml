@@ -1,0 +1,8 @@
+server:
+  port:
+    8080
+  address:
+    localhost
+app:
+  url:
+    http://${server.address}:${server.port}

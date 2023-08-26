@@ -1,0 +1,23 @@
+package uz.backall.store.product;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import uz.backall.store.StoreEntity;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "store_product")
+public class StoreProductEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "store_id")
+    private Long storeId;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id", insertable = false, updatable = false)
+    private StoreEntity store;
+}
