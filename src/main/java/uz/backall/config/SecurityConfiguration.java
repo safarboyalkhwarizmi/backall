@@ -28,7 +28,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors();
-        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());;
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
+        ;
 
         http
                 .csrf()
