@@ -29,7 +29,10 @@ public class BrandService {
 
         List<BrandResponseDTO> result = new LinkedList<>();
         for (BrandEntity brand : all) {
-            all.add(brand);
+            BrandResponseDTO response = new BrandResponseDTO();
+            response.setId(brand.getId());
+            response.setName(brand.getName());
+            result.add(response);
         }
 
         return result;
