@@ -1,5 +1,6 @@
 package uz.backall;
 
+import org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
+import uz.backall.store.StoreNotCreatedException;
 
 
 import java.util.*;
@@ -35,7 +37,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 
-    /* JWT */
     @ExceptionHandler({JwtParseException.class})
     private ResponseEntity<?> handler(JwtParseException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -44,5 +45,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({JwtUsernameException.class})
     private ResponseEntity<?> handler(JwtUsernameException e) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
+    }
+
+    @ExceptionHandler({StoreNotCreatedException.class})
+    private ResponseEntity<?> handler(StoreNotCreatedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 }

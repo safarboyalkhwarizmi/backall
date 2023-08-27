@@ -1,6 +1,7 @@
 package uz.backall.auth;
 
 import uz.backall.config.jwt.JwtService;
+import uz.backall.store.StoreNotCreatedException;
 import uz.backall.store.StoreService;
 import uz.backall.token.Token;
 import uz.backall.token.TokenRepository;
@@ -45,7 +46,7 @@ public class AuthenticationService {
 
         Boolean createStore = storeService.create(savedUser.getId(), request.getStoreName());
         if (!createStore) {
-
+            throw new StoreNotCreatedException("Store not created, Please try again!");
         }
 
         return AuthenticationResponse.builder()
