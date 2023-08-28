@@ -1,6 +1,5 @@
 package uz.backall;
 
-import org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import uz.backall.user.User;
 import uz.backall.user.UserRepository;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,5 +26,19 @@ public class StoreService {
         store.setUserId(userId);
         storeRepository.save(store);
         return true;
+    }
+
+    public List<StoreResponseDTO> getStoresByUserId(Long userId) {
+        List<StoreEntity> byUserId = storeRepository.getByUserId(userId);
+
+        List<StoreResponseDTO> result = new LinkedList<>();
+        for (StoreEntity store : byUserId) {
+            StoreResponseDTO response = new StoreResponseDTO();
+            response.setId(store.getId());
+            response.setName(store.getName());
+            result.add(response);
+        }
+
+        return result;
     }
 }
