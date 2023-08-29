@@ -76,7 +76,10 @@ public class StoreProductService {
             StoreProductInfoDTO info = new StoreProductInfoDTO();
             info.setProductId(storeProduct.getProductId());
             info.setName(storeProduct.getProduct().getName());
-            info.setProductCount(storeProduct.getSoldCount() + "/" + storeProduct.getCount());
+            info.setProductCount(
+                    (storeProduct.getCount() - storeProduct.getSoldCount())
+                            + "/" + storeProduct.getCount()
+            );
 
             result.add(info);
         }
