@@ -20,7 +20,6 @@ public class StoreProductService {
     private final StoreProductRepository repository;
     private final ProductRepository productRepository;
     private final StoreRepository storeRepository;
-    private final SellHistoryRepository sellHistoryRepository;
 
     public Boolean create(List<StoreProductCreateDTO> dtoList) {
         for (StoreProductCreateDTO dto : dtoList) {
@@ -109,12 +108,18 @@ public class StoreProductService {
         storeProduct.setSellingPrice(dto.getSellingPrice());
         storeProduct.setPercentage(dto.getPercentage());
 
+        storeProduct.setCountType(dto.getCountType());
+        if (dto.getCountType().equals(CountType.NUM) || dto.getCountType().equals(CountType.GR)) {
+            Integer i = dto.getCount().intValue();
+            storeProduct.setCount(i.doubleValue());
+        } else {
+            storeProduct.setCount(dto.getCount());
+        }
+
         /* TODO FOR FIRST OCTOBER 2023 SUNDAY
         storeProduct.setCreatedDate(dto.getCreatedDate());
         storeProduct.setExpiredDate(dto.getExpiredDate());
         */
-
-        storeProduct.setCount(dto.getCount());
 
         return storeProduct;
     }

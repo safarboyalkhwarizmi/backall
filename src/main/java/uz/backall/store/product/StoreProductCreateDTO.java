@@ -14,11 +14,12 @@ public class StoreProductCreateDTO {
     private Double price;
     private Double sellingPrice;
     private Double percentage;
+    private Double count;
+    private CountType countType;
 
     /* TODO FOR FIRST OCTOBER 2023 SUNDAY
     private LocalDate createdDate;
     private LocalDate expiredDate;
     */
 
-    private Long count;
 }

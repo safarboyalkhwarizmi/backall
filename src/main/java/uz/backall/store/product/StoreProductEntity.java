@@ -47,7 +47,9 @@ public class StoreProductEntity {
 
     */
 
-    private Long count;
+    private Double count;
+
+    private CountType countType;
 
     private Long soldCount;
 }
