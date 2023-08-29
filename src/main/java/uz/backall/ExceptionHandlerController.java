@@ -12,6 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
+import uz.backall.products.ProductNotFoundException;
 import uz.backall.store.StoreNotCreatedException;
 
 
@@ -49,5 +50,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({StoreNotCreatedException.class})
     private ResponseEntity<?> handler(StoreNotCreatedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler({ProductNotFoundException.class})
+    private ResponseEntity<?> handler(ProductNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }

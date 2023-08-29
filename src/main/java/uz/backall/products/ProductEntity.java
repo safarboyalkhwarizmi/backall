@@ -14,6 +14,9 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String name;
+
     @Column(name = "brand_id")
     private Long brandId;
 
