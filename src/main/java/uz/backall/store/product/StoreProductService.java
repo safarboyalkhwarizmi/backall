@@ -24,23 +24,28 @@ public class StoreProductService {
             Optional<StoreEntity> byStoreId = storeRepository.findById(dto.getStoreId());
 
             if (byProductId.isPresent() || byStoreId.isPresent()) {
-                StoreProductEntity storeProduct = new StoreProductEntity();
-                storeProduct.setStoreId(dto.getStoreId());
-                storeProduct.setProductId(dto.getProductId());
-                storeProduct.setNds(dto.getNds());
-
-                /* TODO WORK ON SETTING PRICES */
-                storeProduct.setPrice(dto.getPrice());
-                storeProduct.setSellingPrice(dto.getSellingPrice());
-                storeProduct.setPercentage(dto.getPercentage());
-
-                /* TODO ADD EXPIRATION AND CREATION DATE OF THAT PRODUCT */
-
+                StoreProductEntity storeProduct = getStoreProductEntity(dto);
                 repository.save(storeProduct);
             }
         }
 
         return true;
+    }
+
+    private StoreProductEntity getStoreProductEntity(StoreProductCreateDTO dto) {
+        StoreProductEntity storeProduct = new StoreProductEntity();
+        storeProduct.setStoreId(dto.getStoreId());
+        storeProduct.setProductId(dto.getProductId());
+        storeProduct.setNds(dto.getNds());
+
+        /* TODO WORK ON SETTING PRICES */
+        storeProduct.setPrice(dto.getPrice());
+        storeProduct.setSellingPrice(dto.getSellingPrice());
+        storeProduct.setPercentage(dto.getPercentage());
+
+        storeProduct.setCreatedDate(dto.getCreatedDate());
+        storeProduct.setExpiredDate(dto.getExpiredDate());
+        return storeProduct;
     }
 
     public List<StoreProductInfoDTO> getInfo(Long storeId) {

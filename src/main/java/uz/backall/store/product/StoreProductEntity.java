@@ -6,6 +6,8 @@ import lombok.Setter;
 import uz.backall.products.ProductEntity;
 import uz.backall.store.StoreEntity;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
@@ -28,8 +30,16 @@ public class StoreProductEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private ProductEntity product;
+
     private Boolean nds;
+
     private Long price;
+
     private Long sellingPrice;
+
     private Integer percentage;
+
+    private LocalDate createdDate;
+
+    private LocalDate expiredDate;
 }
