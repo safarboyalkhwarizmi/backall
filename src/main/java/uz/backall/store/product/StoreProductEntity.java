@@ -28,4 +28,8 @@ public class StoreProductEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private ProductEntity product;
+    private Boolean nds;
+    private Long price;
+    private Long sellingPrice;
+    private Integer percentage;
 }

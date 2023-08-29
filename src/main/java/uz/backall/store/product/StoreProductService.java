@@ -27,6 +27,15 @@ public class StoreProductService {
                 StoreProductEntity storeProduct = new StoreProductEntity();
                 storeProduct.setStoreId(dto.getStoreId());
                 storeProduct.setProductId(dto.getProductId());
+                storeProduct.setNds(dto.getNds());
+
+                /* TODO WORK ON SETTING PRICES */
+                storeProduct.setPrice(dto.getPrice());
+                storeProduct.setSellingPrice(dto.getSellingPrice());
+                storeProduct.setPercentage(dto.getPercentage());
+
+                /* TODO ADD EXPIRATION AND CREATION DATE OF THAT PRODUCT */
+
                 repository.save(storeProduct);
             }
         }

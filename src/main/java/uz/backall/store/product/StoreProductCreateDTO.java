@@ -8,4 +8,8 @@ import lombok.Setter;
 public class StoreProductCreateDTO {
     private Long storeId;
     private Long productId;
+    private Boolean nds;
+    private Long price;
+    private Long sellingPrice;
+    private Integer percentage;
 }
