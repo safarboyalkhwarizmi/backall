@@ -37,11 +37,15 @@ public class StoreProductEntity {
 
     private Long sellingPrice;
 
-    private Integer percentage;
+    private double percentage;
+
+    /* TODO FOR FIRST OCTOBER 2023 SUNDAY
 
     private LocalDate createdDate;
 
     private LocalDate expiredDate;
+
+    */
 
     private Long count;
 
