@@ -8,5 +8,5 @@ import lombok.Setter;
 public class StoreProductInfoDTO {
     private Long productId;
     private String name;
-    private Long productCount;
+    private String productCount;
 }

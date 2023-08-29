@@ -16,4 +16,5 @@ public class StoreProductCreateDTO {
     private Integer percentage;
     private LocalDate createdDate;
     private LocalDate expiredDate;
+    private Long count;
 }

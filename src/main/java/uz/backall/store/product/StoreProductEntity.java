@@ -42,4 +42,8 @@ public class StoreProductEntity {
     private LocalDate createdDate;
 
     private LocalDate expiredDate;
+
+    private Long count;
+
+    private Long soldCount;
 }

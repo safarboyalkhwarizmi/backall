@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductRepository;
+import uz.backall.sellHistory.SellHistoryRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreRepository;
 
@@ -17,15 +18,32 @@ public class StoreProductService {
     private final StoreProductRepository repository;
     private final ProductRepository productRepository;
     private final StoreRepository storeRepository;
+    private final SellHistoryRepository sellHistoryRepository;
 
     public Boolean create(List<StoreProductCreateDTO> dtoList) {
         for (StoreProductCreateDTO dto : dtoList) {
             Optional<ProductEntity> byProductId = productRepository.findById(dto.getProductId());
             Optional<StoreEntity> byStoreId = storeRepository.findById(dto.getStoreId());
 
-            if (byProductId.isPresent() || byStoreId.isPresent()) {
-                StoreProductEntity storeProduct = getStoreProductEntity(dto);
-                repository.save(storeProduct);
+            Optional<StoreProductEntity> byProductIdInStore = repository.findByProductIdAndStoreIdAndCreatedDateAndExpiredDate(
+                    dto.getProductId(),
+                    dto.getStoreId(),
+                    dto.getCreatedDate(),
+                    dto.getExpiredDate()
+            );
+
+            if (byProductId.isPresent() && byStoreId.isPresent()) {
+                if (byProductIdInStore.isEmpty()) {
+                    StoreProductEntity storeProduct = getStoreProductEntity(dto);
+                    repository.save(storeProduct);
+                } else {
+                    StoreProductEntity storeProduct = byProductIdInStore.get();
+                    storeProduct.setNds(dto.getNds());
+                    storeProduct.setPrice(dto.getPrice());
+                    storeProduct.setSellingPrice(dto.getSellingPrice());
+                    storeProduct.setPercentage(dto.getPercentage());
+                    storeProduct.setCount(dto.getCount());
+                }
             }
         }
 
@@ -45,6 +63,7 @@ public class StoreProductService {
 
         storeProduct.setCreatedDate(dto.getCreatedDate());
         storeProduct.setExpiredDate(dto.getExpiredDate());
+        storeProduct.setCount(dto.getCount());
         return storeProduct;
     }
 
@@ -57,7 +76,8 @@ public class StoreProductService {
             StoreProductInfoDTO info = new StoreProductInfoDTO();
             info.setProductId(storeProduct.getProductId());
             info.setName(storeProduct.getProduct().getName());
-            info.setProductCount(repository.countByProductId(storeProduct.getProductId()));
+            info.setProductCount(storeProduct.getSoldCount() + "/" + storeProduct.getCount());
+
             result.add(info);
         }
 
