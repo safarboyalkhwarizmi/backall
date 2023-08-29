@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
+import uz.backall.sellHistory.SellingPriceException;
 import uz.backall.store.StoreNotCreatedException;
 
 
@@ -55,5 +56,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ProductNotFoundException.class})
     private ResponseEntity<?> handler(ProductNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler({SellingPriceException.class})
+    private ResponseEntity<?> handler(SellingPriceException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

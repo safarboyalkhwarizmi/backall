@@ -82,21 +82,27 @@ public class StoreProductService {
         storeProduct.setProductId(dto.getProductId());
         storeProduct.setNds(dto.getNds());
 
-        /* TODO WORK ON SETTING PRICES */
         storeProduct.setPrice(dto.getPrice());
 
-        if (dto.getPrice() > dto.getSellingPrice()) {
-            throw new SellingPriceException("Price is more than selling price!");
-        }
+        if (dto.getPercentage() == null && dto.getSellingPrice() != null) {
+            if (dto.getPrice() > dto.getSellingPrice()) {
+                throw new SellingPriceException("Price is more than selling price!");
+            }
 
-        if (dto.getSellingPrice() != null && dto.getPercentage() == null ) {
             storeProduct.setSellingPrice(dto.getSellingPrice());
-            double percentage = ((double) dto.getSellingPrice() / dto.getPrice()) * 100;
+            double percentage = (double) (
+                    (dto.getSellingPrice() - dto.getPrice()) / dto.getPrice()) * 100;
             storeProduct.setPercentage(percentage);
-        } else if (dto.getSellingPrice() == null && dto.getPercentage() != null) {
+        } else if (dto.getPercentage() != null && dto.getSellingPrice() == null) {
+            storeProduct.setPercentage(dto.getPercentage());
+            double sellingPrice = ((dto.getPrice() / 100) * dto.getPercentage()) + dto.getPrice();
 
+            if (dto.getPrice() > sellingPrice) {
+                throw new SellingPriceException("Price is more than selling price!");
+            }
+            storeProduct.setSellingPrice(sellingPrice);
         } else {
-
+            throw new SellingPriceException("Something must be null!");
         }
 
         storeProduct.setPrice(dto.getPrice());

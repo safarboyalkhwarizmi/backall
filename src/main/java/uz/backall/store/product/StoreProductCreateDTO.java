@@ -11,9 +11,9 @@ public class StoreProductCreateDTO {
     private Long storeId;
     private Long productId;
     private Boolean nds;
-    private Long price;
-    private Long sellingPrice;
-    private Integer percentage;
+    private Double price;
+    private Double sellingPrice;
+    private Double percentage;
 
     /* TODO FOR FIRST OCTOBER 2023 SUNDAY
     private LocalDate createdDate;

@@ -32,4 +32,8 @@ public class SellHistoryService {
     }
 
 
+    public SellHistoryInfoDTO getInfo() {
+
+        return null;
+    }
 }

@@ -33,11 +33,11 @@ public class StoreProductEntity {
 
     private Boolean nds;
 
-    private Long price;
+    private Double price;
 
-    private Long sellingPrice;
+    private Double sellingPrice;
 
-    private double percentage;
+    private Double percentage;
 
     /* TODO FOR FIRST OCTOBER 2023 SUNDAY
 
