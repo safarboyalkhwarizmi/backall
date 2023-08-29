@@ -1,3 +1,0 @@
-server.port=8080
-server.address=46.101.129.187
-app.url=http://${server.address}:${server.port}
