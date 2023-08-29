@@ -86,4 +86,23 @@ public class StoreProductService {
 
         return result;
     }
+
+    public List<StoreProductInfoDTO> getInfoByName(Long storeId, String productName) {
+        List<StoreProductEntity> byStoreId = repository.findByStoreIdAndProductName(storeId, productName);
+
+        List<StoreProductInfoDTO> result = new LinkedList<>();
+        for (StoreProductEntity storeProduct : byStoreId) {
+            StoreProductInfoDTO info = new StoreProductInfoDTO();
+            info.setProductId(storeProduct.getProductId());
+            info.setName(storeProduct.getProduct().getName());
+            info.setProductCount(
+                    (storeProduct.getCount() - storeProduct.getSoldCount())
+                            + "/" + storeProduct.getCount()
+            );
+
+            result.add(info);
+        }
+
+        return result;
+    }
 }

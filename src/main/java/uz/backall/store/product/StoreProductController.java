@@ -26,4 +26,12 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getInfo(storeId));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<StoreProductInfoDTO>> searchInfo(
+            @RequestParam Long storeId,
+            @RequestParam String productName
+    ) {
+        return ResponseEntity.ok(service.getInfoByName(storeId, productName));
+    }
+
 }

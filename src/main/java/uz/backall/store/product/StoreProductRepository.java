@@ -12,6 +12,7 @@ public interface StoreProductRepository extends JpaRepository<StoreProductEntity
     List<StoreProductEntity> findByStoreId(Long storeId);
 
     List<StoreProductEntity> findByStoreIdAndProductId(Long storeId, Long productId);
+    List<StoreProductEntity> findByStoreIdAndProductName(Long storeId, String productName);
 
     Optional<StoreProductEntity> findByProductIdAndStoreIdAndCreatedDateAndExpiredDate(Long productId, Long storeId, LocalDate createdDate, LocalDate expiredDate);
 }
