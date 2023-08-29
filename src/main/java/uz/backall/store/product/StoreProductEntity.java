@@ -50,6 +50,4 @@ public class StoreProductEntity {
     private Double count;
 
     private CountType countType;
-
-    private Long soldCount;
 }

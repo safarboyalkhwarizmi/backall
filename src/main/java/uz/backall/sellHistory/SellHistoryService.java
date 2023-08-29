@@ -21,7 +21,7 @@ public class SellHistoryService {
                 SellHistoryEntity sellHistory = new SellHistoryEntity();
                 sellHistory.setStoreProductId(storeProduct.getId());
                 sellHistory.setCount(dto.getCount());
-                storeProduct.setSoldCount(storeProduct.getSoldCount() + 1);
+                storeProduct.setCount(storeProduct.getCount() - dto.getCount());
 
                 repository.save(sellHistory);
                 storeProductRepository.save(storeProduct);
