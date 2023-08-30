@@ -8,5 +8,5 @@ import lombok.Setter;
 public class SellHistoryCreateDTO {
     private Long productId;
     private Long storeId;
-    private Integer count;
+    private Double count;
 }

@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.backall.store.product.StoreProductEntity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -21,5 +24,7 @@ public class SellHistoryEntity {
     @JoinColumn(name = "store_product_id", insertable = false, updatable = false)
     private StoreProductEntity storeProduct;
 
-    private Integer count;
+    private Double count;
+
+    private LocalDateTime createdDate;
 }

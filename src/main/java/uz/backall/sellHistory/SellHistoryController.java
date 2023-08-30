@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,10 +20,10 @@ public class SellHistoryController {
         return ResponseEntity.ok(service.create(dtoList));
     }
 
-    @GetMapping("/get/")
-    public ResponseEntity<SellHistoryInfoDTO> getInfo(
-            @RequestParam Long storeId
+    @GetMapping("/get")
+    public ResponseEntity<List<SellHistoryInfoDTO>> getInfo(
+            @RequestParam Long storeId, LocalDate date
     ) {
-        return ResponseEntity.ok(service.getInfo());
+        return ResponseEntity.ok(service.getInfo(storeId, date));
     }
 }

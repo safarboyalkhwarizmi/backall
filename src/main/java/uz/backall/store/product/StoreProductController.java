@@ -12,6 +12,7 @@ import java.util.List;
 public class StoreProductController {
     private final StoreProductService service;
 
+    /* FOR CREATING AND UPDATING PRODUCT */
     @PostMapping("/create")
     public ResponseEntity<Boolean> create(
             @RequestBody List<StoreProductCreateDTO> dto
@@ -19,6 +20,7 @@ public class StoreProductController {
         return ResponseEntity.ok(service.create(dto));
     }
 
+    /* FOR GETTING INFO */
     @GetMapping("/get/info")
     public ResponseEntity<List<StoreProductInfoDTO>> getInfo(
             @RequestParam Long storeId
@@ -26,6 +28,7 @@ public class StoreProductController {
         return ResponseEntity.ok(service.getInfo(storeId));
     }
 
+    /* FOR SEARCHING */
     @GetMapping("/search")
     public ResponseEntity<List<StoreProductInfoDTO>> searchInfo(
             @RequestParam Long storeId,
@@ -33,5 +36,4 @@ public class StoreProductController {
     ) {
         return ResponseEntity.ok(service.getInfoByName(storeId, productName));
     }
-
 }
