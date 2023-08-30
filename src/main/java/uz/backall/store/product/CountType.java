@@ -2,5 +2,5 @@ package uz.backall.store.product;
 
 public enum CountType {
 
-    KG, GR, NUM
+    KG, GR, NUM, L
 }
