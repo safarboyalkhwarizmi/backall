@@ -20,9 +20,9 @@ public class SellHistoryController {
         return ResponseEntity.ok(service.create(dtoList));
     }
 
-    @GetMapping("/get")
+    @GetMapping("/get/{storeId}/{date}")
     public ResponseEntity<List<SellHistoryInfoDTO>> getInfo(
-            @RequestParam Long storeId, LocalDate date
+            @PathVariable Long storeId, @PathVariable LocalDate date
     ) {
         return ResponseEntity.ok(service.getInfo(storeId, date));
     }
