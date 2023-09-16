@@ -15,6 +15,9 @@ public class ProductEntity {
     private Long id;
 
     @Column
+    private String serialNumber;
+
+    @Column
     private String name;
 
     @Column(name = "brand_id")

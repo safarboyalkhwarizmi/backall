@@ -19,9 +19,15 @@ public class ProductService {
             return false;
         }
 
+        Optional<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
+        if (bySerialNumber.isPresent()) {
+            return false;
+        }
+
         ProductEntity product = new ProductEntity();
         product.setBrandId(dto.getBrandId());
         product.setName(dto.getName());
+        product.setSerialNumber(dto.getSerialNumber());
         productRepository.save(product);
         return true;
     }
