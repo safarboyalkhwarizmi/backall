@@ -10,9 +10,12 @@ import uz.backall.store.product.StoreProductEntity;
 import uz.backall.store.product.StoreProductInfoDTO;
 import uz.backall.store.product.StoreProductRepository;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +54,12 @@ public class SellHistoryService {
         return true;
     }
 
-    public List<SellHistoryInfoDTO> getInfo(Long storeId, LocalDate date) {
+    public List<SellHistoryInfoDTO> getInfo(Long storeId, String date) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        // Parse the input date string into a LocalDate
+        LocalDate localDate = LocalDate.parse(date, dateFormatter);
+
         List<SellHistoryEntity> byStoreId = repository.findByStoreProductStoreId(storeId);
 
         List<SellHistoryInfoDTO> result = new LinkedList<>();
