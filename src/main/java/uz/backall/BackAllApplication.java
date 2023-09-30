@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackallApplication {
+public class BackAllApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BackallApplication.class, args);
+        SpringApplication.run(BackAllApplication.class, args);
     }
 }

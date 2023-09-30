@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/backall_db
     username: postgres
-    password: root
+    password: BackAllniBitirsakPitsaYeymiz
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -21,7 +21,7 @@ spring:
         10MB
   profiles:
     active:
-      dev
+      prod
 
 application:
   security:

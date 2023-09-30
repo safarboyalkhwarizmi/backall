@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 contact = @Contact(
                         name = "Safarboy",
-                        email = "safarboyalkhwarizmi@gmail.com",
+                        email = "safarboyalxorazmiy@gmail.com",
                         url = "http://backall.uz"
                 ),
-                description = "Open Api documentation for smilechat.uz",
+                description = "Open Api documentation for backall app",
                 title = "OpenApi specification",
                 version = "1.1",
                 license = @License(
@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "PROD ENV",
-                        url = "http://backall.uz:8080"
+                        url = "http://backall.uz"
                 )
         },
         security = {

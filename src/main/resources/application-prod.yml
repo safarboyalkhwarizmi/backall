@@ -1,0 +1,8 @@
+server:
+  port:
+    80
+  address:
+    backall.uz
+app:
+  url:
+    http://${server.address}:${server.port}
