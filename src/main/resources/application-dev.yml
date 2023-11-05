@@ -1,8 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/backall_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  servlet:
+    multipart:
+      max-file-size:
+        10MB
+      max-request-size:
+        10MB
+
 server:
   port:
-    8080
+    80
   address:
-    localhost
+    192.168.0.102
 app:
   url:
     http://${server.address}:${server.port}

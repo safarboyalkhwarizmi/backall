@@ -22,7 +22,7 @@ public class SellHistoryController {
 
     @GetMapping("/get/{storeId}/{date}")
     public ResponseEntity<List<SellHistoryInfoDTO>> getInfo(
-            @PathVariable Long storeId, @PathVariable LocalDate date
+            @PathVariable Long storeId, @PathVariable String date
     ) {
         return ResponseEntity.ok(service.getInfo(storeId, date));
     }
