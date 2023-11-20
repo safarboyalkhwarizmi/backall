@@ -8,14 +8,15 @@ import java.util.Optional;
 
 @Repository
 public interface StoreProductRepository extends JpaRepository<StoreProductEntity, Long> {
-    List<StoreProductEntity> findByStoreId(Long storeId);
+  List<StoreProductEntity> findByStoreId(Long storeId);
 
-    List<StoreProductEntity> findByStoreIdAndProductId(Long storeId, Long productId);
-    List<StoreProductEntity> findByStoreIdAndProductName(Long storeId, String productName);
+  List<StoreProductEntity> findByStoreIdAndProductId(Long storeId, Long productId);
+
+  List<StoreProductEntity> findByStoreIdAndProductName(Long storeId, String productName);
 
     /* TODO FOR FIRST OCTOBER 2023 SUNDAY
     Optional<StoreProductEntity> findByProductIdAndStoreIdAndCreatedDateAndExpiredDate(Long productId, Long storeId, LocalDate createdDate, LocalDate expiredDate);
     */
 
-    Optional<StoreProductEntity> findByProductIdAndStoreId(Long productId, Long storeId);
+  Optional<StoreProductEntity> findByProductIdAndStoreId(Long productId, Long storeId);
 }

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class BackAllApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(BackAllApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(BackAllApplication.class, args);
+  }
 }

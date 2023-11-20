@@ -10,20 +10,20 @@ import uz.backall.brands.BrandEntity;
 @Entity
 @Table(name = "product")
 public class ProductEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column
-    private String serialNumber;
+  @Column
+  private String serialNumber;
 
-    @Column
-    private String name;
+  @Column
+  private String name;
 
-    @Column(name = "brand_id")
-    private Long brandId;
+  @Column(name = "brand_id")
+  private Long brandId;
 
-    @ManyToOne
-    @JoinColumn(name = "brand_id", insertable = false, updatable = false)
-    private BrandEntity brand;
+  @ManyToOne
+  @JoinColumn(name = "brand_id", insertable = false, updatable = false)
+  private BrandEntity brand;
 }

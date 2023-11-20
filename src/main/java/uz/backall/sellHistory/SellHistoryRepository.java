@@ -6,5 +6,5 @@ import java.util.List;
 
 
 public interface SellHistoryRepository extends JpaRepository<SellHistoryEntity, Long> {
-    List<SellHistoryEntity> findByStoreProductStoreId(Long storeId);
+  List<SellHistoryEntity> findByStoreProductStoreId(Long storeId);
 }

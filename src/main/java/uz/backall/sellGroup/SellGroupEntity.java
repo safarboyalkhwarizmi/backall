@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "sell_group")
 public class SellGroupEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 }

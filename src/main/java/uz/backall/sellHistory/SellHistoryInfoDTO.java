@@ -8,7 +8,7 @@ import java.sql.Time;
 @Getter
 @Setter
 public class SellHistoryInfoDTO {
-    private String name;
-    private Double count;
-    private Time time;
+  private String name;
+  private Double count;
+  private Time time;
 }

@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StoreResponseDTO {
-    private Long id;
-    private String name;
+  private Long id;
+  private String name;
 }

@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
-
-    List<StoreEntity> getByUserId(Long userId);
+  List<StoreEntity> getByUserId(Long userId);
 }

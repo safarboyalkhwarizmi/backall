@@ -13,24 +13,24 @@ import java.util.List;
 @RequestMapping("/api/v1/store")
 @RequiredArgsConstructor
 public class StoreController {
-    private final StoreService service;
+  private final StoreService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(
-            @RequestParam String name
-    ) {
-        return ResponseEntity.ok(service.create(getUserId(), name));
-    }
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> create(
+    @RequestParam String name
+  ) {
+    return ResponseEntity.ok(service.create(getUserId(), name));
+  }
 
-    @GetMapping("/get/stores")
-    public ResponseEntity<List<StoreResponseDTO>> getStores() {
-        return ResponseEntity.ok(service.getStoresByUserId(getUserId()));
-    }
+  @GetMapping("/get/stores")
+  public ResponseEntity<List<StoreResponseDTO>> getStores() {
+    return ResponseEntity.ok(service.getStoresByUserId(getUserId()));
+  }
 
-    private Long getUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+  private Long getUserId() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    User user = (User) authentication.getPrincipal();
 
-        return user.getId();
-    }
+    return user.getId();
+  }
 }

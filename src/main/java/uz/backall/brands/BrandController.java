@@ -11,17 +11,17 @@ import java.util.List;
 @RequestMapping("/api/v1/brand")
 @RequiredArgsConstructor
 public class BrandController {
-    private final BrandService service;
+  private final BrandService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(
-            @RequestParam String name
-    ) {
-        return ResponseEntity.ok(service.create(name));
-    }
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> create(
+    @RequestParam String name
+  ) {
+    return ResponseEntity.ok(service.create(name));
+  }
 
-    @GetMapping("/get/all")
-    public ResponseEntity<List<BrandResponseDTO>> getAll() {
-        return ResponseEntity.ok(service.getAll());
-    }
+  @GetMapping("/get/all")
+  public ResponseEntity<List<BrandResponseDTO>> getAll() {
+    return ResponseEntity.ok(service.getAll());
+  }
 }

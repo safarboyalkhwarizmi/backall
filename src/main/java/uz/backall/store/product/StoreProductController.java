@@ -10,30 +10,30 @@ import java.util.List;
 @RequestMapping("/api/v1/store/product")
 @RequiredArgsConstructor
 public class StoreProductController {
-    private final StoreProductService service;
+  private final StoreProductService service;
 
-    /* FOR CREATING AND UPDATING PRODUCT */
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(
-            @RequestBody List<StoreProductCreateDTO> dto
-    ) {
-        return ResponseEntity.ok(service.create(dto));
-    }
+  /* FOR CREATING AND UPDATING PRODUCT */
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> create(
+    @RequestBody List<StoreProductCreateDTO> dto
+  ) {
+    return ResponseEntity.ok(service.create(dto));
+  }
 
-    /* FOR GETTING INFO */
-    @GetMapping("/get/info")
-    public ResponseEntity<List<StoreProductInfoDTO>> getInfo(
-            @RequestParam Long storeId
-    ) {
-        return ResponseEntity.ok(service.getInfo(storeId));
-    }
+  /* FOR GETTING INFO */
+  @GetMapping("/get/info")
+  public ResponseEntity<List<StoreProductInfoDTO>> getInfo(
+    @RequestParam Long storeId
+  ) {
+    return ResponseEntity.ok(service.getInfo(storeId));
+  }
 
-    /* FOR SEARCHING */
-    @GetMapping("/search")
-    public ResponseEntity<List<StoreProductInfoDTO>> searchInfo(
-            @RequestParam Long storeId,
-            @RequestParam String productName
-    ) {
-        return ResponseEntity.ok(service.getInfoByName(storeId, productName));
-    }
+  /* FOR SEARCHING */
+  @GetMapping("/search")
+  public ResponseEntity<List<StoreProductInfoDTO>> searchInfo(
+    @RequestParam Long storeId,
+    @RequestParam String productName
+  ) {
+    return ResponseEntity.ok(service.getInfoByName(storeId, productName));
+  }
 }

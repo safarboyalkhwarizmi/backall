@@ -13,18 +13,18 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "sell_history")
 public class SellHistoryEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "store_product_id")
-    private Long storeProductId;
+  @Column(name = "store_product_id")
+  private Long storeProductId;
 
-    @ManyToOne
-    @JoinColumn(name = "store_product_id", insertable = false, updatable = false)
-    private StoreProductEntity storeProduct;
+  @ManyToOne
+  @JoinColumn(name = "store_product_id", insertable = false, updatable = false)
+  private StoreProductEntity storeProduct;
 
-    private Double count;
+  private Double count;
 
-    private LocalDateTime createdDate;
+  private LocalDateTime createdDate;
 }

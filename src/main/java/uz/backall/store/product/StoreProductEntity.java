@@ -13,31 +13,31 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "store_product")
 public class StoreProductEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "store_id")
-    private Long storeId;
+  @Column(name = "store_id")
+  private Long storeId;
 
-    @ManyToOne
-    @JoinColumn(name = "store_id", insertable = false, updatable = false)
-    private StoreEntity store;
+  @ManyToOne
+  @JoinColumn(name = "store_id", insertable = false, updatable = false)
+  private StoreEntity store;
 
-    @Column(name = "product_id")
-    private Long productId;
+  @Column(name = "product_id")
+  private Long productId;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
-    private ProductEntity product;
+  @ManyToOne
+  @JoinColumn(name = "product_id", insertable = false, updatable = false)
+  private ProductEntity product;
 
-    private Boolean nds;
+  private Boolean nds;
 
-    private Double price;
+  private Double price;
 
-    private Double sellingPrice;
+  private Double sellingPrice;
 
-    private Double percentage;
+  private Double percentage;
 
     /* TODO FOR FIRST OCTOBER 2023 SUNDAY
 
@@ -47,7 +47,7 @@ public class StoreProductEntity {
 
     */
 
-    private Double count;
+  private Double count;
 
-    private CountType countType;
+  private CountType countType;
 }

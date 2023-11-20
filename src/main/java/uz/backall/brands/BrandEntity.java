@@ -9,10 +9,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "brand")
 public class BrandEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(unique = true)
-    private String name;
+  @Column(unique = true)
+  private String name;
 }

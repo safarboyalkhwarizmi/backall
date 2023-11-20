@@ -10,31 +10,31 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class BrandService {
-    private final BrandRepository brandRepository;
+  private final BrandRepository brandRepository;
 
-    public Boolean create(String brandName) {
-        Optional<BrandEntity> byName = brandRepository.findByName(brandName);
-        if (byName.isEmpty()) {
-            BrandEntity brand = new BrandEntity();
-            brand.setName(brandName);
-            brandRepository.save(brand);
-            return true;
-        }
-
-        return false;
+  public Boolean create(String brandName) {
+    Optional<BrandEntity> byName = brandRepository.findByName(brandName);
+    if (byName.isEmpty()) {
+      BrandEntity brand = new BrandEntity();
+      brand.setName(brandName);
+      brandRepository.save(brand);
+      return true;
     }
 
-    public List<BrandResponseDTO> getAll() {
-        List<BrandEntity> all = brandRepository.findAll();
+    return false;
+  }
 
-        List<BrandResponseDTO> result = new LinkedList<>();
-        for (BrandEntity brand : all) {
-            BrandResponseDTO response = new BrandResponseDTO();
-            response.setId(brand.getId());
-            response.setName(brand.getName());
-            result.add(response);
-        }
+  public List<BrandResponseDTO> getAll() {
+    List<BrandEntity> all = brandRepository.findAll();
 
-        return result;
+    List<BrandResponseDTO> result = new LinkedList<>();
+    for (BrandEntity brand : all) {
+      BrandResponseDTO response = new BrandResponseDTO();
+      response.setId(brand.getId());
+      response.setName(brand.getName());
+      result.add(response);
     }
+
+    return result;
+  }
 }

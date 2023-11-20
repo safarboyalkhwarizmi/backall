@@ -12,33 +12,33 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class StoreService {
-    private final StoreRepository storeRepository;
-    private final UserRepository userRepository;
+  private final StoreRepository storeRepository;
+  private final UserRepository userRepository;
 
-    public Boolean create(Long userId, String storeName) {
-        Optional<User> byId = userRepository.findById(userId);
-        if (byId.isEmpty()) {
-            throw new StoreAlreadyExistsException("Store already exists");
-        }
-
-        StoreEntity store = new StoreEntity();
-        store.setName(storeName);
-        store.setUserId(userId);
-        storeRepository.save(store);
-        return true;
+  public Boolean create(Long userId, String storeName) {
+    Optional<User> byId = userRepository.findById(userId);
+    if (byId.isEmpty()) {
+      throw new StoreAlreadyExistsException("Store already exists");
     }
 
-    public List<StoreResponseDTO> getStoresByUserId(Long userId) {
-        List<StoreEntity> byUserId = storeRepository.getByUserId(userId);
+    StoreEntity store = new StoreEntity();
+    store.setName(storeName);
+    store.setUserId(userId);
+    storeRepository.save(store);
+    return true;
+  }
 
-        List<StoreResponseDTO> result = new LinkedList<>();
-        for (StoreEntity store : byUserId) {
-            StoreResponseDTO response = new StoreResponseDTO();
-            response.setId(store.getId());
-            response.setName(store.getName());
-            result.add(response);
-        }
+  public List<StoreResponseDTO> getStoresByUserId(Long userId) {
+    List<StoreEntity> byUserId = storeRepository.getByUserId(userId);
 
-        return result;
+    List<StoreResponseDTO> result = new LinkedList<>();
+    for (StoreEntity store : byUserId) {
+      StoreResponseDTO response = new StoreResponseDTO();
+      response.setId(store.getId());
+      response.setName(store.getName());
+      result.add(response);
     }
+
+    return result;
+  }
 }

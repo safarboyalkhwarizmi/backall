@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
 public class ProductController {
-    private final ProductService service;
+  private final ProductService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(
-            @RequestBody ProductCreateDTO dto
-    ) {
-        return ResponseEntity.ok(service.create(dto));
-    }
-
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> create(
+    @RequestBody ProductCreateDTO dto
+  ) {
+    return ResponseEntity.ok(service.create(dto));
+  }
 }

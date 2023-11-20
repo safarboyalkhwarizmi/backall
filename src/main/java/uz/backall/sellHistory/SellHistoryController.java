@@ -11,19 +11,19 @@ import java.util.List;
 @RequestMapping("/api/v1/store/sell")
 @RequiredArgsConstructor
 public class SellHistoryController {
-    private final SellHistoryService service;
+  private final SellHistoryService service;
 
-    @PostMapping("/create")
-    public ResponseEntity<Boolean> create(
-            @RequestBody List<SellHistoryCreateDTO> dtoList
-    ) {
-        return ResponseEntity.ok(service.create(dtoList));
-    }
+  @PostMapping("/create")
+  public ResponseEntity<Boolean> create(
+    @RequestBody List<SellHistoryCreateDTO> dtoList
+  ) {
+    return ResponseEntity.ok(service.create(dtoList));
+  }
 
-    @GetMapping("/get/{storeId}/{date}")
-    public ResponseEntity<List<SellHistoryInfoDTO>> getInfo(
-            @PathVariable Long storeId, @PathVariable String date
-    ) {
-        return ResponseEntity.ok(service.getInfo(storeId, date));
-    }
+  @GetMapping("/get/{storeId}/{date}")
+  public ResponseEntity<List<SellHistoryInfoDTO>> getInfo(
+    @PathVariable Long storeId, @PathVariable String date
+  ) {
+    return ResponseEntity.ok(service.getInfo(storeId, date));
+  }
 }

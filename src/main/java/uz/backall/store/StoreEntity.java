@@ -10,16 +10,16 @@ import uz.backall.user.User;
 @Entity
 @Table(name = "store")
 public class StoreEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String name;
+  private String name;
 
-    @Column(name = "user_id")
-    private Long userId;
+  @Column(name = "user_id")
+  private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  private User user;
 }

@@ -11,21 +11,21 @@ import uz.backall.sellHistory.SellHistoryEntity;
 @Entity
 @Table(name = "sell_history_group")
 public class SellHistoryGroupEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "sell_group_id")
-    private Long sellGroupId;
+  @Column(name = "sell_group_id")
+  private Long sellGroupId;
 
-    @ManyToOne
-    @JoinColumn(name = "sell_group_id", insertable = false, updatable = false)
-    private SellGroupEntity sellGroup;
+  @ManyToOne
+  @JoinColumn(name = "sell_group_id", insertable = false, updatable = false)
+  private SellGroupEntity sellGroup;
 
-    @Column(name = "sell_history_id")
-    private Long sellHistoryId;
+  @Column(name = "sell_history_id")
+  private Long sellHistoryId;
 
-    @ManyToOne
-    @JoinColumn(name = "sell_history_id", insertable = false, updatable = false)
-    private SellHistoryEntity sellHistory;
+  @ManyToOne
+  @JoinColumn(name = "sell_history_id", insertable = false, updatable = false)
+  private SellHistoryEntity sellHistory;
 }

@@ -10,25 +10,25 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class ProductService {
-    private final ProductRepository productRepository;
-    private final BrandRepository brandRepository;
+  private final ProductRepository productRepository;
+  private final BrandRepository brandRepository;
 
-    public Boolean create(ProductCreateDTO dto) {
-        Optional<BrandEntity> byId = brandRepository.findById(dto.getBrandId());
-        if (byId.isEmpty()) {
-            return false;
-        }
-
-        Optional<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
-        if (bySerialNumber.isPresent()) {
-            return false;
-        }
-
-        ProductEntity product = new ProductEntity();
-        product.setBrandId(dto.getBrandId());
-        product.setName(dto.getName());
-        product.setSerialNumber(dto.getSerialNumber());
-        productRepository.save(product);
-        return true;
+  public Boolean create(ProductCreateDTO dto) {
+    Optional<BrandEntity> byId = brandRepository.findById(dto.getBrandId());
+    if (byId.isEmpty()) {
+      return false;
     }
+
+    Optional<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
+    if (bySerialNumber.isPresent()) {
+      return false;
+    }
+
+    ProductEntity product = new ProductEntity();
+    product.setBrandId(dto.getBrandId());
+    product.setName(dto.getName());
+    product.setSerialNumber(dto.getSerialNumber());
+    productRepository.save(product);
+    return true;
+  }
 }
