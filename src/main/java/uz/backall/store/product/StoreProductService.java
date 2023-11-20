@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductRepository;
-import uz.backall.sellHistory.SellHistoryRepository;
 import uz.backall.sellHistory.SellingPriceException;
 import uz.backall.store.StoreEntity;
-import uz.backall.store.StoreNotCreatedException;
 import uz.backall.store.StoreRepository;
 
 import java.util.LinkedList;
