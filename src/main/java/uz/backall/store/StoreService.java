@@ -18,7 +18,7 @@ public class StoreService {
     public Boolean create(Long userId, String storeName) {
         Optional<User> byId = userRepository.findById(userId);
         if (byId.isEmpty()) {
-            return false;
+            throw new StoreAlreadyExistsException("Store already exists");
         }
 
         StoreEntity store = new StoreEntity();

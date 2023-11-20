@@ -1,7 +1,6 @@
 package uz.backall.auth;
 
 import uz.backall.config.jwt.JwtService;
-import uz.backall.store.StoreNotCreatedException;
 import uz.backall.store.StoreService;
 import uz.backall.token.Token;
 import uz.backall.token.TokenRepository;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +32,11 @@ public class AuthenticationService {
     private final StoreService storeService;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Optional<User> byEmail = repository.findByEmail(request.getEmail());
+        if (byEmail.isPresent()) {
+            throw new UserAlreadyExistsException("User already exists.");
+        }
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -44,10 +49,7 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
 
-        Boolean createStore = storeService.create(savedUser.getId(), request.getStoreName());
-        if (!createStore) {
-            throw new StoreNotCreatedException("Store not created, Please try again!");
-        }
+        storeService.create(savedUser.getId(), request.getStoreName());
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
