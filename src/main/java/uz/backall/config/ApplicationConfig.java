@@ -1,5 +1,7 @@
 package uz.backall.config;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import uz.backall.user.User;
 import uz.backall.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +22,16 @@ public class ApplicationConfig {
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> repository.findByEmail(username)
-      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    return new UserDetailsService() {
+      @Override
+      public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String userEmail = username.substring(0, username.length() - 4);
+        String pinCode = username.substring(username.length() - 4);
+
+        return repository.findByEmailAndPinCode(userEmail, pinCode)
+          .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+      }
+    };
   }
 
   @Bean

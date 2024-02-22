@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uz.backall.user.Role;
 
 @Data
 @Builder
@@ -15,4 +16,6 @@ public class RegisterRequest {
   private String storeName;
   private String email;
   private String password;
+  private String pinCode;
+  private Role role;
 }

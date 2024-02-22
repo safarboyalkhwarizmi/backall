@@ -32,7 +32,10 @@ public class AuthenticationService {
   private final StoreService storeService;
 
   public AuthenticationResponse register(RegisterRequest request) {
-    Optional<User> byEmail = repository.findByEmail(request.getEmail());
+    Optional<User> byEmail = repository.findByEmailAndPinCode(
+      request.getEmail(),
+      request.getPinCode()
+    );
     if (byEmail.isPresent()) {
       throw new UserAlreadyExistsException("User already exists.");
     }
@@ -42,7 +45,8 @@ public class AuthenticationService {
       .lastname(request.getLastname())
       .email(request.getEmail())
       .password(passwordEncoder.encode(request.getPassword()))
-      .role(Role.USER)
+      .pinCode(request.getPinCode())
+      .role(request.getRole())
       .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
@@ -54,17 +58,12 @@ public class AuthenticationService {
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
+      .role(request.getRole())
       .build();
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
-    authenticationManager.authenticate(
-      new UsernamePasswordAuthenticationToken(
-        request.getEmail(),
-        request.getPassword()
-      )
-    );
-    var user = repository.findByEmail(request.getEmail())
+    var user = repository.findByEmailAndPinCode(request.getEmail(), request.getPinCode())
       .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
@@ -73,6 +72,7 @@ public class AuthenticationService {
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
+      .role(user.getRole())
       .build();
   }
 
@@ -105,13 +105,17 @@ public class AuthenticationService {
     final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     final String refreshToken;
     final String userEmail;
+    final String pinCode;
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       return;
     }
     refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken);
-    if (userEmail != null) {
-      var user = this.repository.findByEmail(userEmail)
+
+    String username = jwtService.extractUsername(refreshToken);
+    userEmail = username.substring(0, username.length() - 4);
+    pinCode = username.substring(username.length() - 4);
+    if (userEmail != null && pinCode != null) {
+      var user = this.repository.findByEmailAndPinCode(userEmail, pinCode)
         .orElseThrow();
       if (jwtService.isTokenValid(refreshToken, user)) {
         var accessToken = jwtService.generateToken(user);
@@ -120,6 +124,7 @@ public class AuthenticationService {
         var authResponse = AuthenticationResponse.builder()
           .accessToken(accessToken)
           .refreshToken(refreshToken)
+          .role(user.getRole())
           .build();
         new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
       }

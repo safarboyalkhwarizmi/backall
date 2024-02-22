@@ -33,6 +33,7 @@ public class User implements UserDetails {
   private String lastname;
   private String email;
   private String password;
+  private String pinCode;
 
   @Enumerated(EnumType.STRING)
   private Role role;
@@ -52,7 +53,7 @@ public class User implements UserDetails {
 
   @Override
   public String getUsername() {
-    return email;
+    return email + pinCode;
   }
 
   @Override

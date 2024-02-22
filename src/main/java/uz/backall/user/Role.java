@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public enum Role {
-  USER(Collections.emptySet());
+  SELLER(Collections.emptySet()),
+  BOSS(Collections.emptySet()),
+  SELLER_BOSS(Collections.emptySet());
 
   @Getter
   private final Set<Permission> permissions;
