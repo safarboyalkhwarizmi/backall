@@ -31,6 +31,13 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.authenticate(request));
   }
 
+  @PostMapping("/check")
+  public ResponseEntity<Boolean> authenticate(
+    @RequestBody AuthenticationCheckRequest request
+  ) {
+    return ResponseEntity.ok(service.check(request));
+  }
+
   @PostMapping("/refresh-token")
   public void refreshToken(
     HttpServletRequest request,

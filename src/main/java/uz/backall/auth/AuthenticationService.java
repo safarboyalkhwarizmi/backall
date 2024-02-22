@@ -17,8 +17,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.backall.util.MD5;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,9 +28,7 @@ import java.util.Optional;
 public class AuthenticationService {
   private final UserRepository repository;
   private final TokenRepository tokenRepository;
-  private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
-  private final AuthenticationManager authenticationManager;
   private final StoreService storeService;
 
   public AuthenticationResponse register(RegisterRequest request) {
@@ -44,7 +44,7 @@ public class AuthenticationService {
       .firstname(request.getFirstname())
       .lastname(request.getLastname())
       .email(request.getEmail())
-      .password(passwordEncoder.encode(request.getPassword()))
+      .password(MD5.md5(request.getPassword()))
       .pinCode(request.getPinCode())
       .role(request.getRole())
       .build();
@@ -63,6 +63,19 @@ public class AuthenticationService {
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
+//    authenticationManager.authenticate(
+//      new UsernamePasswordAuthenticationToken(
+//        request.getEmail(),
+//        request.getPassword()
+//      )
+//    );
+    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+      request.getEmail(), MD5.md5(request.getPassword())
+    );
+    if (byEmailAndPassword.isEmpty()) {
+      throw new UserNotFoundException("ACCOUNT NOT FOUND!");
+    }
+
     var user = repository.findByEmailAndPinCode(request.getEmail(), request.getPinCode())
       .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
@@ -74,6 +87,15 @@ public class AuthenticationService {
       .refreshToken(refreshToken)
       .role(user.getRole())
       .build();
+  }
+
+  public Boolean check(AuthenticationCheckRequest request) {
+
+    System.out.println(MD5.md5(request.getPassword()));
+    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+      request.getEmail(), MD5.md5(request.getPassword())
+    );
+    return !byEmailAndPassword.isEmpty();
   }
 
   private void saveUserToken(User user, String jwtToken) {
