@@ -15,9 +15,10 @@ public class BrandController {
 
   @PostMapping("/create")
   public ResponseEntity<BrandResponseDTO> create(
+    @RequestParam(value = "storeId") Long storeId,
     @RequestParam String name
   ) {
-    return ResponseEntity.ok(service.create(name));
+    return ResponseEntity.ok(service.create(storeId, name));
   }
 
   @GetMapping("/get/all")
