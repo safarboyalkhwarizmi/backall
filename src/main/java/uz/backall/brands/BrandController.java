@@ -1,6 +1,7 @@
 package uz.backall.brands;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,20 @@ public class BrandController {
     return ResponseEntity.ok(service.create(storeId, name));
   }
 
-  @GetMapping("/get/all")
-  public ResponseEntity<List<BrandResponseDTO>> getAll() {
-    return ResponseEntity.ok(service.getAll());
+  @GetMapping("/get/global")
+  public ResponseEntity<Page<BrandResponseDTO>> getAll(
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(service.getGlobalPage(page, size));
+  }
+
+  @GetMapping("/get/local")
+  public ResponseEntity<Page<BrandResponseDTO>> getAll(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(service.getLocalPage(storeId, page, size));
   }
 }
