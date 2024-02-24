@@ -12,16 +12,16 @@ import java.util.Optional;
 public class BrandService {
   private final BrandRepository brandRepository;
 
-  public Boolean create(String brandName) {
+  public BrandResponseDTO create(String brandName) {
     Optional<BrandEntity> byName = brandRepository.findByName(brandName);
     if (byName.isEmpty()) {
       BrandEntity brand = new BrandEntity();
       brand.setName(brandName);
       brandRepository.save(brand);
-      return true;
+      return new BrandResponseDTO(brand.getId(), brand.getName());
     }
 
-    return false;
+    throw new BrandAlreadyExistsException("Brand already exits");
   }
 
   public List<BrandResponseDTO> getAll() {
@@ -29,9 +29,8 @@ public class BrandService {
 
     List<BrandResponseDTO> result = new LinkedList<>();
     for (BrandEntity brand : all) {
-      BrandResponseDTO response = new BrandResponseDTO();
-      response.setId(brand.getId());
-      response.setName(brand.getName());
+      BrandResponseDTO response =
+        new BrandResponseDTO(brand.getId(), brand.getName());
       result.add(response);
     }
 

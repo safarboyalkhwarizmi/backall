@@ -14,7 +14,7 @@ public class BrandController {
   private final BrandService service;
 
   @PostMapping("/create")
-  public ResponseEntity<Boolean> create(
+  public ResponseEntity<BrandResponseDTO> create(
     @RequestParam String name
   ) {
     return ResponseEntity.ok(service.create(name));

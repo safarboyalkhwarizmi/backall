@@ -26,4 +26,8 @@ public class ProductEntity {
   @ManyToOne
   @JoinColumn(name = "brand_id", insertable = false, updatable = false)
   private BrandEntity brand;
+
+  @Column
+  @Enumerated(EnumType.STRING)
+  private ProductType type;
 }

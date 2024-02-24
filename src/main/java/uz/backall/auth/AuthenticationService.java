@@ -53,7 +53,9 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
 
-    storeService.create(savedUser.getId(), request.getStoreName());
+    if (request.getRole().equals(Role.BOSS)) {
+      storeService.create(savedUser.getId(), request.getStoreName());
+    }
 
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
