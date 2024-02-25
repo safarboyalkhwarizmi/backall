@@ -14,7 +14,7 @@ import uz.backall.auth.UserAlreadyExistsException;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
-import uz.backall.sell.sellGroup.sellHistory.SellingPriceException;
+import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.store.StoreAlreadyExistsException;
 
 
