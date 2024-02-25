@@ -12,6 +12,7 @@ import uz.backall.sell.sellHistory.SellHistoryCreateDTO;
 import uz.backall.sell.sellHistory.SellHistoryInfoDTO;
 import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryService;
+import uz.backall.sell.sellHistoryGroup.SellHistoryGroupResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupService;
 
 @RestController
@@ -64,5 +65,14 @@ public class SellController {
     );
   }
 
-
+  @GetMapping("/link/info")
+  public ResponseEntity<Page<SellHistoryGroupResponseDTO>> getInfoSellHistoryGroup(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryGroupService.getInfo(storeId, page, size)
+    );
+  }
 }
