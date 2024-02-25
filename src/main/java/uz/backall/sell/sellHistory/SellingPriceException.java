@@ -1,4 +1,4 @@
-package uz.backall.sellHistory;
+package uz.backall.sell.sellHistory;
 
 public class SellingPriceException extends RuntimeException {
   public SellingPriceException(String message) {

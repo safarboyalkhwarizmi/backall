@@ -1,10 +1,10 @@
-package uz.backall.sellHistoryGroup;
+package uz.backall.sell.sellHistoryGroup;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import uz.backall.sellGroup.SellGroupEntity;
-import uz.backall.sellHistory.SellHistoryEntity;
+import uz.backall.sell.sellGroup.SellGroupEntity;
+import uz.backall.sell.sellHistory.SellHistoryEntity;
 
 @Getter
 @Setter

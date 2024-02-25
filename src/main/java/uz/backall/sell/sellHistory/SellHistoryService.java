@@ -1,4 +1,4 @@
-package uz.backall.sellHistory;
+package uz.backall.sell.sellHistory;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

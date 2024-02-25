@@ -1,4 +1,4 @@
-package uz.backall.sellGroup;
+package uz.backall.sell.sellGroup;
 
 import jakarta.persistence.*;
 import lombok.Getter;

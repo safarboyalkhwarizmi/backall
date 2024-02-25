@@ -1,4 +1,4 @@
-package uz.backall.sellHistory;
+package uz.backall.sell.sellHistory;
 
 import lombok.Getter;
 import lombok.Setter;

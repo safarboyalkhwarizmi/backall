@@ -1,4 +1,4 @@
-package uz.backall.sellHistoryGroup;
+package uz.backall.sell.sellHistoryGroup;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
