@@ -16,11 +16,11 @@ public class SellHistoryController {
 
   @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
   @PostMapping("/create")
-  public ResponseEntity<Boolean> create(
-    @RequestBody List<SellHistoryCreateDTO> dtoList
+  public ResponseEntity<SellHistoryResponseDTO> create(
+    @RequestBody SellHistoryCreateDTO dto
   ) {
     return ResponseEntity.ok(
-      service.create(dtoList)
+      service.create(dto)
     );
   }
 

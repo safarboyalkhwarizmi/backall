@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductNotFoundException;
 import uz.backall.products.ProductRepository;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,51 +22,30 @@ public class SellHistoryService {
   private final SellHistoryRepository repository;
 
   @Transactional
-  public boolean create(List<SellHistoryCreateDTO> dtoList) {
-    if (dtoList == null || dtoList.isEmpty()) {
-      throw new IllegalArgumentException("Sell history list is null or empty.");
+  public SellHistoryResponseDTO create(SellHistoryCreateDTO dto) {
+    if (dto == null || dto.getProductId() == null || dto.getCount() <= 0 || dto.getSellingPrice() <= 0) {
+      throw new IllegalArgumentException("Invalid SellHistoryCreateDTO object: " + dto);
     }
 
-    if (dtoList.size() > 20) {
-      throw new IllegalArgumentException("Exceeds maximum allowed sell history creations in a single request.");
-    }
+    ProductEntity product = productRepository.findById(dto.getProductId())
+      .orElseThrow(() -> new ProductNotFoundException("Product with ID " + dto.getProductId() + " not found."));
 
-    // Validate SellHistoryCreateDTO objects
-    for (SellHistoryCreateDTO dto : dtoList) {
-      if (dto == null || dto.getProductId() == null || dto.getCount() <= 0 || dto.getSellingPrice() <= 0) {
-        throw new IllegalArgumentException("Invalid SellHistoryCreateDTO object: " + dto);
-      }
-    }
+    SellHistoryEntity sellHistory = new SellHistoryEntity();
+    sellHistory.setProductId(dto.getProductId());
+    sellHistory.setCount(dto.getCount());
+    sellHistory.setCountType(dto.getCountType());
+    sellHistory.setCreatedDate(dto.getCreatedDate());
+    sellHistory.setSellingPrice(dto.getSellingPrice());
 
-    // Fetch all product IDs
-    Set<Long> productIds = dtoList.stream()
-      .map(SellHistoryCreateDTO::getProductId)
-      .collect(Collectors.toSet());
-    Map<Long, ProductEntity> productsMap = productRepository.findAllById(productIds)
-      .stream()
-      .collect(Collectors.toMap(ProductEntity::getId, Function.identity()));
-
-    // Create SellHistoryEntity objects and save them
-    List<SellHistoryEntity> sellHistories = new ArrayList<>();
-    for (SellHistoryCreateDTO dto : dtoList) {
-      ProductEntity product = productsMap.get(dto.getProductId());
-      if (product == null) {
-        throw new ProductNotFoundException("Product with ID " + dto.getProductId() + " not found.");
-      }
-
-      SellHistoryEntity sellHistory = new SellHistoryEntity();
-      sellHistory.setProduct(product);
-      sellHistory.setCount(dto.getCount());
-      sellHistory.setCountType(dto.getCountType());
-      sellHistory.setCreatedDate(dto.getCreatedDate());
-      sellHistory.setSellingPrice(dto.getSellingPrice());
-
-      sellHistories.add(sellHistory);
-    }
-
-    repository.saveAll(sellHistories);
-
-    return true;
+    repository.save(sellHistory);
+    SellHistoryResponseDTO sellHistoryResponseDTO = new SellHistoryResponseDTO();
+    sellHistoryResponseDTO.setId(sellHistory.getId());
+    sellHistoryResponseDTO.setSellingPrice(sellHistory.getSellingPrice());
+    sellHistoryResponseDTO.setCreatedDate(sellHistory.getCreatedDate());
+    sellHistoryResponseDTO.setCount(sellHistory.getCount());
+    sellHistoryResponseDTO.setCountType(sellHistoryResponseDTO.getCountType());
+    sellHistoryResponseDTO.setProductId(sellHistory.getProductId());
+    return sellHistoryResponseDTO;
   }
 
   public Page<SellHistoryInfoDTO> getInfo(Long storeId, int page, int size) {

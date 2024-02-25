@@ -18,16 +18,12 @@ public class SellHistoryEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column
   private Double count;
 
-  @Column
   private Double sellingPrice;
 
-  @Column
   private String countType;
 
-  @Column
   private LocalDateTime createdDate;
   
   @Column(name = "product_id")
