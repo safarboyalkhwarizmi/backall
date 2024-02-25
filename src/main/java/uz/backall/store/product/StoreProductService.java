@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductRepository;
+import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreRepository;
 

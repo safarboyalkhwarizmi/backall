@@ -1,6 +1,6 @@
 package uz.backall.sell.sellGroup;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +8,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "sell_group")
-public class SellGroupEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+public class SellGroupCreateDTO {
+  @NotNull
   private LocalDateTime createdDate;
+
+  @NotNull
   private Double amount;
 }
