@@ -15,4 +15,5 @@ public class SellHistoryResponseDTO {
   private String countType;
   private LocalDateTime createdDate;
   private Long productId;
+  private Long storeId;
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import uz.backall.products.ProductEntity;
+import uz.backall.store.StoreEntity;
 import uz.backall.store.product.StoreProductEntity;
 
 import java.time.LocalDate;
@@ -32,4 +33,11 @@ public class SellHistoryEntity {
   @ManyToOne
   @JoinColumn(name = "product_id", insertable = false, updatable = false)
   private ProductEntity product;
+
+  @Column(name = "store_id")
+  private Long storeId;
+
+  @ManyToOne
+  @JoinColumn(name = "store_id", insertable = false, updatable = false)
+  private StoreEntity store;
 }

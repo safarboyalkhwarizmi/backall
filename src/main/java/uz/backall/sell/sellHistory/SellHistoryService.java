@@ -36,8 +36,14 @@ public class SellHistoryService {
     sellHistory.setCountType(dto.getCountType());
     sellHistory.setCreatedDate(dto.getCreatedDate());
     sellHistory.setSellingPrice(dto.getSellingPrice());
+    sellHistory.setStoreId(dto.getStoreId());
 
     repository.save(sellHistory);
+    SellHistoryResponseDTO sellHistoryResponseDTO = getSellHistoryResponseDTO(sellHistory);
+    return sellHistoryResponseDTO;
+  }
+
+  private static SellHistoryResponseDTO getSellHistoryResponseDTO(SellHistoryEntity sellHistory) {
     SellHistoryResponseDTO sellHistoryResponseDTO = new SellHistoryResponseDTO();
     sellHistoryResponseDTO.setId(sellHistory.getId());
     sellHistoryResponseDTO.setSellingPrice(sellHistory.getSellingPrice());
@@ -45,6 +51,7 @@ public class SellHistoryService {
     sellHistoryResponseDTO.setCount(sellHistory.getCount());
     sellHistoryResponseDTO.setCountType(sellHistoryResponseDTO.getCountType());
     sellHistoryResponseDTO.setProductId(sellHistory.getProductId());
+    sellHistoryResponseDTO.setStoreId(sellHistory.getStoreId());
     return sellHistoryResponseDTO;
   }
 
