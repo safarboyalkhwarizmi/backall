@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.backall.sell.sellGroup.SellGroupEntity;
 import uz.backall.sell.sellHistory.SellHistoryEntity;
+import uz.backall.store.StoreEntity;
 
 @Getter
 @Setter
@@ -28,4 +29,11 @@ public class SellHistoryGroupEntity {
   @ManyToOne
   @JoinColumn(name = "sell_history_id", insertable = false, updatable = false)
   private SellHistoryEntity sellHistory;
+
+  @Column(name = "store_id")
+  private Long storeId;
+
+  @ManyToOne
+  @JoinColumn(name = "store_id", insertable = false, updatable = false)
+  private StoreEntity store;
 }
