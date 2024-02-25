@@ -3,6 +3,7 @@ package uz.backall.sell.sellGroup;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import uz.backall.store.StoreEntity;
 
 import java.time.LocalDateTime;
 
@@ -16,4 +17,11 @@ public class SellGroupEntity {
   private Long id;
   private LocalDateTime createdDate;
   private Double amount;
+
+  @Column(name = "store_id")
+  private Long storeId;
+
+  @ManyToOne
+  @JoinColumn(name = "store_id", insertable = false, updatable = false)
+  private StoreEntity store;
 }

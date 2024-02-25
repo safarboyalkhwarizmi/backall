@@ -13,5 +13,8 @@ public class SellGroupCreateDTO {
   private LocalDateTime createdDate;
 
   @NotNull
+  private Long storeId;
+
+  @NotNull
   private Double amount;
 }

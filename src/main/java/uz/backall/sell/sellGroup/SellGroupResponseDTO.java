@@ -11,4 +11,5 @@ public class SellGroupResponseDTO {
   private Long id;
   private LocalDateTime createdDate;
   private Double amount;
+  private Long storeId;
 }
