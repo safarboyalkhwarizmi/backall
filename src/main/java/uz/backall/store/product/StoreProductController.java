@@ -15,7 +15,7 @@ public class StoreProductController {
   /* FOR CREATING AND UPDATING PRODUCT */
   @PostMapping("/create")
   public ResponseEntity<Boolean> create(
-    @RequestBody List<StoreProductCreateDTO> dto
+    @RequestBody StoreProductCreateDTO dto
   ) {
     return ResponseEntity.ok(service.create(dto));
   }

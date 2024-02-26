@@ -7,12 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.backall.brands.localStoreBrand.LocalStoreBrandEntity;
 import uz.backall.brands.localStoreBrand.LocalStoreBrandRepository;
-import uz.backall.products.ProductEntity;
-import uz.backall.products.ProductResponseDTO;
-import uz.backall.products.localStoreProduct.LocalStoreProductEntity;
+import uz.backall.store.StoreEntity;
+import uz.backall.store.StoreNotFoundException;
+import uz.backall.store.StoreRepository;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +18,14 @@ import java.util.Optional;
 public class BrandService {
   private final BrandRepository brandRepository;
   private final LocalStoreBrandRepository localStoreBrandRepository;
+  private final StoreRepository storeRepository;
 
   public BrandResponseDTO create(Long storeId, String brandName) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Optional<LocalStoreBrandEntity> byBrandNameAndStoreId =
       localStoreBrandRepository.findByBrand_NameAndStoreId(brandName, storeId);
     if (byBrandNameAndStoreId.isEmpty()) {
@@ -42,12 +46,10 @@ public class BrandService {
   public Page<BrandResponseDTO> getGlobalPage(Integer page, Integer size) {
     Pageable pageable = PageRequest.of(page, size);
 
-    // Retrieve the paginated list of LocalStoreProductEntity objects using the repository
     Page<BrandEntity> brandEntities = brandRepository.findByBrandType(
       BrandType.GLOBAL, pageable
     );
 
-    // Map ProductEntity objects to ProductResponseDTO objects
     Page<BrandResponseDTO> responsePage = brandEntities.map(brandEntity ->
       new BrandResponseDTO(
         brandEntity.getId(),
@@ -58,6 +60,11 @@ public class BrandService {
     return responsePage;
   }
   public Page<BrandResponseDTO> getLocalPage(Long storeId, Integer page, Integer size) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Pageable pageable = PageRequest.of(page, size);
 
     Page<BrandEntity> byStoreId = localStoreBrandRepository.findByStoreId(

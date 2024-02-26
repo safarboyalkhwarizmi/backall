@@ -10,8 +10,10 @@ import uz.backall.brands.BrandEntity;
 import uz.backall.brands.BrandRepository;
 import uz.backall.products.localStoreProduct.LocalStoreProductEntity;
 import uz.backall.products.localStoreProduct.LocalStoreProductRepository;
+import uz.backall.store.StoreEntity;
+import uz.backall.store.StoreNotFoundException;
+import uz.backall.store.StoreRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +22,14 @@ public class ProductService {
   private final ProductRepository productRepository;
   private final BrandRepository brandRepository;
   private final LocalStoreProductRepository localStoreProductRepository;
+  private final StoreRepository storeRepository;
 
   public Boolean create(ProductCreateDTO dto) {
+    Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Optional<BrandEntity> byId = brandRepository.findById(dto.getBrandId());
     if (byId.isEmpty()) {
       return false;
@@ -50,13 +58,10 @@ public class ProductService {
   }
 
   public Page<ProductResponseDTO> getGlobalProductsInfo(int page, int size) {
-    // Create a Pageable object with the given page number and page size
     Pageable pageable = PageRequest.of(page, size);
 
-    // Retrieve the paginated list of ProductEntity objects using the repository
     Page<ProductEntity> productPage = productRepository.findByType(ProductType.GLOBAL, pageable);
 
-    // Map ProductEntity objects to ProductResponseDTO objects
     Page<ProductResponseDTO> responsePage = productPage.map(productEntity ->
       new ProductResponseDTO(
         productEntity.getId(),
@@ -70,16 +75,17 @@ public class ProductService {
   }
 
   public Page<ProductResponseDTO> getLocalProductsInfo(Long storeId, int page, int size) {
-    // Create a Pageable object with the given page number and page size
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Pageable pageable = PageRequest.of(page, size);
 
-    // Retrieve the paginated list of LocalStoreProductEntity objects using the repository
     Page<LocalStoreProductEntity> localProductPage = localStoreProductRepository.findByStoreId(storeId, pageable);
 
-    // Extract the list of ProductEntity objects from LocalStoreProductEntity objects
     Page<ProductEntity> productPage = localProductPage.map(LocalStoreProductEntity::getProduct);
 
-    // Map ProductEntity objects to ProductResponseDTO objects
     Page<ProductResponseDTO> responsePage = productPage.map(productEntity ->
       new ProductResponseDTO(
         productEntity.getId(),

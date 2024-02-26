@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductNotFoundException;
 import uz.backall.products.ProductRepository;
+import uz.backall.store.StoreEntity;
+import uz.backall.store.StoreNotFoundException;
+import uz.backall.store.StoreRepository;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,9 +22,15 @@ import java.util.stream.Collectors;
 public class SellHistoryService {
   private final ProductRepository productRepository;
   private final SellHistoryRepository repository;
+  private final StoreRepository storeRepository;
 
   @Transactional
   public SellHistoryResponseDTO create(SellHistoryCreateDTO dto) {
+    Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     if (dto == null || dto.getProductId() == null || dto.getCount() <= 0 || dto.getSellingPrice() <= 0) {
       throw new IllegalArgumentException("Invalid SellHistoryCreateDTO object: " + dto);
     }
@@ -56,6 +64,11 @@ public class SellHistoryService {
   }
 
   public Page<SellHistoryInfoDTO> getInfo(Long storeId, int page, int size) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
 
@@ -76,6 +89,4 @@ public class SellHistoryService {
     dto.setCreatedDate(entity.getCreatedDate());
     return dto;
   }
-
-
 }

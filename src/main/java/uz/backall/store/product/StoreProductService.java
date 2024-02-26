@@ -6,6 +6,7 @@ import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductRepository;
 import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.store.StoreEntity;
+import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 
 import java.util.LinkedList;
@@ -19,55 +20,28 @@ public class StoreProductService {
   private final ProductRepository productRepository;
   private final StoreRepository storeRepository;
 
-  public Boolean create(List<StoreProductCreateDTO> dtoList) {
-    for (StoreProductCreateDTO dto : dtoList) {
-      Optional<ProductEntity> byProductId = productRepository.findById(dto.getProductId());
-      Optional<StoreEntity> byStoreId = storeRepository.findById(dto.getStoreId());
+  public Boolean create(StoreProductCreateDTO dto) {
+    Optional<ProductEntity> byProductId = productRepository.findById(dto.getProductId());
+    Optional<StoreEntity> byStoreId = storeRepository.findById(dto.getStoreId());
 
-      // TODO DELETE THAT IN FIRST OCTOBER 2023 SUNDAY
-      Optional<StoreProductEntity> byProductIdInStore = repository.findByProductIdAndStoreId(
-        dto.getProductId(),
-        dto.getStoreId()
-      );
+    Optional<StoreProductEntity> byProductIdInStore = repository.findByProductIdAndStoreId(
+      dto.getProductId(),
+      dto.getStoreId()
+    );
 
-      if (byProductId.isPresent() && byStoreId.isPresent()) {
-        StoreProductEntity storeProduct;
-        if (byProductIdInStore.isEmpty()) {
-          storeProduct = getStoreProductEntity(dto);
-        } else {
-          storeProduct = byProductIdInStore.get();
-          storeProduct.setNds(dto.getNds());
-          storeProduct.setPrice(dto.getPrice());
-          storeProduct.setSellingPrice(dto.getSellingPrice());
-          storeProduct.setPercentage(dto.getPercentage());
-          storeProduct.setCount(dto.getCount());
-        }
-        repository.save(storeProduct);
+    if (byProductId.isPresent() && byStoreId.isPresent()) {
+      StoreProductEntity storeProduct;
+      if (byProductIdInStore.isEmpty()) {
+        storeProduct = getStoreProductEntity(dto);
+      } else {
+        storeProduct = byProductIdInStore.get();
+        storeProduct.setNds(dto.getNds());
+        storeProduct.setPrice(dto.getPrice());
+        storeProduct.setSellingPrice(dto.getSellingPrice());
+        storeProduct.setPercentage(dto.getPercentage());
+        storeProduct.setCount(dto.getCount());
       }
-
-            /* TODO FOR FIRST OCTOBER 2023 SUNDAY
-            Optional<StoreProductEntity> byProductIdInStore = repository.findByProductIdAndStoreIdAndCreatedDateAndExpiredDate(
-                    dto.getProductId(),
-                    dto.getStoreId(),
-                    dto.getCreatedDate(),
-                    dto.getExpiredDate()
-            );
-
-            if (byProductId.isPresent() && byStoreId.isPresent()) {
-                if (byProductIdInStore.isEmpty()) {
-                    StoreProductEntity storeProduct = getStoreProductEntity(dto);
-                    repository.save(storeProduct);
-                } else {
-                    StoreProductEntity storeProduct = byProductIdInStore.get();
-                    storeProduct.setNds(dto.getNds());
-                    storeProduct.setPrice(dto.getPrice());
-                    storeProduct.setSellingPrice(dto.getSellingPrice());
-                    storeProduct.setPercentage(dto.getPercentage());
-                    storeProduct.setCount(dto.getCount());
-                    repository.save(storeProduct);
-                }
-            }
-            */
+      repository.save(storeProduct);
     }
 
     return true;
@@ -123,6 +97,11 @@ public class StoreProductService {
   }
 
   public List<StoreProductInfoDTO> getInfo(Long storeId) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     List<StoreProductEntity> byStoreId = repository.findByStoreId(storeId);
 
     List<StoreProductInfoDTO> result = new LinkedList<>();
@@ -139,6 +118,11 @@ public class StoreProductService {
   }
 
   public List<StoreProductInfoDTO> getInfoByName(Long storeId, String productName) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     List<StoreProductEntity> byStoreId = repository.findByStoreIdAndProductName(storeId, productName);
 
     List<StoreProductInfoDTO> result = new LinkedList<>();
