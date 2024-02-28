@@ -3,6 +3,7 @@ package uz.backall.products;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
   private final ProductService service;
 
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
   @PostMapping("/create")
   public ResponseEntity<ProductResponseDTO> create(
     @RequestBody ProductCreateDTO dto

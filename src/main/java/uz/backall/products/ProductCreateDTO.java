@@ -15,7 +15,7 @@ public class ProductCreateDTO {
   private String name;
 
   @NotNull(message = "Please provide brandId:")
-  private Long brandId;
+  private String brandName;
 
   @NotBlank(message = "Please provide type")
   private ProductType type;

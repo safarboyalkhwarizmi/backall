@@ -31,8 +31,8 @@ public class ProductService {
       throw new StoreNotFoundException("Store not found");
     }
 
-    Optional<BrandEntity> byId = brandRepository.findById(dto.getBrandId());
-    if (byId.isEmpty()) {
+    Optional<BrandEntity> byBrandName = brandRepository.findByName(dto.getBrandName());
+    if (byBrandName.isEmpty()) {
       throw new BrandNotFoundException("Brand not found");
     }
 
@@ -47,10 +47,11 @@ public class ProductService {
         throw new SerialAlreadyExistException("Serial already exist.");
       }
     }
-    // What happens if serial already exist
+
+    BrandEntity brand = byBrandName.get();
 
     ProductEntity product = new ProductEntity();
-    product.setBrandId(dto.getBrandId());
+    product.setBrandId(brand.getId());
     product.setName(dto.getName());
     product.setSerialNumber(dto.getSerialNumber());
     product.setType(dto.getType());
