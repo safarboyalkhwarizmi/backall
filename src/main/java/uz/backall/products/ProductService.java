@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import uz.backall.brands.BrandEntity;
 import uz.backall.brands.BrandNotFoundException;
 import uz.backall.brands.BrandRepository;
+import uz.backall.brands.BrandService;
+import uz.backall.brands.localStoreBrand.LocalStoreBrandEntity;
+import uz.backall.brands.localStoreBrand.LocalStoreBrandRepository;
 import uz.backall.products.localStoreProduct.LocalStoreProductEntity;
 import uz.backall.products.localStoreProduct.LocalStoreProductRepository;
 import uz.backall.store.StoreEntity;
@@ -24,6 +27,7 @@ public class ProductService {
   private final BrandRepository brandRepository;
   private final LocalStoreProductRepository localStoreProductRepository;
   private final StoreRepository storeRepository;
+  private final LocalStoreBrandRepository localStoreBrandRepository;
 
   public ProductResponseDTO create(ProductCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
@@ -32,8 +36,19 @@ public class ProductService {
     }
 
     Optional<BrandEntity> byBrandName = brandRepository.findByName(dto.getBrandName());
+    BrandEntity brand;
+
     if (byBrandName.isEmpty()) {
-      throw new BrandNotFoundException("Brand not found");
+      brand = new BrandEntity();
+      brand.setName(dto.getBrandName());
+      brandRepository.save(brand);
+
+      LocalStoreBrandEntity localStoreBrandEntity = new LocalStoreBrandEntity();
+      localStoreBrandEntity.setBrandId(brand.getId());
+      localStoreBrandEntity.setStoreId(dto.getStoreId());
+      localStoreBrandRepository.save(localStoreBrandEntity);
+    } else {
+      brand = byBrandName.get();
     }
 
     List<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
@@ -47,8 +62,6 @@ public class ProductService {
         throw new SerialAlreadyExistException("Serial already exist.");
       }
     }
-
-    BrandEntity brand = byBrandName.get();
 
     ProductEntity product = new ProductEntity();
     product.setBrandId(brand.getId());
