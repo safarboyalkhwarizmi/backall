@@ -27,6 +27,12 @@ public class StoreProductController {
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getInfo(page, size));
+    return ResponseEntity.ok(
+      service.getInfo(
+        storeId,
+        page,
+        size
+      )
+    );
   }
 }

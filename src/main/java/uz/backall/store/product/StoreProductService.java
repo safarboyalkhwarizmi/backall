@@ -99,7 +99,12 @@ public class StoreProductService {
     return storeProduct;
   }
 
-  public Page<StoreProductResponseDTO> getInfo(Integer page, Integer size) {
+  public Page<StoreProductResponseDTO> getInfo(Long storeId, Integer page, Integer size) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
     Pageable pageable = PageRequest.of(page, size);
 
     Page<StoreProductEntity> productPage = repository.findAll(pageable);
