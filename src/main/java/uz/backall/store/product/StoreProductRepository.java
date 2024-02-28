@@ -22,5 +22,5 @@ public interface StoreProductRepository extends JpaRepository<StoreProductEntity
 
   Optional<StoreProductEntity> findByProductIdAndStoreId(Long productId, Long storeId);
 
-  Page<StoreProductEntity> findAll(Pageable pageable);
+  Page<StoreProductEntity> findByStoreId(Long storeId, Pageable pageable);
 }
