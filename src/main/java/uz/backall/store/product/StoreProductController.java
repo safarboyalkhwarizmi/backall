@@ -1,6 +1,7 @@
 package uz.backall.store.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,20 +21,11 @@ public class StoreProductController {
     return ResponseEntity.ok(service.create(dto));
   }
 
-  /* FOR GETTING INFO */
   @GetMapping("/get/info")
-  public ResponseEntity<List<StoreProductInfoDTO>> getInfo(
-    @RequestParam Long storeId
+  public ResponseEntity<Page<StoreProductResponseDTO>> getGlobalInfo(
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getInfo(storeId));
-  }
-
-  /* FOR SEARCHING */
-  @GetMapping("/search")
-  public ResponseEntity<List<StoreProductInfoDTO>> searchInfo(
-    @RequestParam Long storeId,
-    @RequestParam String productName
-  ) {
-    return ResponseEntity.ok(service.getInfoByName(storeId, productName));
+    return ResponseEntity.ok(service.getInfo(page, size));
   }
 }

@@ -1,6 +1,9 @@
 package uz.backall.store.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.backall.products.ProductEntity;
 import uz.backall.products.ProductRepository;
@@ -96,45 +99,24 @@ public class StoreProductService {
     return storeProduct;
   }
 
-  public List<StoreProductInfoDTO> getInfo(Long storeId) {
-    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
-    if (storeById.isEmpty()) {
-      throw new StoreNotFoundException("Store not found");
-    }
+  public Page<StoreProductResponseDTO> getInfo(Integer page, Integer size) {
+    Pageable pageable = PageRequest.of(page, size);
 
-    List<StoreProductEntity> byStoreId = repository.findByStoreId(storeId);
+    Page<StoreProductEntity> productPage = repository.findAll(pageable);
 
-    List<StoreProductInfoDTO> result = new LinkedList<>();
-    for (StoreProductEntity storeProduct : byStoreId) {
-      StoreProductInfoDTO info = new StoreProductInfoDTO();
-      info.setProductId(storeProduct.getProductId());
-      info.setName(storeProduct.getProduct().getName());
-      info.setProductCount(String.valueOf(storeProduct.getCount()));
+    Page<StoreProductResponseDTO> responsePage = productPage.map(productEntity ->
+      new StoreProductResponseDTO(
+        productEntity.getId(),
+        productEntity.getProductId(),
+        productEntity.getNds(),
+        productEntity.getPrice(),
+        productEntity.getSellingPrice(),
+        productEntity.getPercentage(),
+        productEntity.getCount(),
+        productEntity.getCountType()
+      )
+    );
 
-      result.add(info);
-    }
-
-    return result;
-  }
-
-  public List<StoreProductInfoDTO> getInfoByName(Long storeId, String productName) {
-    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
-    if (storeById.isEmpty()) {
-      throw new StoreNotFoundException("Store not found");
-    }
-
-    List<StoreProductEntity> byStoreId = repository.findByStoreIdAndProductName(storeId, productName);
-
-    List<StoreProductInfoDTO> result = new LinkedList<>();
-    for (StoreProductEntity storeProduct : byStoreId) {
-      StoreProductInfoDTO info = new StoreProductInfoDTO();
-      info.setProductId(storeProduct.getProductId());
-      info.setName(storeProduct.getProduct().getName());
-      info.setProductCount(String.valueOf(storeProduct.getCount()));
-
-      result.add(info);
-    }
-
-    return result;
+    return responsePage;
   }
 }
