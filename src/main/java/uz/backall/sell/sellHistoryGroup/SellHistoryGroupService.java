@@ -72,6 +72,7 @@ public class SellHistoryGroupService {
 
   private SellHistoryGroupResponseDTO mapToDTO(SellHistoryGroupEntity sellHistoryGroupEntity) {
     SellHistoryGroupResponseDTO sellHistoryGroupResponseDTO = new SellHistoryGroupResponseDTO();
+    sellHistoryGroupResponseDTO.setId(sellHistoryGroupEntity.getId());
     sellHistoryGroupResponseDTO.setSellGroupId(sellHistoryGroupEntity.getSellGroupId());
     sellHistoryGroupResponseDTO.setSellHistoryId(sellHistoryGroupResponseDTO.getSellHistoryId());
     return sellHistoryGroupResponseDTO;

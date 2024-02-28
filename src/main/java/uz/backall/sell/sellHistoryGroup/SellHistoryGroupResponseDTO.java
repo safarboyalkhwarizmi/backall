@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SellHistoryGroupResponseDTO {
+  private Long id;
   private Long sellGroupId;
   private Long sellHistoryId;
 }

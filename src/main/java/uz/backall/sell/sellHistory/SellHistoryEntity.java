@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import uz.backall.products.ProductEntity;
 import uz.backall.store.StoreEntity;
-import uz.backall.store.product.StoreProductEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,7 +24,7 @@ public class SellHistoryEntity {
   private String countType;
 
   private LocalDateTime createdDate;
-  
+
   @Column(name = "product_id")
   private Long productId;
 
