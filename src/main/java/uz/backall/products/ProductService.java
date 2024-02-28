@@ -2,11 +2,11 @@ package uz.backall.products;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uz.backall.brands.BrandEntity;
+import uz.backall.brands.BrandNotFoundException;
 import uz.backall.brands.BrandRepository;
 import uz.backall.products.localStoreProduct.LocalStoreProductEntity;
 import uz.backall.products.localStoreProduct.LocalStoreProductRepository;
@@ -14,6 +14,7 @@ import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class ProductService {
   private final LocalStoreProductRepository localStoreProductRepository;
   private final StoreRepository storeRepository;
 
-  public Boolean create(ProductCreateDTO dto) {
+  public ProductResponseDTO create(ProductCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -32,13 +33,21 @@ public class ProductService {
 
     Optional<BrandEntity> byId = brandRepository.findById(dto.getBrandId());
     if (byId.isEmpty()) {
-      return false;
+      throw new BrandNotFoundException("Brand not found");
     }
 
-    Optional<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
-    if (bySerialNumber.isPresent()) {
-      return false;
+    List<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
+    if (bySerialNumber.size() == 2) {
+      throw new SerialAlreadyExistException("Serial already exist.");
     }
+
+    if (!bySerialNumber.isEmpty()) {
+      ProductEntity productEntity = bySerialNumber.get(0);
+      if (productEntity.getType() == dto.getType()) {
+        throw new SerialAlreadyExistException("Serial already exist.");
+      }
+    }
+    // What happens if serial already exist
 
     ProductEntity product = new ProductEntity();
     product.setBrandId(dto.getBrandId());
@@ -54,7 +63,13 @@ public class ProductService {
       localStoreProduct.setStoreId(dto.getStoreId());
       localStoreProductRepository.save(localStoreProduct);
     }
-    return true;
+
+    return new ProductResponseDTO(
+      product.getId(),
+      product.getName(),
+      product.getSerialNumber(),
+      product.getBrand().getName()
+    );
   }
 
   public Page<ProductResponseDTO> getGlobalProductsInfo(int page, int size) {
@@ -67,7 +82,7 @@ public class ProductService {
         productEntity.getId(),
         productEntity.getSerialNumber(),
         productEntity.getName(),
-        productEntity.getBrandId()
+        productEntity.getBrand().getName()
       )
     );
 
@@ -91,7 +106,7 @@ public class ProductService {
         productEntity.getId(),
         productEntity.getSerialNumber(),
         productEntity.getName(),
-        productEntity.getBrandId()
+        productEntity.getBrand().getName()
       )
     );
 

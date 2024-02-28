@@ -12,7 +12,7 @@ public class ProductController {
   private final ProductService service;
 
   @PostMapping("/create")
-  public ResponseEntity<Boolean> create(
+  public ResponseEntity<ProductResponseDTO> create(
     @RequestBody ProductCreateDTO dto
   ) {
     return ResponseEntity.ok(service.create(dto));
