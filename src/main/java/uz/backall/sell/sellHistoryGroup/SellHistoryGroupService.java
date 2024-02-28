@@ -50,7 +50,11 @@ public class SellHistoryGroupService {
     sellHistoryGroup.setStoreId(dto.getStoreId());
     sellHistoryGroupRepository.save(sellHistoryGroup);
 
-    return new SellHistoryGroupResponseDTO(sellHistoryGroup.getId(), sellHistoryGroup.getSellGroupId(), sellHistoryGroup.getSellHistoryId());
+    return new SellHistoryGroupResponseDTO(
+      sellHistoryGroup.getId(),
+      sellHistoryGroup.getSellGroupId(),
+      sellHistoryGroup.getSellHistoryId()
+    );
   }
 
   public Page<SellHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size) {
