@@ -28,7 +28,7 @@ public class ProfitHistoryGroupService {
   private final ProfitHistoryRepository profitHistoryRepository;
   private final StoreRepository storeRepository;
 
-  public Boolean create(ProfitHistoryGroupCreateDTO dto) {
+  public ProfitHistoryGroupResponseDTO create(ProfitHistoryGroupCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -51,7 +51,11 @@ public class ProfitHistoryGroupService {
     profitHistoryGroup.setStoreId(dto.getStoreId());
     profitHistoryGroupRepository.save(profitHistoryGroup);
 
-    return true;
+    return new ProfitHistoryGroupResponseDTO(
+      profitHistoryGroup.getId(),
+      profitHistoryGroup.getProfitGroupId(),
+      profitHistoryGroup.getProfitHistoryId()
+    );
   }
 
   public Page<ProfitHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size) {
@@ -72,9 +76,6 @@ public class ProfitHistoryGroupService {
   }
 
   private ProfitHistoryGroupResponseDTO mapToDTO(ProfitHistoryGroupEntity profitHistoryGroupEntity) {
-    ProfitHistoryGroupResponseDTO profitHistoryGroupResponseDTO = new ProfitHistoryGroupResponseDTO();
-    profitHistoryGroupResponseDTO.setProfitGroupId(profitHistoryGroupEntity.getProfitGroupId());
-    profitHistoryGroupResponseDTO.setProfitHistoryId(profitHistoryGroupResponseDTO.getProfitHistoryId());
-    return profitHistoryGroupResponseDTO;
+    return new ProfitHistoryGroupResponseDTO(profitHistoryGroupEntity.getId(), profitHistoryGroupEntity.getProfitGroupId(), profitHistoryGroupEntity.getProfitHistoryId());
   }
 }

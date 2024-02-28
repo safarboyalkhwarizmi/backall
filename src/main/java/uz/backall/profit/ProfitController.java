@@ -12,6 +12,7 @@ import uz.backall.profit.profitHistory.ProfitHistoryCreateDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryInfoDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryService;
+import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupCreateDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupResponseDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupService;
 
@@ -33,6 +34,26 @@ public class ProfitController {
     );
   }
 
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/history/create")
+  public ResponseEntity<ProfitHistoryResponseDTO> createSellHistory(
+    @RequestBody ProfitHistoryCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      profitHistoryService.create(dto)
+    );
+  }
+
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/link/create")
+  public ResponseEntity<ProfitHistoryGroupResponseDTO> createSellHistory(
+    @RequestBody ProfitHistoryGroupCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      profitHistoryGroupService.create(dto)
+    );
+  }
+
   @GetMapping("/group/get")
   public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoSellGroup(
     @RequestParam(value = "storeId") Long storeId,
@@ -41,16 +62,6 @@ public class ProfitController {
   ) {
     return ResponseEntity.ok(
       profitGroupService.getInfo(storeId, page, size)
-    );
-  }
-
-  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
-  @PostMapping("/history/create")
-  public ResponseEntity<ProfitHistoryResponseDTO> createSellHistory(
-    @RequestBody ProfitHistoryCreateDTO dto
-  ) {
-    return ResponseEntity.ok(
-      profitHistoryService.create(dto)
     );
   }
 
