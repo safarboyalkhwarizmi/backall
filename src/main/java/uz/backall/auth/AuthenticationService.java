@@ -53,24 +53,29 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
 
+    Long storeId;
     if (request.getRole().equals(Role.BOSS)) {
-      storeService.create(savedUser.getId(), request.getStoreName());
+      storeId = storeService.create(savedUser.getId(), request.getStoreName());
+    } else {
+      Optional<User> byEmailAndRole = repository.findByEmailAndRole(savedUser.getEmail(), Role.BOSS);
+      if (byEmailAndRole.isEmpty()) {
+        throw new BossNotFoundException("Boss not found");
+      }
+
+      User bossProfile = byEmailAndRole.get();
+      storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
     }
+
 
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
       .role(request.getRole())
+      .storeId(storeId)
       .build();
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
-//    authenticationManager.authenticate(
-//      new UsernamePasswordAuthenticationToken(
-//        request.getEmail(),
-//        request.getPassword()
-//      )
-//    );
     List<User> byEmailAndPassword = repository.findByEmailAndPassword(
       request.getEmail(), MD5.md5(request.getPassword())
     );
@@ -80,6 +85,15 @@ public class AuthenticationService {
 
     var user = repository.findByEmailAndPinCode(request.getEmail(), request.getPinCode())
       .orElseThrow();
+
+    Optional<User> byEmailAndRole = repository.findByEmailAndRole(user.getEmail(), Role.BOSS);
+    if (byEmailAndRole.isEmpty()) {
+      throw new BossNotFoundException("Boss not found");
+    }
+
+    User bossProfile = byEmailAndRole.get();
+    Long storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
+
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserTokens(user);
@@ -88,6 +102,7 @@ public class AuthenticationService {
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
       .role(user.getRole())
+      .storeId(storeId)
       .build();
   }
 

@@ -15,13 +15,6 @@ import java.util.List;
 public class StoreController {
   private final StoreService service;
 
-  @PostMapping("/create")
-  public ResponseEntity<Boolean> create(
-    @RequestParam String name
-  ) {
-    return ResponseEntity.ok(service.create(getUserId(), name));
-  }
-
   @GetMapping("/get/stores")
   public ResponseEntity<List<StoreResponseDTO>> getStores() {
     return ResponseEntity.ok(service.getStoresByUserId(getUserId()));

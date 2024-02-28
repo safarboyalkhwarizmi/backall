@@ -15,7 +15,7 @@ public class StoreService {
   private final StoreRepository storeRepository;
   private final UserRepository userRepository;
 
-  public Boolean create(Long userId, String storeName) {
+  public Long create(Long userId, String storeName) {
     Optional<User> byId = userRepository.findById(userId);
     if (byId.isEmpty()) {
       throw new StoreAlreadyExistsException("Store already exists");
@@ -25,11 +25,25 @@ public class StoreService {
     store.setName(storeName);
     store.setUserId(userId);
     storeRepository.save(store);
-    return true;
+    return store.getId();
   }
 
   public List<StoreResponseDTO> getStoresByUserId(Long userId) {
     List<StoreEntity> byUserId = storeRepository.getByUserId(userId);
+
+    List<StoreResponseDTO> result = new LinkedList<>();
+    for (StoreEntity store : byUserId) {
+      StoreResponseDTO response = new StoreResponseDTO();
+      response.setId(store.getId());
+      response.setName(store.getName());
+      result.add(response);
+    }
+
+    return result;
+  }
+
+  public List<StoreResponseDTO> getStoresByUserEmail(String email) {
+    List<StoreEntity> byUserId = storeRepository.getByUser_Email(email);
 
     List<StoreResponseDTO> result = new LinkedList<>();
     for (StoreEntity store : byUserId) {
