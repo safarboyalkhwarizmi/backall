@@ -28,7 +28,7 @@ public class SellHistoryGroupService {
   private final SellHistoryRepository sellHistoryRepository;
   private final StoreRepository storeRepository;
 
-  public Boolean create(SellHistoryGroupCreateDTO dto) {
+  public SellHistoryGroupResponseDTO create(SellHistoryGroupCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -50,7 +50,7 @@ public class SellHistoryGroupService {
     sellHistoryGroup.setStoreId(dto.getStoreId());
     sellHistoryGroupRepository.save(sellHistoryGroup);
 
-    return true;
+    return new SellHistoryGroupResponseDTO(sellHistoryGroup.getId(), sellHistoryGroup.getSellGroupId(), sellHistoryGroup.getSellHistoryId());
   }
 
   public Page<SellHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size) {
@@ -71,10 +71,11 @@ public class SellHistoryGroupService {
   }
 
   private SellHistoryGroupResponseDTO mapToDTO(SellHistoryGroupEntity sellHistoryGroupEntity) {
-    SellHistoryGroupResponseDTO sellHistoryGroupResponseDTO = new SellHistoryGroupResponseDTO();
-    sellHistoryGroupResponseDTO.setId(sellHistoryGroupEntity.getId());
-    sellHistoryGroupResponseDTO.setSellGroupId(sellHistoryGroupEntity.getSellGroupId());
-    sellHistoryGroupResponseDTO.setSellHistoryId(sellHistoryGroupResponseDTO.getSellHistoryId());
+    SellHistoryGroupResponseDTO sellHistoryGroupResponseDTO = new SellHistoryGroupResponseDTO(
+      sellHistoryGroupEntity.getId(),
+      sellHistoryGroupEntity.getSellGroupId(),
+      sellHistoryGroupEntity.getSellHistoryId()
+    );
     return sellHistoryGroupResponseDTO;
   }
 }

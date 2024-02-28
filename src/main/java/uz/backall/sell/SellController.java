@@ -12,6 +12,7 @@ import uz.backall.sell.sellHistory.SellHistoryCreateDTO;
 import uz.backall.sell.sellHistory.SellHistoryInfoDTO;
 import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryService;
+import uz.backall.sell.sellHistoryGroup.SellHistoryGroupCreateDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupService;
 
@@ -33,6 +34,26 @@ public class SellController {
     );
   }
 
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/history/create")
+  public ResponseEntity<SellHistoryResponseDTO> createSellHistory(
+    @RequestBody SellHistoryCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryService.create(dto)
+    );
+  }
+
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/link/create")
+  public ResponseEntity<SellHistoryGroupResponseDTO> createSellHistory(
+    @RequestBody SellHistoryGroupCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryGroupService.create(dto)
+    );
+  }
+
   @GetMapping("/group/get")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroup(
     @RequestParam(value = "storeId") Long storeId,
@@ -41,16 +62,6 @@ public class SellController {
   ) {
     return ResponseEntity.ok(
       sellGroupService.getInfo(storeId, page, size)
-    );
-  }
-
-  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
-  @PostMapping("/history/create")
-  public ResponseEntity<SellHistoryResponseDTO> createSellHistory(
-    @RequestBody SellHistoryCreateDTO dto
-  ) {
-    return ResponseEntity.ok(
-      sellHistoryService.create(dto)
     );
   }
 
