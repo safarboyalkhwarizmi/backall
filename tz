@@ -1,0 +1,13 @@
+`CREATE TABLE IF NOT EXISTS profit_amount_date (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              global_id INTEGER,
+              date TEXT NOT NULL,
+              amount DOUBLE NOT NULL
+            );`,
+
+            `CREATE TABLE IF NOT EXISTS sell_amount_date (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              global_id INTEGER,
+              date TEXT NOT NULL,
+              amount DOUBLE NOT NULL
+            );`,

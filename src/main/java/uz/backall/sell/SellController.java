@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.backall.sell.sellAmountDate.SellAmountDateCreateDTO;
+import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
+import uz.backall.sell.sellAmountDate.SellAmountDateService;
 import uz.backall.sell.sellGroup.SellGroupCreateDTO;
 import uz.backall.sell.sellGroup.SellGroupResponseDTO;
 import uz.backall.sell.sellGroup.SellGroupService;
@@ -23,6 +26,7 @@ public class SellController {
   private final SellGroupService sellGroupService;
   private final SellHistoryService sellHistoryService;
   private final SellHistoryGroupService sellHistoryGroupService;
+  private final SellAmountDateService sellAmountDateService;
 
   @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
   @PostMapping("/group/create")
@@ -51,6 +55,27 @@ public class SellController {
   ) {
     return ResponseEntity.ok(
       sellHistoryGroupService.create(dto)
+    );
+  }
+
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/amount/date/create")
+  public ResponseEntity<SellAmountDateResponse> createSellAmountDate(
+    @RequestBody SellAmountDateCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      sellAmountDateService.create(dto)
+    );
+  }
+
+  @GetMapping("/amount/date/get")
+  public ResponseEntity<Page<SellAmountDateResponse>> getSellAmountDateInfo(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellAmountDateService.getInfo(storeId, page, size)
     );
   }
 
