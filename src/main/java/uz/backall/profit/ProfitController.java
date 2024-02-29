@@ -5,6 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import uz.backall.profit.profitAmountDate.ProfitAmountDateCreateDTO;
+import uz.backall.profit.profitAmountDate.ProfitAmountDateRepository;
+import uz.backall.profit.profitAmountDate.ProfitAmountDateResponse;
+import uz.backall.profit.profitAmountDate.ProfitAmountDateService;
 import uz.backall.profit.profitGroup.ProfitGroupCreateDTO;
 import uz.backall.profit.profitGroup.ProfitGroupResponseDTO;
 import uz.backall.profit.profitGroup.ProfitGroupService;
@@ -23,6 +27,7 @@ public class ProfitController {
   private final ProfitGroupService profitGroupService;
   private final ProfitHistoryService profitHistoryService;
   private final ProfitHistoryGroupService profitHistoryGroupService;
+  private final ProfitAmountDateService profitAmountDateService;
 
   @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
   @PostMapping("/group/create")
@@ -51,6 +56,27 @@ public class ProfitController {
   ) {
     return ResponseEntity.ok(
       profitHistoryGroupService.create(dto)
+    );
+  }
+
+  @PreAuthorize("hasAnyRole('SELLER', 'SELLER_BOSS')")
+  @PostMapping("/amount/date/create")
+  public ResponseEntity<ProfitAmountDateResponse> createSellHistory(
+    @RequestBody ProfitAmountDateCreateDTO dto
+  ) {
+    return ResponseEntity.ok(
+      profitAmountDateService.create(dto)
+    );
+  }
+
+  @GetMapping("/amount/date/get")
+  public ResponseEntity<Page<ProfitAmountDateResponse>> getAmountDateInfo(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitAmountDateService.getInfo(storeId, page, size)
     );
   }
 
