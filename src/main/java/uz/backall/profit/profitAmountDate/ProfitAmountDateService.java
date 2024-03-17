@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
+import uz.backall.store.StoreRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfitAmountDateService {
   private final ProfitAmountDateRepository profitAmountDateRepository;
+  private final StoreRepository storeRepository;
 
   public ProfitAmountDateResponse create(ProfitAmountDateCreateDTO dto) {
     ProfitAmountDateEntity profitAmountDate = new ProfitAmountDateEntity();
@@ -36,7 +39,7 @@ public class ProfitAmountDateService {
     int page,
     int size
   ) {
-    Optional<ProfitAmountDateEntity> storeById = profitAmountDateRepository.findById(storeId);
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
