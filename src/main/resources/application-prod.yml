@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
@@ -23,7 +23,7 @@ server:
   port:
     80
   address:
-    backall.uz
+    206.189.149.79
 app:
   url:
     http://${server.address}:${server.port}

@@ -16,6 +16,7 @@ import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
 import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.store.StoreAlreadyExistsException;
+import uz.backall.store.StoreNotFoundException;
 
 
 import java.util.*;
@@ -65,6 +66,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({SellingPriceException.class})
   private ResponseEntity<?> handler(SellingPriceException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({StoreNotFoundException.class})
+  private ResponseEntity<?> handler(StoreNotFoundException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
 }

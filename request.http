@@ -1,0 +1,11 @@
+POST http://192.168.0.105:8080/api/v1/product/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmdAYmFja2FsbC51ejQzMjEiLCJpYXQiOjE3MTAxNTk5MjMsImV4cCI6MTcxMDI0NjMyM30.foGCM8MelxlwIfvdaRV8fzhcm1H21RTt9DoQ-CdSikk
+Content-Type: application/json
+
+{
+  "serialNumber": "string",
+  "name": "string",
+  "brandName": "string",
+  "type": "LOCAL",
+  "storeId": 1
+}

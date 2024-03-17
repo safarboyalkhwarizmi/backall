@@ -5,10 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uz.backall.brands.BrandEntity;
-import uz.backall.brands.BrandNotFoundException;
-import uz.backall.brands.BrandRepository;
-import uz.backall.brands.BrandService;
+import uz.backall.brands.*;
 import uz.backall.brands.localStoreBrand.LocalStoreBrandEntity;
 import uz.backall.brands.localStoreBrand.LocalStoreBrandRepository;
 import uz.backall.products.localStoreProduct.LocalStoreProductEntity;
@@ -41,13 +38,15 @@ public class ProductService {
     if (byBrandName.isEmpty()) {
       brand = new BrandEntity();
       brand.setName(dto.getBrandName());
+      brand.setBrandType(BrandType.LOCAL);
       brandRepository.save(brand);
 
       LocalStoreBrandEntity localStoreBrandEntity = new LocalStoreBrandEntity();
       localStoreBrandEntity.setBrandId(brand.getId());
       localStoreBrandEntity.setStoreId(dto.getStoreId());
       localStoreBrandRepository.save(localStoreBrandEntity);
-    } else {
+    }
+    else {
       brand = byBrandName.get();
     }
 
@@ -68,7 +67,7 @@ public class ProductService {
     product.setName(dto.getName());
     product.setSerialNumber(dto.getSerialNumber());
     product.setType(dto.getType());
-    productRepository.save(product);
+    product = productRepository.save(product);
 
     if (dto.getType() == ProductType.LOCAL) {
       // THE PRODUCTS CREATED BY STORE
@@ -82,7 +81,7 @@ public class ProductService {
       product.getId(),
       product.getName(),
       product.getSerialNumber(),
-      product.getBrand().getName()
+      brand.getName()
     );
   }
 

@@ -32,6 +32,8 @@ public class SellGroupService {
     sellGroup.setStoreId(dto.getStoreId());
     repository.save(sellGroup);
 
+    System.out.println(sellGroup);
+
     return mapToDTO(sellGroup);
   }
 
