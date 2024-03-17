@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ProfitHistoryInfoDTO {
-  private Long id, storeProductId;
+  private Long id, productId;
   private Double count, profit;
   private String countType;
   private LocalDateTime createdDate;

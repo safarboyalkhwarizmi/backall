@@ -31,7 +31,7 @@ public class SellHistoryService {
       throw new StoreNotFoundException("Store not found");
     }
 
-    if (dto == null || dto.getProductId() == null || dto.getCount() <= 0 || dto.getSellingPrice() <= 0) {
+    if (dto == null || dto.getProductId() == null) {
       throw new IllegalArgumentException("Invalid SellHistoryCreateDTO object: " + dto);
     }
 
@@ -82,7 +82,7 @@ public class SellHistoryService {
   private SellHistoryInfoDTO mapToDTO(SellHistoryEntity entity) {
     SellHistoryInfoDTO dto = new SellHistoryInfoDTO();
     dto.setId(entity.getId());
-    dto.setStoreProductId(entity.getProduct().getId());
+    dto.setProductId(entity.getProduct().getId());
     dto.setCount(entity.getCount());
     dto.setSellingPrice(entity.getSellingPrice());
     dto.setCountType(entity.getCountType());

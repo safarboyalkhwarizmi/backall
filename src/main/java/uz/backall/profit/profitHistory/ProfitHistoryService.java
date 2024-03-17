@@ -83,7 +83,7 @@ public class ProfitHistoryService {
   private ProfitHistoryInfoDTO mapToDTO(ProfitHistoryEntity entity) {
     ProfitHistoryInfoDTO dto = new ProfitHistoryInfoDTO();
     dto.setId(entity.getId());
-    dto.setStoreProductId(entity.getProduct().getId());
+    dto.setProductId(entity.getProduct().getId());
     dto.setCount(entity.getCount());
     dto.setProfit(entity.getProfit());
     dto.setCountType(entity.getCountType());

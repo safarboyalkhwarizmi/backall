@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SellHistoryInfoDTO {
-  private Long id, storeProductId;
+  private Long id, productId;
   private Double count, sellingPrice;
   private String countType;
   private LocalDateTime createdDate;
