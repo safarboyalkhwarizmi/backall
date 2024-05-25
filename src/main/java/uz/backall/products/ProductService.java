@@ -13,6 +13,8 @@ import uz.backall.products.localStoreProduct.LocalStoreProductRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +47,7 @@ public class ProductService {
       localStoreBrandEntity.setBrandId(brand.getId());
       localStoreBrandEntity.setStoreId(dto.getStoreId());
       localStoreBrandRepository.save(localStoreBrandEntity);
-    }
-    else {
+    } else {
       brand = byBrandName.get();
     }
 
@@ -102,7 +103,7 @@ public class ProductService {
     return responsePage;
   }
 
-  public Page<ProductResponseDTO> getLocalProductsInfo(Long storeId, int page, int size) {
+  public Page<ProductResponseDTO> getLocalProductsInfo(Long storeId, int page, int size, User user) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -114,15 +115,55 @@ public class ProductService {
 
     Page<ProductEntity> productPage = localProductPage.map(LocalStoreProductEntity::getProduct);
 
-    Page<ProductResponseDTO> responsePage = productPage.map(productEntity ->
-      new ProductResponseDTO(
+    Page<ProductResponseDTO> responsePage = productPage.map(productEntity -> {
+        productEntity.setIsOwnerDownloaded(true);
+        productRepository.save(productEntity);
+
+        return new ProductResponseDTO(
+          productEntity.getId(),
+          productEntity.getSerialNumber(),
+          productEntity.getName(),
+          productEntity.getBrand().getName()
+        );
+      }
+    );
+
+    return responsePage;
+  }
+
+  public Page<ProductResponseDTO> getLocalProductsNotDownloaded(Long storeId, int page, int size, User user) {
+    // Check if the user has the BOSS role
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    // Find the store by ID and handle the case where the store is not found
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    // Create a pageable request
+    Pageable pageable = PageRequest.of(page, size);
+
+    // Find local store products that have not been downloaded by the owner
+    Page<LocalStoreProductEntity> localProductPage = localStoreProductRepository.findByStoreIdAndProductIsOwnerDownloadedFalse(storeId, pageable);
+
+    // Map local products to product entities and update the downloaded status
+    Page<ProductResponseDTO> responsePage = localProductPage.map(localStoreProductEntity -> {
+      ProductEntity productEntity = localStoreProductEntity.getProduct();
+      productEntity.setIsOwnerDownloaded(true);
+      productRepository.save(productEntity);
+
+      return new ProductResponseDTO(
         productEntity.getId(),
         productEntity.getSerialNumber(),
         productEntity.getName(),
         productEntity.getBrand().getName()
-      )
-    );
+      );
+    });
 
+    // Return the final page of ProductResponseDTO
     return responsePage;
   }
 }

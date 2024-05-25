@@ -30,4 +30,7 @@ public class ProductEntity {
   @Column
   @Enumerated(EnumType.STRING)
   private ProductType type;
+
+  @Column
+  private Boolean isOwnerDownloaded = false;
 }

@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
     ),
     @Server(
       description = "PROD ENV",
-      url = "http://backall.uz"
+      url = "http://api.backall.uz"
     )
   },
   security = {

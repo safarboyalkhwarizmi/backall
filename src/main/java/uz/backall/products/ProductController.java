@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import uz.backall.user.User;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -34,6 +37,21 @@ public class ProductController {
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getLocalProductsInfo(storeId, page, size));
+    return ResponseEntity.ok(service.getLocalProductsInfo(storeId, page, size, getUser()));
+  }
+
+  @GetMapping("/get/local/info/not/downloaded")
+  public ResponseEntity<Page<ProductResponseDTO>> getLocalInfoNotDownloadedOnlyForBoss(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(service.getLocalProductsNotDownloaded(storeId, page, size, getUser()));
+  }
+
+  private User getUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    return (User) authentication.getPrincipal();
   }
 }
