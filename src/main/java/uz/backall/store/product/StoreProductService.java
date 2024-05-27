@@ -49,6 +49,7 @@ public class StoreProductService {
         storeProduct.setSellingPrice(dto.getSellingPrice());
         storeProduct.setPercentage(dto.getPercentage());
         storeProduct.setCount(dto.getCount());
+        storeProduct.setIsOwnerDownloaded(false);
 
         if (dto.getPercentage() == null && dto.getSellingPrice() != null) {
           if (dto.getPrice() > dto.getSellingPrice()) {

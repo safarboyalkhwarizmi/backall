@@ -59,7 +59,7 @@ public class SellHistoryService {
       storeProductEntity.setCount(storeProductEntity.getCount() - dto.getCount());
     }
 
-    storeProductEntity.setIsOwnerDownloaded(true);
+    storeProductEntity.setIsOwnerDownloaded(false);
     storeProductRepository.save(storeProductEntity);
 
     SellHistoryEntity sellHistory = new SellHistoryEntity();
