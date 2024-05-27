@@ -20,7 +20,9 @@ public class ProductController {
   public ResponseEntity<ProductResponseDTO> create(
     @RequestBody ProductCreateDTO dto
   ) {
-    return ResponseEntity.ok(service.create(dto));
+    return ResponseEntity.ok(
+      service.create(dto)
+    );
   }
 
   @GetMapping("/get/global/info")
@@ -28,7 +30,9 @@ public class ProductController {
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getGlobalProductsInfo(page, size));
+    return ResponseEntity.ok(
+      service.getGlobalProductsInfo(page, size)
+    );
   }
 
   @GetMapping("/get/local/info")
@@ -37,7 +41,11 @@ public class ProductController {
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getLocalProductsInfo(storeId, page, size, getUser()));
+    return ResponseEntity.ok(
+      service.getLocalProductsInfo(
+        storeId, page, size, getUser()
+      )
+    );
   }
 
   @GetMapping("/get/local/info/not/downloaded")
@@ -46,7 +54,11 @@ public class ProductController {
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return ResponseEntity.ok(service.getLocalProductsNotDownloaded(storeId, page, size, getUser()));
+    return ResponseEntity.ok(
+      service.getLocalProductsNotDownloaded(
+        storeId, page, size, getUser()
+      )
+    );
   }
 
   private User getUser() {

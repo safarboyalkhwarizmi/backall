@@ -12,6 +12,8 @@ import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.Optional;
 
@@ -131,7 +133,9 @@ public class StoreProductService {
     return storeProduct;
   }
 
-  public Page<StoreProductResponseDTO> getInfo(Long storeId, Integer page, Integer size) {
+  public Page<StoreProductResponseDTO> getInfo(
+    Long storeId, Integer page, Integer size, User user
+  ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -141,19 +145,57 @@ public class StoreProductService {
 
     Page<StoreProductEntity> productPage = storeProductRepository.findAll(pageable);
 
-    Page<StoreProductResponseDTO> responsePage = productPage.map(productEntity ->
-      new StoreProductResponseDTO(
-        productEntity.getId(),
-        productEntity.getProductId(),
-        productEntity.getNds(),
-        productEntity.getPrice(),
-        productEntity.getSellingPrice(),
-        productEntity.getPercentage(),
-        productEntity.getCount(),
-        productEntity.getCountType()
-      )
-    );
+    return productPage.map(productEntity -> {
+        if (user.getRole().equals(Role.BOSS)) {
+          productEntity.setIsOwnerDownloaded(true);
+          storeProductRepository.save(productEntity);
+        }
 
-    return responsePage;
+        return new StoreProductResponseDTO(
+          productEntity.getId(),
+          productEntity.getProductId(),
+          productEntity.getNds(),
+          productEntity.getPrice(),
+          productEntity.getSellingPrice(),
+          productEntity.getPercentage(),
+          productEntity.getCount(),
+          productEntity.getCountType()
+        );
+      }
+    );
+  }
+
+  public Page<StoreProductResponseDTO> getInfoNotDownloaded(
+    Long storeId, Integer page, Integer size, User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<StoreProductEntity> productPage = storeProductRepository.findByIsOwnerDownloadedFalse(pageable);
+
+    return productPage.map(productEntity -> {
+        productEntity.setIsOwnerDownloaded(true);
+        storeProductRepository.save(productEntity);
+
+        return new StoreProductResponseDTO(
+          productEntity.getId(),
+          productEntity.getProductId(),
+          productEntity.getNds(),
+          productEntity.getPrice(),
+          productEntity.getSellingPrice(),
+          productEntity.getPercentage(),
+          productEntity.getCount(),
+          productEntity.getCountType()
+        );
+      }
+    );
   }
 }

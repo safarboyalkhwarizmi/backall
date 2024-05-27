@@ -115,9 +115,12 @@ public class ProductService {
 
     Page<ProductEntity> productPage = localProductPage.map(LocalStoreProductEntity::getProduct);
 
-    Page<ProductResponseDTO> responsePage = productPage.map(productEntity -> {
-        productEntity.setIsOwnerDownloaded(true);
-        productRepository.save(productEntity);
+
+    return productPage.map(productEntity -> {
+        if (user.getRole().equals(Role.BOSS)) {
+          productEntity.setIsOwnerDownloaded(true);
+          productRepository.save(productEntity);
+        }
 
         return new ProductResponseDTO(
           productEntity.getId(),
@@ -127,29 +130,28 @@ public class ProductService {
         );
       }
     );
-
-    return responsePage;
   }
 
-  public Page<ProductResponseDTO> getLocalProductsNotDownloaded(Long storeId, int page, int size, User user) {
-    // Check if the user has the BOSS role
+  public Page<ProductResponseDTO> getLocalProductsNotDownloaded(
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 
-    // Find the store by ID and handle the case where the store is not found
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
 
-    // Create a pageable request
     Pageable pageable = PageRequest.of(page, size);
 
-    // Find local store products that have not been downloaded by the owner
-    Page<LocalStoreProductEntity> localProductPage = localStoreProductRepository.findByStoreIdAndProductIsOwnerDownloadedFalse(storeId, pageable);
+    Page<LocalStoreProductEntity> localProductPage =
+      localStoreProductRepository.findByStoreIdAndProductIsOwnerDownloadedFalse(storeId, pageable);
 
-    // Map local products to product entities and update the downloaded status
     Page<ProductResponseDTO> responsePage = localProductPage.map(localStoreProductEntity -> {
       ProductEntity productEntity = localStoreProductEntity.getProduct();
       productEntity.setIsOwnerDownloaded(true);
@@ -163,7 +165,6 @@ public class ProductService {
       );
     });
 
-    // Return the final page of ProductResponseDTO
     return responsePage;
   }
 }

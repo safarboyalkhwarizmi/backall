@@ -47,7 +47,12 @@ public class StoreProductEntity {
 
     */
 
+  @Column
   private Double count;
 
+  @Column
   private CountType countType;
+
+  @Column
+  private Boolean isOwnerDownloaded = false;
 }
