@@ -13,6 +13,8 @@ import uz.backall.products.ProductRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.store.product.StoreProductEntity;
+import uz.backall.store.product.StoreProductRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SellHistoryService {
   private final ProductRepository productRepository;
+  private final StoreProductRepository storeProductRepository;
   private final SellHistoryRepository repository;
   private final StoreRepository storeRepository;
 
@@ -37,6 +40,20 @@ public class SellHistoryService {
 
     ProductEntity product = productRepository.findById(dto.getProductId())
       .orElseThrow(() -> new ProductNotFoundException("Product with ID " + dto.getProductId() + " not found."));
+
+    Optional<StoreProductEntity> byProductIdAndStoreId = storeProductRepository.findByProductIdAndStoreId(
+      dto.getStoreId(), dto.getProductId()
+    );
+
+    if (byProductIdAndStoreId.isEmpty()) {
+      throw new ProductNotFoundException("Product with ID " + dto.getProductId() + " not found.");
+    }
+
+    // STORE PRODUCT COUNT UPDATE
+    StoreProductEntity storeProductEntity = byProductIdAndStoreId.get();
+    storeProductEntity.setCount(storeProductEntity.getCount() - dto.getCount());
+    storeProductEntity.setIsOwnerDownloaded(true);
+    storeProductRepository.save(storeProductEntity);
 
     SellHistoryEntity sellHistory = new SellHistoryEntity();
     sellHistory.setProductId(dto.getProductId());
