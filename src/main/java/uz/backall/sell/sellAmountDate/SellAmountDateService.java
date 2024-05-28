@@ -11,6 +11,8 @@ import uz.backall.sell.sellGroup.SellGroupResponseDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,9 +35,7 @@ public class SellAmountDateService {
   }
 
   public Page<SellAmountDateResponse> getInfo(
-    Long storeId,
-    int page,
-    int size
+    Long storeId, int page, int size, User user
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -44,19 +44,72 @@ public class SellAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellAmountDateEntity> byStoreProductStoreId = sellAmountDateRepository.findByStoreId(storeId, pageable);
+    List<SellAmountDateResponse> dtoList;
 
-    List<SellAmountDateResponse> dtoList = byStoreProductStoreId.getContent().stream()
-      .map(this::mapToDTO)
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(sellAmountDateEntity -> {
+          sellAmountDateEntity.setIsOwnerDownloaded(true);
+          sellAmountDateRepository.save(sellAmountDateEntity);
+
+          return new SellAmountDateResponse(
+            sellAmountDateEntity.getId(),
+            sellAmountDateEntity.getDate(),
+            sellAmountDateEntity.getAmount()
+          );
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(sellAmountDateEntity -> {
+          return new SellAmountDateResponse(
+            sellAmountDateEntity.getId(),
+            sellAmountDateEntity.getDate(),
+            sellAmountDateEntity.getAmount()
+          );
+        })
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+
+
+  public Page<SellAmountDateResponse> getInfoNotDownloaded(
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<SellAmountDateEntity> byStoreProductStoreId =
+      sellAmountDateRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+
+    List<SellAmountDateResponse> dtoList =
+      byStoreProductStoreId.getContent().stream()
+      .map(sellAmountDateEntity -> {
+        sellAmountDateEntity.setIsOwnerDownloaded(true);
+        sellAmountDateRepository.save(sellAmountDateEntity);
+
+        return new SellAmountDateResponse(
+          sellAmountDateEntity.getId(),
+          sellAmountDateEntity.getDate(),
+          sellAmountDateEntity.getAmount()
+        );
+      })
       .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
-  private SellAmountDateResponse mapToDTO(SellAmountDateEntity sellAmountDateEntity) {
-    return new SellAmountDateResponse(
-      sellAmountDateEntity.getId(),
-      sellAmountDateEntity.getDate(),
-      sellAmountDateEntity.getAmount()
-    );
-  }
 }

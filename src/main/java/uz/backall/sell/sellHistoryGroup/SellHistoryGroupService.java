@@ -15,6 +15,8 @@ import uz.backall.sell.sellHistory.SellHistoryRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +59,7 @@ public class SellHistoryGroupService {
     );
   }
 
-  public Page<SellHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size) {
+  public Page<SellHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size, User user) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -66,20 +68,56 @@ public class SellHistoryGroupService {
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryGroupEntity> byStoreId = sellHistoryGroupRepository.findByStoreId(storeId, pageable);
 
+    List<SellHistoryGroupResponseDTO> dtoList;
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreId.getContent().stream()
+        .map(sellHistoryGroupEntity -> {
+          sellHistoryGroupEntity.setIsOwnerDownloaded(true);
+          sellHistoryGroupRepository.save(sellHistoryGroupEntity);
+
+          return mapToDTO(sellHistoryGroupEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreId.getContent().stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, byStoreId.getTotalElements());
+  }
+
+  public Page<SellHistoryGroupResponseDTO> getInfoNotDownloaded(Long storeId, int page, int size, User user) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<SellHistoryGroupEntity> byStoreId = sellHistoryGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+
     List<SellHistoryGroupResponseDTO> dtoList =
       byStoreId.getContent().stream()
-        .map(this::mapToDTO)
+        .map(sellHistoryGroupEntity -> {
+          sellHistoryGroupEntity.setIsOwnerDownloaded(true);
+          sellHistoryGroupRepository.save(sellHistoryGroupEntity);
+
+          return mapToDTO(sellHistoryGroupEntity);
+        })
         .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreId.getTotalElements());
   }
 
   private SellHistoryGroupResponseDTO mapToDTO(SellHistoryGroupEntity sellHistoryGroupEntity) {
-    SellHistoryGroupResponseDTO sellHistoryGroupResponseDTO = new SellHistoryGroupResponseDTO(
+    return new SellHistoryGroupResponseDTO(
       sellHistoryGroupEntity.getId(),
       sellHistoryGroupEntity.getSellGroupId(),
       sellHistoryGroupEntity.getSellHistoryId()
     );
-    return sellHistoryGroupResponseDTO;
   }
 }

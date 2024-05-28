@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import uz.backall.sell.sellAmountDate.SellAmountDateCreateDTO;
 import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
@@ -18,6 +20,7 @@ import uz.backall.sell.sellHistory.SellHistoryService;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupCreateDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupService;
+import uz.backall.user.User;
 
 @RestController
 @RequestMapping("/api/v1/store/sell")
@@ -75,7 +78,22 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellAmountDateService.getInfo(storeId, page, size)
+      sellAmountDateService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/amount/date/get/not/downloaded")
+  public ResponseEntity<Page<SellAmountDateResponse>> getSellAmountDateInfoNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellAmountDateService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -86,7 +104,22 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellGroupService.getInfo(storeId, page, size)
+      sellGroupService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/group/get/not/downloaded")
+  public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroupNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellGroupService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -97,7 +130,20 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellHistoryService.getInfo(storeId, page, size)
+      sellHistoryService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/history/get/not/downloaded")
+  public ResponseEntity<Page<SellHistoryInfoDTO>> getInfoSellHistoryNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryService.getInfoNotDownloaded(storeId, page, size, getUser())
     );
   }
 
@@ -108,7 +154,26 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellHistoryGroupService.getInfo(storeId, page, size)
+      sellHistoryGroupService.getInfo(
+        storeId, page, size, getUser()
+      )
     );
+  }
+
+  @GetMapping("/link/info/not/downloaded")
+  public ResponseEntity<Page<SellHistoryGroupResponseDTO>> getInfoSellHistoryGroupNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryGroupService.getInfoNotDownloaded(storeId, page, size, getUser())
+    );
+  }
+
+  private User getUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    return (User) authentication.getPrincipal();
   }
 }

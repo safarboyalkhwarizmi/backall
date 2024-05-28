@@ -16,4 +16,7 @@ public class SellAmountDateEntity {
   private String date;
   private Double amount;
   private Long storeId;
+
+  @Column
+  private Boolean isOwnerDownloaded = false;
 }

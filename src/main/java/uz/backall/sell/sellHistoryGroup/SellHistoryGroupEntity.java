@@ -36,4 +36,7 @@ public class SellHistoryGroupEntity {
   @ManyToOne
   @JoinColumn(name = "store_id", insertable = false, updatable = false)
   private StoreEntity store;
+
+  @Column
+  private Boolean isOwnerDownloaded = false;
 }

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SellHistoryGroupRepository extends JpaRepository<SellHistoryGroupEntity, Long> {
   Page<SellHistoryGroupEntity> findByStoreId(Long storeId, Pageable pageable);
+  Page<SellHistoryGroupEntity> findByStoreIdAndIsOwnerDownloadedFalse(Long storeId, Pageable pageable);
 }

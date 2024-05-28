@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SellAmountDateRepository extends JpaRepository<SellAmountDateEntity, Long> {
   Page<SellAmountDateEntity> findByStoreId(Long storeId, Pageable pageable);
+  Page<SellAmountDateEntity> findByStoreIdAndIsOwnerDownloadedFalse(Long storeId, Pageable pageable);
 }

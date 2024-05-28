@@ -15,6 +15,8 @@ import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.store.product.StoreProductEntity;
 import uz.backall.store.product.StoreProductRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,8 +73,7 @@ public class SellHistoryService {
     sellHistory.setStoreId(dto.getStoreId());
 
     repository.save(sellHistory);
-    SellHistoryResponseDTO sellHistoryResponseDTO = getSellHistoryResponseDTO(sellHistory);
-    return sellHistoryResponseDTO;
+    return getSellHistoryResponseDTO(sellHistory);
   }
 
   private static SellHistoryResponseDTO getSellHistoryResponseDTO(SellHistoryEntity sellHistory) {
@@ -87,7 +88,42 @@ public class SellHistoryService {
     return sellHistoryResponseDTO;
   }
 
-  public Page<SellHistoryInfoDTO> getInfo(Long storeId, int page, int size) {
+  public Page<SellHistoryInfoDTO> getInfo(Long storeId, int page, int size, User user) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+
+    List<SellHistoryInfoDTO> dtoList;
+
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(sellHistoryEntity -> {
+          sellHistoryEntity.setIsOwnerDownloaded(true);
+          repository.save(sellHistoryEntity);
+
+          return mapToDTO(sellHistoryEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+  public Page<SellHistoryInfoDTO> getInfoNotDownloaded(
+    Long storeId, int page, int size, User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -97,7 +133,12 @@ public class SellHistoryService {
     Page<SellHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()
-      .map(this::mapToDTO)
+      .map(sellHistoryEntity -> {
+        sellHistoryEntity.setIsOwnerDownloaded(true);
+        repository.save(sellHistoryEntity);
+
+        return mapToDTO(sellHistoryEntity);
+      })
       .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
