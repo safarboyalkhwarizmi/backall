@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long> {
 
   Page<SellGroupEntity> findByStoreId(Long storeId, Pageable pageable);
+
+  Page<SellGroupEntity> findByStoreIdAndIsOwnerDownloadedFalse(Long storeId, Pageable pageable);
+
 }

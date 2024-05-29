@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SellHistoryRepository extends JpaRepository<SellHistoryEntity, Long> {
   Page<SellHistoryEntity> findByStoreId(Long storeId, Pageable pageable);
+  Page<SellHistoryEntity> findByStoreIdAndIsOwnerDownloadedFalse(Long storeId, Pageable pageable);
 }

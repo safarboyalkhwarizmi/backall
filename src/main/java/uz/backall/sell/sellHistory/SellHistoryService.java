@@ -130,7 +130,8 @@ public class SellHistoryService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<SellHistoryEntity> byStoreProductStoreId =
+      repository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellHistoryEntity -> {

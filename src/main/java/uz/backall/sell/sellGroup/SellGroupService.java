@@ -90,7 +90,8 @@ public class SellGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellGroupEntity> byStoreProductStoreId = sellGroupRepository.findByStoreId(storeId, pageable);
+    Page<SellGroupEntity> byStoreProductStoreId =
+      sellGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
 
     List<SellGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellGroupEntity -> {

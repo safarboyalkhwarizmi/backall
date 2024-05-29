@@ -98,7 +98,8 @@ public class SellHistoryGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellHistoryGroupEntity> byStoreId = sellHistoryGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+    Page<SellHistoryGroupEntity> byStoreId =
+      sellHistoryGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
 
     List<SellHistoryGroupResponseDTO> dtoList =
       byStoreId.getContent().stream()

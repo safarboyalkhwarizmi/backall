@@ -143,7 +143,9 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellHistoryService.getInfoNotDownloaded(storeId, page, size, getUser())
+      sellHistoryService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -167,7 +169,9 @@ public class SellController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      sellHistoryGroupService.getInfoNotDownloaded(storeId, page, size, getUser())
+      sellHistoryGroupService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
