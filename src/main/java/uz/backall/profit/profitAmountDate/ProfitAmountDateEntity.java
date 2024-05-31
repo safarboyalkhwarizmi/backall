@@ -16,4 +16,7 @@ public class ProfitAmountDateEntity {
   private String date;
   private Double amount;
   private Long storeId;
+
+  @Column
+  private Boolean isOwnerDownloaded = false;
 }

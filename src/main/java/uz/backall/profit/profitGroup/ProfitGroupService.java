@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,9 @@ public class ProfitGroupService {
     return mapToDTO(profitGroup);
   }
 
-  public Page<ProfitGroupResponseDTO> getInfo(Long storeId, int page, int size) {
+  public Page<ProfitGroupResponseDTO> getInfo(
+    Long storeId, int page, int size, User user
+  ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -44,8 +48,49 @@ public class ProfitGroupService {
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitGroupEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
 
-    List<ProfitGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
-      .map(this::mapToDTO)
+    List<ProfitGroupResponseDTO> dtoList;
+
+      if (user.getRole().equals(Role.BOSS)) {
+        dtoList = byStoreProductStoreId.getContent().stream()
+          .map(profitGroupEntity -> {
+            profitGroupEntity.setIsOwnerDownloaded(true);
+            repository.save(profitGroupEntity);
+
+            return mapToDTO(profitGroupEntity);
+          })
+          .collect(Collectors.toList());
+      } else {
+        dtoList = byStoreProductStoreId.getContent().stream()
+          .map(this::mapToDTO)
+          .collect(Collectors.toList());
+      }
+
+    return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+  public Page<ProfitGroupResponseDTO> getInfoNotDownloaded(
+    Long storeId, int page, int size, User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<ProfitGroupEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+
+    List<ProfitGroupResponseDTO> dtoList =
+      byStoreProductStoreId.getContent().stream()
+      .map(profitGroupEntity -> {
+        profitGroupEntity.setIsOwnerDownloaded(true);
+        repository.save(profitGroupEntity);
+
+        return mapToDTO(profitGroupEntity);
+      })
       .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());

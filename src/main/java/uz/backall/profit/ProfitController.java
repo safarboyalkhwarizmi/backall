@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateCreateDTO;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateRepository;
@@ -19,6 +21,7 @@ import uz.backall.profit.profitHistory.ProfitHistoryService;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupCreateDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupResponseDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupService;
+import uz.backall.user.User;
 
 @RestController
 @RequestMapping("/api/v1/store/profit")
@@ -76,7 +79,22 @@ public class ProfitController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      profitAmountDateService.getInfo(storeId, page, size)
+      profitAmountDateService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/amount/date/get/not/downloaded")
+  public ResponseEntity<Page<ProfitAmountDateResponse>> getAmountDateInfoNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitAmountDateService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -87,7 +105,22 @@ public class ProfitController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      profitGroupService.getInfo(storeId, page, size)
+      profitGroupService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/group/get/not/downloaded")
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoSellGroupNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitGroupService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -98,7 +131,22 @@ public class ProfitController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      profitHistoryService.getInfo(storeId, page, size)
+      profitHistoryService.getInfo(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/history/get/not/downloaded")
+  public ResponseEntity<Page<ProfitHistoryInfoDTO>> getInfoSellHistoryNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitHistoryService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
     );
   }
 
@@ -109,7 +157,29 @@ public class ProfitController {
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
-      profitHistoryGroupService.getInfo(storeId, page, size)
+      profitHistoryGroupService.getInfo(
+        storeId, page, size, getUser()
+      )
     );
+  }
+
+
+  @GetMapping("/link/info/not/downloaded")
+  public ResponseEntity<Page<ProfitHistoryGroupResponseDTO>> getInfoSellHistoryGroupNotDownloaded(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitHistoryGroupService.getInfoNotDownloaded(
+        storeId, page, size, getUser()
+      )
+    );
+  }
+
+  private User getUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    return (User) authentication.getPrincipal();
   }
 }

@@ -13,6 +13,8 @@ import uz.backall.products.ProductRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +66,39 @@ public class ProfitHistoryService {
     return profitHistoryResponseDTO;
   }
 
-  public Page<ProfitHistoryInfoDTO> getInfo(Long storeId, int page, int size) {
+  public Page<ProfitHistoryInfoDTO> getInfo(Long storeId, int page, int size, User user) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<ProfitHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+
+    List<ProfitHistoryInfoDTO> dtoList;
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(profitHistoryEntity -> {
+          profitHistoryEntity.setIsOwnerDownloaded(true);
+          repository.save(profitHistoryEntity);
+
+          return mapToDTO(profitHistoryEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+  public Page<ProfitHistoryInfoDTO> getInfoNotDownloaded(Long storeId, int page, int size, User user) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");

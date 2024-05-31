@@ -15,6 +15,8 @@ import uz.backall.profit.profitHistory.ProfitHistoryRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.user.Role;
+import uz.backall.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +60,43 @@ public class ProfitHistoryGroupService {
     );
   }
 
-  public Page<ProfitHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size) {
+  public Page<ProfitHistoryGroupResponseDTO> getInfo(
+    Long storeId, int page, int size, User user
+  ) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<ProfitHistoryGroupEntity> byStoreId = profitHistoryGroupRepository.findByStoreId(storeId, pageable);
+
+    List<ProfitHistoryGroupResponseDTO> dtoList;
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreId.getContent().stream()
+        .map(profitHistoryGroupEntity -> {
+          profitHistoryGroupEntity.setIsOwnerDownloaded(true);
+          profitHistoryGroupRepository.save(profitHistoryGroupEntity);
+
+          return mapToDTO(profitHistoryGroupEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreId.getContent().stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, byStoreId.getTotalElements());
+  }
+
+  public Page<ProfitHistoryGroupResponseDTO> getInfoNotDownloaded(
+    Long storeId, int page, int size, User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -74,6 +112,7 @@ public class ProfitHistoryGroupService {
 
     return new PageImpl<>(dtoList, pageable, byStoreId.getTotalElements());
   }
+
 
   private ProfitHistoryGroupResponseDTO mapToDTO(ProfitHistoryGroupEntity profitHistoryGroupEntity) {
     return new ProfitHistoryGroupResponseDTO(profitHistoryGroupEntity.getId(), profitHistoryGroupEntity.getProfitGroupId(), profitHistoryGroupEntity.getProfitHistoryId());
