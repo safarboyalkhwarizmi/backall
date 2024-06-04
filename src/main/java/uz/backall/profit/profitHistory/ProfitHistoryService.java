@@ -13,6 +13,8 @@ import uz.backall.products.ProductRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
+import uz.backall.store.product.StoreProductEntity;
+import uz.backall.store.product.StoreProductRepository;
 import uz.backall.user.Role;
 import uz.backall.user.User;
 
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfitHistoryService {
   private final ProductRepository productRepository;
+  private final StoreProductRepository storeProductRepository;
   private final ProfitHistoryRepository repository;
   private final StoreRepository storeRepository;
 
@@ -34,7 +37,7 @@ public class ProfitHistoryService {
       throw new StoreNotFoundException("Store not found");
     }
 
-    if (dto == null || dto.getProductId() == null || dto.getCount() <= 0 || dto.getProfit() <= 0) {
+    if (dto == null || dto.getProductId() == null) {
       throw new IllegalArgumentException("Invalid profitHistoryCreateDTO object: " + dto);
     }
 
@@ -50,17 +53,16 @@ public class ProfitHistoryService {
     profitHistory.setStoreId(dto.getStoreId());
 
     repository.save(profitHistory);
-    ProfitHistoryResponseDTO profitHistoryResponseDTO = getprofitHistoryResponseDTO(profitHistory);
-    return profitHistoryResponseDTO;
+    return getProfitHistoryResponseDTO(profitHistory);
   }
 
-  private static ProfitHistoryResponseDTO getprofitHistoryResponseDTO(ProfitHistoryEntity profitHistory) {
+  private ProfitHistoryResponseDTO getProfitHistoryResponseDTO(ProfitHistoryEntity profitHistory) {
     ProfitHistoryResponseDTO profitHistoryResponseDTO = new ProfitHistoryResponseDTO();
     profitHistoryResponseDTO.setId(profitHistory.getId());
     profitHistoryResponseDTO.setProfit(profitHistory.getProfit());
     profitHistoryResponseDTO.setCreatedDate(profitHistory.getCreatedDate());
     profitHistoryResponseDTO.setCount(profitHistory.getCount());
-    profitHistoryResponseDTO.setCountType(profitHistoryResponseDTO.getCountType());
+    profitHistoryResponseDTO.setCountType(profitHistory.getCountType());
     profitHistoryResponseDTO.setProductId(profitHistory.getProductId());
     profitHistoryResponseDTO.setStoreId(profitHistory.getStoreId());
     return profitHistoryResponseDTO;
