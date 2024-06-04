@@ -54,11 +54,11 @@ public class SellHistoryService {
     // STORE PRODUCT COUNT UPDATE
     StoreProductEntity storeProductEntity = byProductIdAndStoreId.get();
     if (
-      (storeProductEntity.getCount() - dto.getCount()) >= 0
+      (storeProductEntity.getCount() - Math.abs(dto.getCount())) >= 0
     ) {
       storeProductEntity.setCount(0.0);
     } else {
-      storeProductEntity.setCount(storeProductEntity.getCount() - dto.getCount());
+      storeProductEntity.setCount(storeProductEntity.getCount() - Math.abs(dto.getCount()));
     }
 
     storeProductEntity.setIsOwnerDownloaded(false);
