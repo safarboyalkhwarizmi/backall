@@ -36,7 +36,7 @@ public class SellHistoryService {
       throw new StoreNotFoundException("Store not found");
     }
 
-    if (dto == null || dto.getProductId() == null) {
+    if (dto.getProductId() == null) {
       throw new IllegalArgumentException("Invalid SellHistoryCreateDTO object: " + dto);
     }
 
@@ -44,7 +44,7 @@ public class SellHistoryService {
       .orElseThrow(() -> new ProductNotFoundException("Product with ID " + dto.getProductId() + " not found."));
 
     Optional<StoreProductEntity> byProductIdAndStoreId = storeProductRepository.findByProductIdAndStoreId(
-      dto.getStoreId(), dto.getProductId()
+      dto.getProductId(), dto.getStoreId()
     );
 
     if (byProductIdAndStoreId.isEmpty()) {
