@@ -31,7 +31,14 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final StoreService storeService;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  public AuthenticationResponse register(RegisterRequest request, User owner) {
+    if (
+      !request.getRole().equals(Role.ADMIN) &&
+      owner.getRole().equals(Role.ADMIN)
+    ) {
+      throw new RegisterNotAllowedException("Registering is not allowed.");
+    }
+
     Optional<User> byEmail = repository.findByEmailAndPinCode(
       request.getEmail(),
       request.getPinCode()

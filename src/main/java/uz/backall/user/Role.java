@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public enum Role {
+  ADMIN(Collections.emptySet()),
   SELLER(Collections.emptySet()),
   BOSS(Collections.emptySet()),
   SELLER_BOSS(Collections.emptySet());

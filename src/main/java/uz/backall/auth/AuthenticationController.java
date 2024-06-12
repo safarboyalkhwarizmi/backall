@@ -4,10 +4,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uz.backall.user.User;
 
 import java.io.IOException;
 
@@ -21,7 +24,13 @@ public class AuthenticationController {
   public ResponseEntity<AuthenticationResponse> register(
     @RequestBody RegisterRequest request
   ) {
-    return ResponseEntity.ok(service.register(request));
+    return ResponseEntity.ok(service.register(request, getUser()));
+  }
+
+  private User getUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    return (User) authentication.getPrincipal();
   }
 
   @PostMapping("/authenticate")
