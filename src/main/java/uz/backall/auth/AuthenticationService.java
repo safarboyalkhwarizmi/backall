@@ -31,13 +31,13 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final StoreService storeService;
 
-  public AuthenticationResponse register(RegisterRequest request, User owner) {
-    if (
-      !request.getRole().equals(Role.ADMIN) &&
-      owner.getRole().equals(Role.ADMIN)
-    ) {
-      throw new RegisterNotAllowedException("Registering is not allowed.");
-    }
+  public AuthenticationResponse register(RegisterRequest request) {
+//    if (
+//      !request.getRole().equals(Role.ADMIN) &&
+//      owner.getRole().equals(Role.ADMIN)
+//    ) {
+//      throw new RegisterNotAllowedException("Registering is not allowed.");
+//    }
 
     Optional<User> byEmail = repository.findByEmailAndPinCode(
       request.getEmail(),
@@ -58,7 +58,6 @@ public class AuthenticationService {
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-    saveUserToken(savedUser, jwtToken);
 
     Long storeId;
     if (request.getRole().equals(Role.BOSS)) {
@@ -73,6 +72,7 @@ public class AuthenticationService {
       storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
     }
 
+    saveUserToken(savedUser, jwtToken);
 
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
