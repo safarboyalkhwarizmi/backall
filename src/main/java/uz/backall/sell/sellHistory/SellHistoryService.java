@@ -56,13 +56,12 @@ public class SellHistoryService {
     if (
       (storeProductEntity.getCount() - Math.abs(dto.getCount())) >= 0
     ) {
-      storeProductEntity.setCount(0.0);
-    } else {
       storeProductEntity.setCount(storeProductEntity.getCount() - Math.abs(dto.getCount()));
+      storeProductEntity.setIsOwnerDownloaded(false);
+      storeProductRepository.save(storeProductEntity);
+    } else {
+      storeProductRepository.delete(storeProductEntity);
     }
-
-    storeProductEntity.setIsOwnerDownloaded(false);
-    storeProductRepository.save(storeProductEntity);
 
     SellHistoryEntity sellHistory = new SellHistoryEntity();
     sellHistory.setProductId(dto.getProductId());
