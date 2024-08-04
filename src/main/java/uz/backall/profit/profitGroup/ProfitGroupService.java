@@ -38,7 +38,7 @@ public class ProfitGroupService {
   }
 
   public Page<ProfitGroupResponseDTO> getInfo(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -46,7 +46,10 @@ public class ProfitGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitGroupEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<ProfitGroupEntity> byStoreProductStoreId =
+      repository.findByIdLessThanAndStoreId(
+        lastId, storeId, pageable
+      );
 
     List<ProfitGroupResponseDTO> dtoList;
 
@@ -69,7 +72,7 @@ public class ProfitGroupService {
   }
 
   public Page<ProfitGroupResponseDTO> getInfoNotDownloaded(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -81,7 +84,10 @@ public class ProfitGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitGroupEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<ProfitGroupEntity> byStoreProductStoreId =
+      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, storeId, pageable
+      );
 
     List<ProfitGroupResponseDTO> dtoList =
       byStoreProductStoreId.getContent().stream()
@@ -103,5 +109,9 @@ public class ProfitGroupService {
     responseDTO.setCreatedDate(profitHistoryEntity.getCreatedDate());
     responseDTO.setStoreId(profitHistoryEntity.getStoreId());
     return responseDTO;
+  }
+
+  public Long getLastId(Long storeId) {
+    return repository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
 }

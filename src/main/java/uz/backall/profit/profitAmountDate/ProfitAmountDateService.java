@@ -37,10 +37,7 @@ public class ProfitAmountDateService {
   }
 
   public Page<ProfitAmountDateResponse> getInfo(
-    Long storeId,
-    int page,
-    int size,
-    User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -49,7 +46,9 @@ public class ProfitAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitAmountDateEntity> byStoreProductStoreId =
-      profitAmountDateRepository.findByStoreId(storeId, pageable);
+      profitAmountDateRepository.findByIdLessThanAndStoreId(
+        lastId, storeId, pageable
+      );
 
     List<ProfitAmountDateResponse> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -71,10 +70,7 @@ public class ProfitAmountDateService {
   }
 
   public Page<ProfitAmountDateResponse> getInfoNotDownloaded(
-    Long storeId,
-    int page,
-    int size,
-    User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -87,7 +83,9 @@ public class ProfitAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitAmountDateEntity> byStoreProductStoreId =
-      profitAmountDateRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+      profitAmountDateRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, storeId, pageable
+      );
 
     List<ProfitAmountDateResponse> dtoList = byStoreProductStoreId.getContent().stream()
       .map(profitAmountDateEntity -> {
@@ -107,5 +105,9 @@ public class ProfitAmountDateService {
       profitAmountDateEntity.getDate(),
       profitAmountDateEntity.getAmount()
     );
+  }
+
+  public Long getLastId(Long storeId) {
+    return profitAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
 }

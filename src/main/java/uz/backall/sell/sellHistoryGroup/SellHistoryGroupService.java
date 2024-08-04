@@ -59,14 +59,23 @@ public class SellHistoryGroupService {
     );
   }
 
-  public Page<SellHistoryGroupResponseDTO> getInfo(Long storeId, int page, int size, User user) {
+  public Page<SellHistoryGroupResponseDTO> getInfo(
+    Long lastId,
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellHistoryGroupEntity> byStoreId = sellHistoryGroupRepository.findByStoreId(storeId, pageable);
+    Page<SellHistoryGroupEntity> byStoreId =
+      sellHistoryGroupRepository.findByIdLessThanAndStoreId(
+        lastId, storeId, pageable
+      );
 
     List<SellHistoryGroupResponseDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -87,7 +96,13 @@ public class SellHistoryGroupService {
     return new PageImpl<>(dtoList, pageable, byStoreId.getTotalElements());
   }
 
-  public Page<SellHistoryGroupResponseDTO> getInfoNotDownloaded(Long storeId, int page, int size, User user) {
+  public Page<SellHistoryGroupResponseDTO> getInfoNotDownloaded(
+    Long lastId,
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
@@ -99,7 +114,9 @@ public class SellHistoryGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryGroupEntity> byStoreId =
-      sellHistoryGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+      sellHistoryGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, storeId, pageable
+      );
 
     List<SellHistoryGroupResponseDTO> dtoList =
       byStoreId.getContent().stream()
@@ -120,5 +137,9 @@ public class SellHistoryGroupService {
       sellHistoryGroupEntity.getSellGroupId(),
       sellHistoryGroupEntity.getSellHistoryId()
     );
+  }
+
+  public Long getLastId(Long storeId) {
+    return sellHistoryGroupRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
 }

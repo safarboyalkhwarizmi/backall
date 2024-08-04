@@ -73,104 +73,148 @@ public class SellController {
 
   @GetMapping("/amount/date/get")
   public ResponseEntity<Page<SellAmountDateResponse>> getSellAmountDateInfo(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellAmountDateService.getInfo(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
     );
   }
 
   @GetMapping("/amount/date/get/not/downloaded")
   public ResponseEntity<Page<SellAmountDateResponse>> getSellAmountDateInfoNotDownloaded(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellAmountDateService.getInfoNotDownloaded(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
+    );
+  }
+
+  @GetMapping("/amount/date/get/lastId")
+  public ResponseEntity<Long> getLastIdAmountDate(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellAmountDateService.getLastId(storeId)
     );
   }
 
   @GetMapping("/group/get")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroup(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellGroupService.getInfo(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
+    );
+  }
+
+  @GetMapping("/group/get/lastId")
+  public ResponseEntity<Long> getLastIdSellGroup(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellGroupService.getLastId(storeId)
     );
   }
 
   @GetMapping("/group/get/not/downloaded")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroupNotDownloaded(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellGroupService.getInfoNotDownloaded(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
     );
   }
 
   @GetMapping("/history/get")
   public ResponseEntity<Page<SellHistoryInfoDTO>> getInfoSellHistory(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellHistoryService.getInfo(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
+    );
+  }
+
+  @GetMapping("/history/get/lastId")
+  public ResponseEntity<Long> getLastIdSellHistory(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryService.getLastId(storeId)
     );
   }
 
   @GetMapping("/history/get/not/downloaded")
   public ResponseEntity<Page<SellHistoryInfoDTO>> getInfoSellHistoryNotDownloaded(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellHistoryService.getInfoNotDownloaded(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
     );
   }
 
   @GetMapping("/link/info")
   public ResponseEntity<Page<SellHistoryGroupResponseDTO>> getInfoSellHistoryGroup(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellHistoryGroupService.getInfo(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
+    );
+  }
+
+  @GetMapping("/link/get/lastId")
+  public ResponseEntity<Long> getLastIdSellHistoryGroup(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryGroupService.getLastId(storeId)
     );
   }
 
   @GetMapping("/link/info/not/downloaded")
   public ResponseEntity<Page<SellHistoryGroupResponseDTO>> getInfoSellHistoryGroupNotDownloaded(
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     return ResponseEntity.ok(
       sellHistoryGroupService.getInfoNotDownloaded(
-        storeId, page, size, getUser()
+        lastId, storeId, page, size, getUser()
       )
     );
   }

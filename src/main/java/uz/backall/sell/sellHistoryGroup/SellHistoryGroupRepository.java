@@ -4,9 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import uz.backall.sell.sellHistory.SellHistoryEntity;
 
 @Repository
 public interface SellHistoryGroupRepository extends JpaRepository<SellHistoryGroupEntity, Long> {
-  Page<SellHistoryGroupEntity> findByStoreId(Long storeId, Pageable pageable);
-  Page<SellHistoryGroupEntity> findByStoreIdAndIsOwnerDownloadedFalse(Long storeId, Pageable pageable);
+  Page<SellHistoryGroupEntity> findByIdLessThanAndStoreId(Long id, Long storeId, Pageable pageable);
+
+  Page<SellHistoryGroupEntity> findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long storeId, Pageable pageable);
+
+  SellHistoryGroupEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
 }

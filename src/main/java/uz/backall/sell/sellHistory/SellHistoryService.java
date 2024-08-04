@@ -87,14 +87,14 @@ public class SellHistoryService {
     return sellHistoryResponseDTO;
   }
 
-  public Page<SellHistoryInfoDTO> getInfo(Long storeId, int page, int size, User user) {
+  public Page<SellHistoryInfoDTO> getInfo(Long lastId, Long storeId, int page, int size, User user) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList;
 
@@ -117,7 +117,7 @@ public class SellHistoryService {
   }
 
   public Page<SellHistoryInfoDTO> getInfoNotDownloaded(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -130,7 +130,7 @@ public class SellHistoryService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryEntity> byStoreProductStoreId =
-      repository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellHistoryEntity -> {
@@ -153,5 +153,9 @@ public class SellHistoryService {
     dto.setCountType(entity.getCountType());
     dto.setCreatedDate(entity.getCreatedDate());
     return dto;
+  }
+
+  public Long getLastId(Long storeId) {
+    return repository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId).getId();
   }
 }

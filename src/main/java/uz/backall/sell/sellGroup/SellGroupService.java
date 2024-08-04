@@ -39,7 +39,13 @@ public class SellGroupService {
     return mapToDTO(sellGroup);
   }
 
-  public Page<SellGroupResponseDTO> getInfo(Long storeId, int page, int size, User user) {
+  public Page<SellGroupResponseDTO> getInfo(
+    Long lastId,
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
     // Retrieve the store by ID
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -48,7 +54,8 @@ public class SellGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
 
-    Page<SellGroupEntity> sellGroupEntities = sellGroupRepository.findByStoreId(storeId, pageable);
+    Page<SellGroupEntity> sellGroupEntities =
+      sellGroupRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
 
     List<SellGroupResponseDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -68,17 +75,8 @@ public class SellGroupService {
     return new PageImpl<>(dtoList, pageable, sellGroupEntities.getTotalElements());
   }
 
-  private SellGroupResponseDTO mapToDto(SellGroupEntity sellGroupEntity) {
-    SellGroupResponseDTO responseDTO = new SellGroupResponseDTO();
-    responseDTO.setId(sellGroupEntity.getId());
-    responseDTO.setAmount(sellGroupEntity.getAmount());
-    responseDTO.setCreatedDate(sellGroupEntity.getCreatedDate());
-    responseDTO.setStoreId(sellGroupEntity.getStoreId());
-    return responseDTO;
-  }
-
   public Page<SellGroupResponseDTO> getInfoNotDownloaded(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -91,7 +89,7 @@ public class SellGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellGroupEntity> byStoreProductStoreId =
-      sellGroupRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+      sellGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
 
     List<SellGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellGroupEntity -> {
@@ -105,6 +103,15 @@ public class SellGroupService {
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
+  private SellGroupResponseDTO mapToDto(SellGroupEntity sellGroupEntity) {
+    SellGroupResponseDTO responseDTO = new SellGroupResponseDTO();
+    responseDTO.setId(sellGroupEntity.getId());
+    responseDTO.setAmount(sellGroupEntity.getAmount());
+    responseDTO.setCreatedDate(sellGroupEntity.getCreatedDate());
+    responseDTO.setStoreId(sellGroupEntity.getStoreId());
+    return responseDTO;
+  }
+
   private SellGroupResponseDTO mapToDTO(SellGroupEntity sellHistoryEntity) {
     SellGroupResponseDTO responseDTO = new SellGroupResponseDTO();
     responseDTO.setId(sellHistoryEntity.getId());
@@ -112,5 +119,9 @@ public class SellGroupService {
     responseDTO.setCreatedDate(sellHistoryEntity.getCreatedDate());
     responseDTO.setStoreId(sellHistoryEntity.getStoreId());
     return responseDTO;
+  }
+
+  public Long getLastId(Long storeId) {
+    return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId).getId();
   }
 }

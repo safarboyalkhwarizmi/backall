@@ -35,7 +35,7 @@ public class SellAmountDateService {
   }
 
   public Page<SellAmountDateResponse> getInfo(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -43,7 +43,7 @@ public class SellAmountDateService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellAmountDateEntity> byStoreProductStoreId = sellAmountDateRepository.findByStoreId(storeId, pageable);
+    Page<SellAmountDateEntity> byStoreProductStoreId = sellAmountDateRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
     List<SellAmountDateResponse> dtoList;
 
     if (user.getRole().equals(Role.BOSS)) {
@@ -77,6 +77,7 @@ public class SellAmountDateService {
 
 
   public Page<SellAmountDateResponse> getInfoNotDownloaded(
+    Long lastId,
     Long storeId,
     int page,
     int size,
@@ -93,7 +94,7 @@ public class SellAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellAmountDateEntity> byStoreProductStoreId =
-      sellAmountDateRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
+      sellAmountDateRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
 
     List<SellAmountDateResponse> dtoList =
       byStoreProductStoreId.getContent().stream()
@@ -112,4 +113,7 @@ public class SellAmountDateService {
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
+  public Long getLastId(Long storeId) {
+    return sellAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+  }
 }

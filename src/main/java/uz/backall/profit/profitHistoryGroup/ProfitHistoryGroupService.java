@@ -36,7 +36,8 @@ public class ProfitHistoryGroupService {
       throw new StoreNotFoundException("Store not found");
     }
 
-    Optional<ProfitGroupEntity> byGroupId = profitGroupRepository.findById(dto.getProfitGroupId());
+    Optional<ProfitGroupEntity> byGroupId =
+      profitGroupRepository.findById(dto.getProfitGroupId());
     if (byGroupId.isEmpty()) {
       throw new ProfitGroupNotFoundException("Sell group not found");
     }
@@ -61,7 +62,7 @@ public class ProfitHistoryGroupService {
   }
 
   public Page<ProfitHistoryGroupResponseDTO> getInfo(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -69,7 +70,8 @@ public class ProfitHistoryGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitHistoryGroupEntity> byStoreId = profitHistoryGroupRepository.findByStoreId(storeId, pageable);
+    Page<ProfitHistoryGroupEntity> byStoreId =
+      profitHistoryGroupRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
 
     List<ProfitHistoryGroupResponseDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -91,7 +93,7 @@ public class ProfitHistoryGroupService {
   }
 
   public Page<ProfitHistoryGroupResponseDTO> getInfoNotDownloaded(
-    Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -103,7 +105,9 @@ public class ProfitHistoryGroupService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitHistoryGroupEntity> byStoreId = profitHistoryGroupRepository.findByStoreId(storeId, pageable);
+    Page<ProfitHistoryGroupEntity> byStoreId =
+      profitHistoryGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, storeId, pageable);
 
     List<ProfitHistoryGroupResponseDTO> dtoList =
       byStoreId.getContent().stream()
@@ -116,5 +120,9 @@ public class ProfitHistoryGroupService {
 
   private ProfitHistoryGroupResponseDTO mapToDTO(ProfitHistoryGroupEntity profitHistoryGroupEntity) {
     return new ProfitHistoryGroupResponseDTO(profitHistoryGroupEntity.getId(), profitHistoryGroupEntity.getProfitGroupId(), profitHistoryGroupEntity.getProfitHistoryId());
+  }
+
+  public Long getLastId(Long storeId) {
+    return profitHistoryGroupRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
 }

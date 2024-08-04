@@ -26,18 +26,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfitHistoryService {
   private final ProductRepository productRepository;
-  private final StoreProductRepository storeProductRepository;
   private final ProfitHistoryRepository repository;
   private final StoreRepository storeRepository;
 
-  @Transactional
   public ProfitHistoryResponseDTO create(ProfitHistoryCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
 
-    if (dto == null || dto.getProductId() == null) {
+    if (dto.getProductId() == null) {
       throw new IllegalArgumentException("Invalid profitHistoryCreateDTO object: " + dto);
     }
 
@@ -68,14 +66,19 @@ public class ProfitHistoryService {
     return profitHistoryResponseDTO;
   }
 
-  public Page<ProfitHistoryInfoDTO> getInfo(Long storeId, int page, int size, User user) {
+  public Page<ProfitHistoryInfoDTO> getInfo(
+    Long lastId, Long storeId, int page, int size, User user
+  ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<ProfitHistoryEntity> byStoreProductStoreId =
+      repository.findByIdLessThanAndStoreId(
+        lastId, storeId, pageable
+      );
 
     List<ProfitHistoryInfoDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -96,7 +99,9 @@ public class ProfitHistoryService {
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
-  public Page<ProfitHistoryInfoDTO> getInfoNotDownloaded(Long storeId, int page, int size, User user) {
+  public Page<ProfitHistoryInfoDTO> getInfoNotDownloaded(
+    Long lastId, Long storeId, int page, int size, User user
+  ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
@@ -107,7 +112,10 @@ public class ProfitHistoryService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<ProfitHistoryEntity> byStoreProductStoreId = repository.findByStoreId(storeId, pageable);
+    Page<ProfitHistoryEntity> byStoreProductStoreId =
+      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, storeId, pageable
+      );
 
     List<ProfitHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(this::mapToDTO)
@@ -125,5 +133,9 @@ public class ProfitHistoryService {
     dto.setCountType(entity.getCountType());
     dto.setCreatedDate(entity.getCreatedDate());
     return dto;
+  }
+
+  public Long getLastId(Long storeId) {
+    return repository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
 }
