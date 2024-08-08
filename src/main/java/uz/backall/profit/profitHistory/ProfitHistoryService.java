@@ -76,8 +76,8 @@ public class ProfitHistoryService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitHistoryEntity> byStoreProductStoreId =
-      repository.findByIdLessThanAndStoreId(
-        lastId, storeId, pageable
+      repository.findByIdLessThanAndIdGreaterThanAndStoreId(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitHistoryInfoDTO> dtoList;
@@ -113,8 +113,8 @@ public class ProfitHistoryService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitHistoryEntity> byStoreProductStoreId =
-      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
-        lastId, storeId, pageable
+      repository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()

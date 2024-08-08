@@ -94,7 +94,7 @@ public class SellHistoryService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
+    Page<SellHistoryEntity> byStoreProductStoreId = repository.findByIdLessThanAndIdGreaterThanAndStoreId(lastId, lastId - size, storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList;
 
@@ -130,7 +130,7 @@ public class SellHistoryService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryEntity> byStoreProductStoreId =
-      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
+      repository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, lastId - size, storeId, pageable);
 
     List<SellHistoryInfoDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellHistoryEntity -> {

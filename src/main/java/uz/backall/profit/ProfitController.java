@@ -123,7 +123,7 @@ public class ProfitController {
     );
   }
 
-  @GetMapping("/history/lastId")
+  @GetMapping("/group/lastId")
   public ResponseEntity<Long> getLastIdProfitGroup(
     @RequestParam(value = "storeId") Long storeId
   ) {

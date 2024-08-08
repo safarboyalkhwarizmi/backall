@@ -8,9 +8,9 @@ import uz.backall.sell.sellHistory.SellHistoryEntity;
 
 @Repository
 public interface SellHistoryGroupRepository extends JpaRepository<SellHistoryGroupEntity, Long> {
-  Page<SellHistoryGroupEntity> findByIdLessThanAndStoreId(Long id, Long storeId, Pageable pageable);
+  Page<SellHistoryGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreId(Long id, Long id2, Long storeId, Pageable pageable);
 
-  Page<SellHistoryGroupEntity> findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long storeId, Pageable pageable);
+  Page<SellHistoryGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
   SellHistoryGroupEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
 }

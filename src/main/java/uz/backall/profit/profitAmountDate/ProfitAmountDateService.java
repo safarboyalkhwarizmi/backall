@@ -46,8 +46,8 @@ public class ProfitAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitAmountDateEntity> byStoreProductStoreId =
-      profitAmountDateRepository.findByIdLessThanAndStoreId(
-        lastId, storeId, pageable
+      profitAmountDateRepository.findByIdLessThanAndIdGreaterThanAndStoreId(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitAmountDateResponse> dtoList;
@@ -83,8 +83,8 @@ public class ProfitAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitAmountDateEntity> byStoreProductStoreId =
-      profitAmountDateRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
-        lastId, storeId, pageable
+      profitAmountDateRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitAmountDateResponse> dtoList = byStoreProductStoreId.getContent().stream()

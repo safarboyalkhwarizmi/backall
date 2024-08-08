@@ -71,7 +71,9 @@ public class ProfitHistoryGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitHistoryGroupEntity> byStoreId =
-      profitHistoryGroupRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
+      profitHistoryGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreId(
+        lastId, lastId - size, storeId, pageable
+      );
 
     List<ProfitHistoryGroupResponseDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -106,8 +108,9 @@ public class ProfitHistoryGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitHistoryGroupEntity> byStoreId =
-      profitHistoryGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
-        lastId, storeId, pageable);
+      profitHistoryGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
+      );
 
     List<ProfitHistoryGroupResponseDTO> dtoList =
       byStoreId.getContent().stream()

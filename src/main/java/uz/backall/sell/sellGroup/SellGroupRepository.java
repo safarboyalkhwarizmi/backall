@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long> {
-  Page<SellGroupEntity> findByIdLessThanAndStoreId(Long id, Long storeId, Pageable pageable);
+  Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreId(Long id, Long id2, Long storeId, Pageable pageable);
 
-  Page<SellGroupEntity> findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long storeId, Pageable pageable);
+  Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
 
   SellGroupEntity findTop1ByStoreIdOrderByCreatedDateDesc(Long storeId);

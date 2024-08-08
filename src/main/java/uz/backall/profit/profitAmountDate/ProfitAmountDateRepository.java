@@ -8,9 +8,9 @@ import uz.backall.profit.profitGroup.ProfitGroupEntity;
 
 @Repository
 public interface ProfitAmountDateRepository extends JpaRepository<ProfitAmountDateEntity, Long> {
-  Page<ProfitAmountDateEntity> findByIdLessThanAndStoreId(Long id, Long storeId, Pageable pageable);
+  Page<ProfitAmountDateEntity> findByIdLessThanAndIdGreaterThanAndStoreId(Long id, Long id2, Long storeId, Pageable pageable);
 
-  Page<ProfitAmountDateEntity> findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long storeId, Pageable pageable);
+  Page<ProfitAmountDateEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
   ProfitAmountDateEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
 }

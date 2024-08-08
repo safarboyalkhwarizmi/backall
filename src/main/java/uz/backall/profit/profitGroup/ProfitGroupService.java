@@ -47,8 +47,8 @@ public class ProfitGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitGroupEntity> byStoreProductStoreId =
-      repository.findByIdLessThanAndStoreId(
-        lastId, storeId, pageable
+      repository.findByIdLessThanAndIdGreaterThanAndStoreId(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitGroupResponseDTO> dtoList;
@@ -85,8 +85,8 @@ public class ProfitGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitGroupEntity> byStoreProductStoreId =
-      repository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
-        lastId, storeId, pageable
+      repository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<ProfitGroupResponseDTO> dtoList =

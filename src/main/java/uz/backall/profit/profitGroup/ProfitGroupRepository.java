@@ -9,8 +9,8 @@ import uz.backall.profit.profitHistory.ProfitHistoryEntity;
 @Repository
 public interface ProfitGroupRepository extends JpaRepository<ProfitGroupEntity, Long> {
 
-  Page<ProfitGroupEntity> findByIdLessThanAndStoreId(Long id, Long storeId, Pageable pageable);
-  Page<ProfitGroupEntity> findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long storeId, Pageable pageable);
+  Page<ProfitGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreId(Long id, Long id2, Long storeId, Pageable pageable);
+  Page<ProfitGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
   ProfitGroupEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
 }

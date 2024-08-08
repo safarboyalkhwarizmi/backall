@@ -73,8 +73,8 @@ public class SellHistoryGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryGroupEntity> byStoreId =
-      sellHistoryGroupRepository.findByIdLessThanAndStoreId(
-        lastId, storeId, pageable
+      sellHistoryGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreId(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<SellHistoryGroupResponseDTO> dtoList;
@@ -114,8 +114,8 @@ public class SellHistoryGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellHistoryGroupEntity> byStoreId =
-      sellHistoryGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(
-        lastId, storeId, pageable
+      sellHistoryGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
       );
 
     List<SellHistoryGroupResponseDTO> dtoList =

@@ -43,7 +43,9 @@ public class SellAmountDateService {
     }
 
     Pageable pageable = PageRequest.of(page, size);
-    Page<SellAmountDateEntity> byStoreProductStoreId = sellAmountDateRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
+    Page<SellAmountDateEntity> byStoreProductStoreId = sellAmountDateRepository.findByIdLessThanAndIdGreaterThanAndStoreId(
+      lastId, lastId - size, storeId, pageable
+    );
     List<SellAmountDateResponse> dtoList;
 
     if (user.getRole().equals(Role.BOSS)) {
@@ -94,7 +96,9 @@ public class SellAmountDateService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellAmountDateEntity> byStoreProductStoreId =
-      sellAmountDateRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
+      sellAmountDateRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
+      );
 
     List<SellAmountDateResponse> dtoList =
       byStoreProductStoreId.getContent().stream()

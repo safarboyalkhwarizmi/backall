@@ -55,7 +55,7 @@ public class SellGroupService {
     Pageable pageable = PageRequest.of(page, size);
 
     Page<SellGroupEntity> sellGroupEntities =
-      sellGroupRepository.findByIdLessThanAndStoreId(lastId, storeId, pageable);
+      sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreId(lastId, lastId - size, storeId, pageable);
 
     List<SellGroupResponseDTO> dtoList;
     if (user.getRole().equals(Role.BOSS)) {
@@ -89,7 +89,9 @@ public class SellGroupService {
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellGroupEntity> byStoreProductStoreId =
-      sellGroupRepository.findByIdLessThanAndStoreIdAndIsOwnerDownloadedFalse(lastId, storeId, pageable);
+      sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(
+        lastId, lastId - size, storeId, pageable
+      );
 
     List<SellGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
       .map(sellGroupEntity -> {
