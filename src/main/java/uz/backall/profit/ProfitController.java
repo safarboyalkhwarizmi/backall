@@ -21,6 +21,7 @@ import uz.backall.profit.profitHistory.ProfitHistoryService;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupCreateDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupResponseDTO;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupService;
+import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
 import uz.backall.user.User;
 
 @RestController
@@ -85,6 +86,21 @@ public class ProfitController {
       )
     );
   }
+
+  @GetMapping("/amount/date/get")
+  public ResponseEntity<ProfitAmountDateResponse> getSellAmountDateInfo(
+    @RequestParam(value = "date") String date,
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitAmountDateService.getInfoByDate(
+        date, storeId
+      )
+    );
+  }
+
 
   @GetMapping("/amount/date/lastId")
   public ResponseEntity<Long> getLastIdAmountDate(

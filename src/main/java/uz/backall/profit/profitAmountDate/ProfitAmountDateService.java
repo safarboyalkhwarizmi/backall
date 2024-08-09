@@ -110,4 +110,20 @@ public class ProfitAmountDateService {
   public Long getLastId(Long storeId) {
     return profitAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
   }
+
+  public ProfitAmountDateResponse getInfoByDate(String date, Long storeId) {
+    Optional<ProfitAmountDateEntity> byStoreIdAndDate =
+      profitAmountDateRepository.findByStoreIdAndDate(storeId, date);
+    if (byStoreIdAndDate.isEmpty()) {
+      throw new ProfitAmountNotFoundException("Profit amount not found");
+    }
+
+    ProfitAmountDateEntity profitAmountDate = byStoreIdAndDate.get();
+
+    return new ProfitAmountDateResponse(
+      profitAmountDate.getId(),
+      profitAmountDate.getDate(),
+      profitAmountDate.getAmount()
+    );
+  }
 }

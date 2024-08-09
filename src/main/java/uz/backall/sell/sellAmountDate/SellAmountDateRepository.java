@@ -13,4 +13,6 @@ public interface SellAmountDateRepository extends JpaRepository<SellAmountDateEn
   Page<SellAmountDateEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
   SellAmountDateEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
+
+  SellAmountDateEntity findByStoreIdAndDate(Long storeId, String date);
 }

@@ -76,7 +76,23 @@ public class SellAmountDateService {
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
+  public SellAmountDateResponse getInfoByDate(
+    String date, Long storeId
+  ) {
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
 
+    SellAmountDateEntity sellAmountDate = sellAmountDateRepository.findByStoreIdAndDate(
+      storeId, date
+    );
+    return new SellAmountDateResponse(
+      sellAmountDate.getId(),
+      sellAmountDate.getDate(),
+      sellAmountDate.getAmount()
+    );
+  }
 
   public Page<SellAmountDateResponse> getInfoNotDownloaded(
     Long lastId,
