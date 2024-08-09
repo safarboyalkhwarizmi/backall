@@ -156,6 +156,8 @@ public class SellHistoryService {
   }
 
   public Long getLastId(Long storeId) {
-    return repository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId).getId();
+    return repository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId)
+      .map(SellHistoryEntity::getId)
+      .orElseThrow(() -> new SellHistoryNotFoundException("No SellGroup found for storeId: " + storeId));
   }
 }

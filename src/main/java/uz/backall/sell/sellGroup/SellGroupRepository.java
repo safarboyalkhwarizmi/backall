@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long> {
@@ -13,6 +14,5 @@ public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long
 
   Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
-
-  SellGroupEntity findTop1ByStoreIdOrderByCreatedDateDesc(Long storeId);
+  Optional<SellGroupEntity> findTop1ByStoreIdOrderByCreatedDateDesc(Long storeId);
 }

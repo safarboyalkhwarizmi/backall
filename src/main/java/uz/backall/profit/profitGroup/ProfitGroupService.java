@@ -112,6 +112,8 @@ public class ProfitGroupService {
   }
 
   public Long getLastId(Long storeId) {
-    return repository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+    return repository.findTop1ByStoreIdOrderByIdDesc(storeId)
+      .map(ProfitGroupEntity::getId)
+      .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
   }
 }

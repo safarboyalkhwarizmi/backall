@@ -76,17 +76,16 @@ public class SellAmountDateService {
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
-  public SellAmountDateResponse getInfoByDate(
-    String date, Long storeId
-  ) {
-    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
-    if (storeById.isEmpty()) {
-      throw new StoreNotFoundException("Store not found");
-    }
+  public SellAmountDateResponse getInfoByDate(String date, Long storeId) {
+    // Check if the store exists
+    StoreEntity store = storeRepository.findById(storeId)
+      .orElseThrow(() -> new StoreNotFoundException("Store not found for id: " + storeId));
 
-    SellAmountDateEntity sellAmountDate = sellAmountDateRepository.findByStoreIdAndDate(
-      storeId, date
-    );
+    // Find the SellAmountDateEntity by storeId and date
+    SellAmountDateEntity sellAmountDate = sellAmountDateRepository.findByStoreIdAndDate(storeId, date)
+      .orElseThrow(() -> new SellAmountDateNotFoundException("SellAmountDate not found for storeId: " + storeId));
+
+    // Return the response with the necessary details
     return new SellAmountDateResponse(
       sellAmountDate.getId(),
       sellAmountDate.getDate(),
@@ -118,22 +117,24 @@ public class SellAmountDateService {
 
     List<SellAmountDateResponse> dtoList =
       byStoreProductStoreId.getContent().stream()
-      .map(sellAmountDateEntity -> {
-        sellAmountDateEntity.setIsOwnerDownloaded(true);
-        sellAmountDateRepository.save(sellAmountDateEntity);
+        .map(sellAmountDateEntity -> {
+          sellAmountDateEntity.setIsOwnerDownloaded(true);
+          sellAmountDateRepository.save(sellAmountDateEntity);
 
-        return new SellAmountDateResponse(
-          sellAmountDateEntity.getId(),
-          sellAmountDateEntity.getDate(),
-          sellAmountDateEntity.getAmount()
-        );
-      })
-      .collect(Collectors.toList());
+          return new SellAmountDateResponse(
+            sellAmountDateEntity.getId(),
+            sellAmountDateEntity.getDate(),
+            sellAmountDateEntity.getAmount()
+          );
+        })
+        .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 
   public Long getLastId(Long storeId) {
-    return sellAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+    return sellAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId)
+      .map(SellAmountDateEntity::getId)
+      .orElseThrow(() -> new SellAmountDateNotFoundException("No SellAmountDate found for storeId: " + storeId));
   }
 }

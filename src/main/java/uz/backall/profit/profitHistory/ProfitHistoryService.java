@@ -136,6 +136,9 @@ public class ProfitHistoryService {
   }
 
   public Long getLastId(Long storeId) {
-    return repository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+    return repository.findTop1ByStoreIdOrderByIdDesc(storeId)
+      .map(ProfitHistoryEntity::getId)
+      .orElseThrow(() -> new ProfitHistoryNotFoundException("No ProfitHistory found for storeId: " + storeId));
   }
+
 }

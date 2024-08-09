@@ -124,6 +124,8 @@ public class SellGroupService {
   }
 
   public Long getLastId(Long storeId) {
-    return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId).getId();
+    return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId)
+      .map(SellGroupEntity::getId)
+      .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
   }
 }

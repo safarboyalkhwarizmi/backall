@@ -126,6 +126,9 @@ public class ProfitHistoryGroupService {
   }
 
   public Long getLastId(Long storeId) {
-    return profitHistoryGroupRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+    return profitHistoryGroupRepository.findTop1ByStoreIdOrderByIdDesc(storeId)
+      .map(ProfitHistoryGroupEntity::getId)
+      .orElseThrow(() -> new ProfitHistoryGroupNotFoundException("No ProfitHistoryGroup found for storeId: " + storeId));
   }
+
 }

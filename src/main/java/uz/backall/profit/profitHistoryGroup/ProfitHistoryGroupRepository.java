@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import uz.backall.sell.sellAmountDate.SellAmountDateEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface ProfitHistoryGroupRepository extends JpaRepository<ProfitHistoryGroupEntity, Long> {
   Page<ProfitHistoryGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreId(Long id, Long id2, Long storeId, Pageable pageable);
 
   Page<ProfitHistoryGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
-  ProfitHistoryGroupEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
+  Optional<ProfitHistoryGroupEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);
 }
