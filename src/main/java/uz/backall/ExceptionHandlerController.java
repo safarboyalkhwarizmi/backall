@@ -14,7 +14,15 @@ import uz.backall.auth.UserAlreadyExistsException;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
+import uz.backall.profit.profitAmountDate.ProfitAmountNotFoundException;
+import uz.backall.profit.profitGroup.ProfitGroupNotFoundException;
+import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
+import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupNotFoundException;
+import uz.backall.sell.sellAmountDate.SellAmountDateNotFoundException;
+import uz.backall.sell.sellGroup.SellGroupNotFoundException;
+import uz.backall.sell.sellHistory.SellHistoryNotFoundException;
 import uz.backall.sell.sellHistory.SellingPriceException;
+import uz.backall.sell.sellHistoryGroup.SellHistoryGroupNotFoundException;
 import uz.backall.store.StoreAlreadyExistsException;
 import uz.backall.store.StoreNotFoundException;
 
@@ -71,6 +79,46 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({StoreNotFoundException.class})
   private ResponseEntity<?> handler(StoreNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({SellGroupNotFoundException.class})
+  private ResponseEntity<?> handler(SellGroupNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({SellHistoryNotFoundException.class})
+  private ResponseEntity<?> handler(SellHistoryNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({SellHistoryGroupNotFoundException.class})
+  private ResponseEntity<?> handler(SellHistoryGroupNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({SellAmountDateNotFoundException.class})
+  private ResponseEntity<?> handler(SellAmountDateNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({ProfitGroupNotFoundException.class})
+  private ResponseEntity<?> handler(ProfitGroupNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({ProfitHistoryNotFoundException.class})
+  private ResponseEntity<?> handler(ProfitHistoryNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({ProfitHistoryGroupNotFoundException.class})
+  private ResponseEntity<?> handler(ProfitHistoryGroupNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({ProfitAmountNotFoundException.class})
+  private ResponseEntity<?> handler(ProfitAmountNotFoundException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
 }
