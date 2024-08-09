@@ -87,7 +87,7 @@ public class ProfitController {
     );
   }
 
-  @GetMapping("/amount/date/get")
+  @GetMapping("/amount/date/get/by")
   public ResponseEntity<ProfitAmountDateResponse> getSellAmountDateInfoByDate(
     @RequestParam(value = "date") String date,
     @RequestParam(value = "storeId") Long storeId

@@ -86,7 +86,7 @@ public class SellController {
   }
 
 
-  @GetMapping("/amount/date/get")
+  @GetMapping("/amount/date/get/by")
   public ResponseEntity<SellAmountDateResponse> getSellAmountDateInfoByDate(
     @RequestParam(value = "date") String date,
     @RequestParam(value = "storeId") Long storeId
