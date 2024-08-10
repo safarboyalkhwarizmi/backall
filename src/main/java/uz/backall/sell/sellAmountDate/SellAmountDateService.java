@@ -25,11 +25,20 @@ public class SellAmountDateService {
   private final StoreRepository storeRepository;
 
   public SellAmountDateResponse create(SellAmountDateCreateDTO dto) {
-    SellAmountDateEntity sellAmountDate = new SellAmountDateEntity();
-    sellAmountDate.setAmount(dto.getAmount());
-    sellAmountDate.setDate(dto.getDate());
-    sellAmountDate.setStoreId(dto.getStoreId());
-    sellAmountDateRepository.save(sellAmountDate);
+    Optional<SellAmountDateEntity> byStoreIdAndDate = sellAmountDateRepository.findByStoreIdAndDate(dto.getStoreId(), dto.getDate());
+
+    SellAmountDateEntity sellAmountDate;
+    if (byStoreIdAndDate.isEmpty()) {
+      sellAmountDate = new SellAmountDateEntity();
+      sellAmountDate.setAmount(dto.getAmount());
+      sellAmountDate.setDate(dto.getDate());
+      sellAmountDate.setStoreId(dto.getStoreId());
+      sellAmountDateRepository.save(sellAmountDate);
+    } else {
+      sellAmountDate = byStoreIdAndDate.get();
+      sellAmountDate.setAmount(sellAmountDate.getAmount() + dto.getAmount());
+      sellAmountDateRepository.save(sellAmountDate);
+    }
 
     return new SellAmountDateResponse(sellAmountDate.getId(), sellAmountDate.getDate(), sellAmountDate.getAmount());
   }
