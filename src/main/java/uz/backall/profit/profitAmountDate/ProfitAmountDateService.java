@@ -23,11 +23,20 @@ public class ProfitAmountDateService {
   private final StoreRepository storeRepository;
 
   public ProfitAmountDateResponse create(ProfitAmountDateCreateDTO dto) {
-    ProfitAmountDateEntity profitAmountDate = new ProfitAmountDateEntity();
-    profitAmountDate.setAmount(dto.getAmount());
-    profitAmountDate.setDate(dto.getDate());
-    profitAmountDate.setStoreId(dto.getStoreId());
-    profitAmountDateRepository.save(profitAmountDate);
+    Optional<ProfitAmountDateEntity> byStoreIdAndDate = profitAmountDateRepository.findByStoreIdAndDate(dto.getStoreId(), dto.getDate());
+
+    ProfitAmountDateEntity profitAmountDate;
+    if (byStoreIdAndDate.isEmpty()) {
+      profitAmountDate = new ProfitAmountDateEntity();
+      profitAmountDate.setAmount(dto.getAmount());
+      profitAmountDate.setDate(dto.getDate());
+      profitAmountDate.setStoreId(dto.getStoreId());
+      profitAmountDateRepository.save(profitAmountDate);
+    } else {
+      profitAmountDate = byStoreIdAndDate.get();
+      profitAmountDate.setAmount(profitAmountDate.getAmount() + dto.getAmount());
+      profitAmountDateRepository.save(profitAmountDate);
+    }
 
     return new ProfitAmountDateResponse(
       profitAmountDate.getId(),
