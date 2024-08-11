@@ -34,7 +34,7 @@ public class ProfitAmountDateService {
       profitAmountDateRepository.save(profitAmountDate);
     } else {
       profitAmountDate = byStoreIdAndDate.get();
-      profitAmountDate.setAmount(profitAmountDate.getAmount() + dto.getAmount());
+      profitAmountDate.setAmount(dto.getAmount());
       profitAmountDateRepository.save(profitAmountDate);
     }
 

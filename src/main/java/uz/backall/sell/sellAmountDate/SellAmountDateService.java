@@ -36,7 +36,7 @@ public class SellAmountDateService {
       sellAmountDateRepository.save(sellAmountDate);
     } else {
       sellAmountDate = byStoreIdAndDate.get();
-      sellAmountDate.setAmount(sellAmountDate.getAmount() + dto.getAmount());
+      sellAmountDate.setAmount(dto.getAmount());
       sellAmountDateRepository.save(sellAmountDate);
     }
 
