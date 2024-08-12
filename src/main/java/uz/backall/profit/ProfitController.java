@@ -73,6 +73,17 @@ public class ProfitController {
     );
   }
 
+  @GetMapping("/month/amount")
+  public ResponseEntity<Double> getThisMonthAmountInfo(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      profitAmountDateService.getMonthAmount(
+        storeId
+      )
+    );
+  }
+
   @GetMapping("/amount/date/get")
   public ResponseEntity<Page<ProfitAmountDateResponse>> getAmountDateInfo(
     @RequestParam(value = "lastId") Long lastId,

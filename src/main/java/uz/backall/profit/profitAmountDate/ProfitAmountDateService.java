@@ -12,6 +12,7 @@ import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
 import uz.backall.user.User;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -134,5 +135,17 @@ public class ProfitAmountDateService {
       profitAmountDate.getDate(),
       profitAmountDate.getAmount()
     );
+  }
+
+  public Double getMonthAmount(Long storeId) {
+    Calendar calendar = Calendar.getInstance();
+    int monthNumber = calendar.get(Calendar.MONTH) + 1; // Months are 0-based in Calendar
+    int year = calendar.get(Calendar.YEAR);
+
+    // Construct the date pattern for the given month and year (e.g., "2024-08-%")
+    String datePattern = year + "-" + (monthNumber < 10 ? "0" : "") + monthNumber + "-%";
+
+    Double totalAmount = profitAmountDateRepository.findTotalAmountByStoreIdAndDatePattern(storeId, datePattern);
+    return totalAmount != null ? totalAmount : 0.0;
   }
 }
