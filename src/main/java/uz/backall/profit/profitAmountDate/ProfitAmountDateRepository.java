@@ -22,6 +22,6 @@ public interface ProfitAmountDateRepository extends JpaRepository<ProfitAmountDa
   Optional<ProfitAmountDateEntity> findByStoreIdAndDate(Long storeId, String date);
 
   @Query("SELECT SUM(s.amount) FROM ProfitAmountDateEntity s WHERE s.storeId = :storeId AND s.date LIKE :datePattern")
-  Double findTotalAmountByStoreIdAndDatePattern(@Param("storeId") Long storeId, @Param("datePattern") String datePattern);
+  Long findTotalAmountByStoreIdAndDatePattern(@Param("storeId") Long storeId, @Param("datePattern") String datePattern);
 
 }

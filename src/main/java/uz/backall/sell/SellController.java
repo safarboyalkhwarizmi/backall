@@ -86,7 +86,7 @@ public class SellController {
   }
 
   @GetMapping("/month/amount")
-  public ResponseEntity<Double> getThisMonthAmountInfo(
+  public ResponseEntity<Long> getThisMonthAmountInfo(
     @RequestParam(value = "storeId") Long storeId
   ) {
     return ResponseEntity.ok(
