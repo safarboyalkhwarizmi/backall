@@ -85,6 +85,16 @@ public class SellController {
     );
   }
 
+  @GetMapping("/month/amount")
+  public ResponseEntity<Double> getThisMonthAmountInfo(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellAmountDateService.getMonthAmount(
+        storeId
+      )
+    );
+  }
 
   @GetMapping("/amount/date/get/by")
   public ResponseEntity<SellAmountDateResponse> getSellAmountDateInfoByDate(
