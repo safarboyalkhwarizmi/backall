@@ -26,5 +26,10 @@ public interface ProfitGroupRepository extends JpaRepository<ProfitGroupEntity, 
     LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
+
   Optional<ProfitGroupEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);
+
+  Optional<ProfitGroupEntity> findTop1ByStoreIdAndCreatedDateBetweenOrderByIdDesc(
+    Long storeId, LocalDateTime toLocalDate, LocalDateTime fromLocalDate
+  );
 }

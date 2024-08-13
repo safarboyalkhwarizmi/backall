@@ -55,20 +55,20 @@ public class ProfitGroupService {
 
     List<ProfitGroupResponseDTO> dtoList;
 
-      if (user.getRole().equals(Role.BOSS)) {
-        dtoList = byStoreProductStoreId.getContent().stream()
-          .map(profitGroupEntity -> {
-            profitGroupEntity.setIsOwnerDownloaded(true);
-            repository.save(profitGroupEntity);
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(profitGroupEntity -> {
+          profitGroupEntity.setIsOwnerDownloaded(true);
+          repository.save(profitGroupEntity);
 
-            return mapToDTO(profitGroupEntity);
-          })
-          .collect(Collectors.toList());
-      } else {
-        dtoList = byStoreProductStoreId.getContent().stream()
-          .map(this::mapToDTO)
-          .collect(Collectors.toList());
-      }
+          return mapToDTO(profitGroupEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = byStoreProductStoreId.getContent().stream()
+        .map(this::mapToDTO)
+        .collect(Collectors.toList());
+    }
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
@@ -93,13 +93,13 @@ public class ProfitGroupService {
 
     List<ProfitGroupResponseDTO> dtoList =
       byStoreProductStoreId.getContent().stream()
-      .map(profitGroupEntity -> {
-        profitGroupEntity.setIsOwnerDownloaded(true);
-        repository.save(profitGroupEntity);
+        .map(profitGroupEntity -> {
+          profitGroupEntity.setIsOwnerDownloaded(true);
+          repository.save(profitGroupEntity);
 
-        return mapToDTO(profitGroupEntity);
-      })
-      .collect(Collectors.toList());
+          return mapToDTO(profitGroupEntity);
+        })
+        .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
@@ -111,12 +111,6 @@ public class ProfitGroupService {
     responseDTO.setCreatedDate(profitHistoryEntity.getCreatedDate());
     responseDTO.setStoreId(profitHistoryEntity.getStoreId());
     return responseDTO;
-  }
-
-  public Long getLastId(Long storeId) {
-    return repository.findTop1ByStoreIdOrderByIdDesc(storeId)
-      .map(ProfitGroupEntity::getId)
-      .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
   }
 
   public Page<ProfitGroupResponseDTO> getInfoByDate(Long lastId, String fromDate, String toDate, Long storeId, int page, int size, User user) {
@@ -148,8 +142,7 @@ public class ProfitGroupService {
           return mapToDTO(profitGroupEntity);
         })
         .collect(Collectors.toList());
-    }
-    else {
+    } else {
       dtoList = byStoreProductStoreId.getContent().stream()
         .map(this::mapToDTO)
         .collect(Collectors.toList());
@@ -191,5 +184,25 @@ public class ProfitGroupService {
         .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+  public Long getLastId(Long storeId) {
+    return repository.findTop1ByStoreIdOrderByIdDesc(storeId)
+      .map(ProfitGroupEntity::getId)
+      .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
+  }
+
+  public Long getLastIdByDate(Long storeId, String fromDate, String toDate) {
+    LocalDate fromLocalDate = LocalDate.parse(fromDate);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+
+    LocalDate toLocalDate = LocalDate.parse(toDate);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+
+    return repository.findTop1ByStoreIdAndCreatedDateBetweenOrderByIdDesc(
+        storeId, toLocalDateTime, fromLocalDateTime
+      )
+      .map(ProfitGroupEntity::getId)
+      .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
   }
 }

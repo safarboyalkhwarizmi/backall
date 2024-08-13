@@ -203,6 +203,17 @@ public class ProfitController {
     );
   }
 
+  @GetMapping("/group/lastId/by")
+  public ResponseEntity<Long> getLastIdProfitGroupByDate(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "fromDate") String fromDate,
+    @RequestParam(value = "toDate") String toDate
+    ) {
+    return ResponseEntity.ok(
+      profitGroupService.getLastIdByDate(storeId, fromDate, toDate)
+    );
+  }
+
   @GetMapping("/history/get")
   public ResponseEntity<Page<ProfitHistoryInfoDTO>> getInfoProfitHistory(
     @RequestParam(value = "lastId") Long lastId,
