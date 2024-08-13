@@ -135,7 +135,7 @@ public class ProfitController {
   }
 
   @GetMapping("/group/get")
-  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupByDate(
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroup(
     @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
@@ -148,11 +148,11 @@ public class ProfitController {
     );
   }
 
-  @GetMapping("/group/get/")
+  @GetMapping("/group/get/by")
   public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupByDate(
-    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
@@ -164,11 +164,11 @@ public class ProfitController {
     );
   }
 
-  @GetMapping("/group/get/not/downloaded")
-  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupNotDownloaded(
-    @RequestParam(value = "lastId") Long lastId,
+  @GetMapping("/group/get/not/downloaded/by")
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupNotDownloadedByDate(
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
@@ -177,15 +177,6 @@ public class ProfitController {
       profitGroupService.getInfoByDateNotDownloaded(
         lastId, fromDate, toDate, storeId, page, size, getUser()
       )
-    );
-  }
-
-  @GetMapping("/group/lastId")
-  public ResponseEntity<Long> getLastIdProfitGroup(
-    @RequestParam(value = "storeId") Long storeId
-  ) {
-    return ResponseEntity.ok(
-      profitGroupService.getLastId(storeId)
     );
   }
 
@@ -200,6 +191,15 @@ public class ProfitController {
       profitGroupService.getInfoNotDownloaded(
         lastId, storeId, page, size, getUser()
       )
+    );
+  }
+
+  @GetMapping("/group/lastId")
+  public ResponseEntity<Long> getLastIdProfitGroup(
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      profitGroupService.getLastId(storeId)
     );
   }
 
