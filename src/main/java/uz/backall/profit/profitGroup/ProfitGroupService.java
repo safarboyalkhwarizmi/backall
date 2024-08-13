@@ -120,10 +120,10 @@ public class ProfitGroupService {
     }
 
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitGroupEntity> byStoreProductStoreId =
@@ -162,10 +162,10 @@ public class ProfitGroupService {
     }
 
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     Pageable pageable = PageRequest.of(page, size);
     Page<ProfitGroupEntity> byStoreProductStoreId =
@@ -194,10 +194,10 @@ public class ProfitGroupService {
 
   public Long getLastIdByDate(Long storeId, String fromDate, String toDate) {
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     return repository.findTop1ByStoreIdAndCreatedDateBetweenOrderByIdDesc(
         storeId, toLocalDateTime, fromLocalDateTime

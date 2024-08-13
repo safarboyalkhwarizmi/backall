@@ -147,10 +147,10 @@ public class SellGroupService {
     Pageable pageable = PageRequest.of(page, size);
 
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     Page<SellGroupEntity> sellGroupEntities =
       sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
@@ -194,10 +194,10 @@ public class SellGroupService {
     }
 
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     Pageable pageable = PageRequest.of(page, size);
     Page<SellGroupEntity> byStoreProductStoreId =
@@ -225,10 +225,10 @@ public class SellGroupService {
 
   public Long getLastIdByDate(Long storeId, String fromDate, String toDate) {
     LocalDate fromLocalDate = LocalDate.parse(fromDate);
-    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(23, 59, 59, 999);
 
     LocalDate toLocalDate = LocalDate.parse(toDate);
-    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(0, 0, 0, 0);
 
     return sellGroupRepository.findTop1ByStoreIdAndCreatedDateBetweenOrderByCreatedDateDesc(storeId, toLocalDateTime, fromLocalDateTime)
       .map(SellGroupEntity::getId)
