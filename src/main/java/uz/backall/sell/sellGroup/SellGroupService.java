@@ -12,6 +12,8 @@ import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
 import uz.backall.user.User;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,7 +78,11 @@ public class SellGroupService {
   }
 
   public Page<SellGroupResponseDTO> getInfoNotDownloaded(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId,
+    Long storeId,
+    int page,
+    int size,
+    User user
   ) {
     if (!user.getRole().equals(Role.BOSS)) {
       return Page.empty();
@@ -127,5 +133,93 @@ public class SellGroupService {
     return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId)
       .map(SellGroupEntity::getId)
       .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
+  }
+
+  public Page<SellGroupResponseDTO> getInfoByDate(
+    Long lastId,
+    String fromDate,
+    String toDate,
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
+    // Retrieve the store by ID
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    LocalDate fromLocalDate = LocalDate.parse(fromDate);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+
+    LocalDate toLocalDate = LocalDate.parse(toDate);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+
+    Page<SellGroupEntity> sellGroupEntities =
+      sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
+        lastId, lastId - size, storeId, fromLocalDateTime, toLocalDateTime, pageable
+      );
+
+    List<SellGroupResponseDTO> dtoList;
+    if (user.getRole().equals(Role.BOSS)) {
+      dtoList = sellGroupEntities.getContent().stream()
+        .map(sellGroupEntity -> {
+          sellGroupEntity.setIsOwnerDownloaded(true);
+          sellGroupRepository.save(sellGroupEntity);
+          return mapToDto(sellGroupEntity);
+        })
+        .collect(Collectors.toList());
+    } else {
+      dtoList = sellGroupEntities.getContent().stream()
+        .map(this::mapToDto)
+        .collect(Collectors.toList());
+    }
+
+    return new PageImpl<>(dtoList, pageable, sellGroupEntities.getTotalElements());
+  }
+
+  public Page<SellGroupResponseDTO> getInfoNotDownloadedByDate(
+    Long lastId,
+    String fromDate,
+    String toDate,
+    Long storeId,
+    int page,
+    int size,
+    User user
+  ) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
+    Optional<StoreEntity> storeById = storeRepository.findById(storeId);
+    if (storeById.isEmpty()) {
+      throw new StoreNotFoundException("Store not found");
+    }
+
+    LocalDate fromLocalDate = LocalDate.parse(fromDate);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+
+    LocalDate toLocalDate = LocalDate.parse(toDate);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<SellGroupEntity> byStoreProductStoreId =
+      sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalseAndCreatedDateBetween(
+        lastId, lastId - size, storeId, fromLocalDateTime, toLocalDateTime, pageable
+      );
+
+    List<SellGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
+      .map(sellGroupEntity -> {
+        sellGroupEntity.setIsOwnerDownloaded(true);
+        sellGroupRepository.save(sellGroupEntity);
+
+        return mapToDTO(sellGroupEntity);
+      })
+      .collect(Collectors.toList());
+
+    return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }
 }
