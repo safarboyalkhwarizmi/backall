@@ -148,6 +148,38 @@ public class ProfitController {
     );
   }
 
+  @GetMapping("/group/get")
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroup(
+    @RequestParam(value = "lastId") Long lastId,
+    @RequestParam(value = "fromDate") String fromDate,
+    @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitGroupService.getInfoByDate(
+        lastId, fromDate, toDate, storeId, page, size, getUser()
+      )
+    );
+  }
+
+  @GetMapping("/group/get/not/downloaded")
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupNotDownloaded(
+    @RequestParam(value = "lastId") Long lastId,
+    @RequestParam(value = "fromDate") String fromDate,
+    @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "page", defaultValue = "0") int page,
+    @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
+    return ResponseEntity.ok(
+      profitGroupService.getInfoByDateNotDownloaded(
+        lastId, fromDate, toDate, storeId, page, size, getUser()
+      )
+    );
+  }
+
   @GetMapping("/group/lastId")
   public ResponseEntity<Long> getLastIdProfitGroup(
     @RequestParam(value = "storeId") Long storeId
