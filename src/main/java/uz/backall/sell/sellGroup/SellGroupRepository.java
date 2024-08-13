@@ -18,6 +18,10 @@ public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long
 
   Optional<SellGroupEntity> findTop1ByStoreIdOrderByCreatedDateDesc(Long storeId);
 
+  Optional<SellGroupEntity> findTop1ByStoreIdAndCreatedDateBetweenOrderByCreatedDateDesc(
+    Long storeId, LocalDateTime toLocalDate, LocalDateTime fromLocalDate
+  );
+
   Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
     Long id, Long id2, Long storeId,
     LocalDateTime toLocalDate, LocalDateTime fromLocalDate,

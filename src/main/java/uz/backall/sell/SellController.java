@@ -170,6 +170,17 @@ public class SellController {
     );
   }
 
+  @GetMapping("/group/get/lastId/by")
+  public ResponseEntity<Long> getLastIdSellGroup(
+    @RequestParam(value = "storeId") Long storeId,
+    @RequestParam(value = "fromDate") String fromDate,
+    @RequestParam(value = "toDate") String toDate
+    ) {
+    return ResponseEntity.ok(
+      sellGroupService.getLastIdByDate(storeId, fromDate, toDate)
+    );
+  }
+
   @GetMapping("/group/get/not/downloaded")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroupNotDownloaded(
     @RequestParam(value = "lastId") Long lastId,

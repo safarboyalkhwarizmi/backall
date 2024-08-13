@@ -129,12 +129,6 @@ public class SellGroupService {
     return responseDTO;
   }
 
-  public Long getLastId(Long storeId) {
-    return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId)
-      .map(SellGroupEntity::getId)
-      .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
-  }
-
   public Page<SellGroupResponseDTO> getInfoByDate(
     Long lastId,
     String fromDate,
@@ -221,5 +215,23 @@ public class SellGroupService {
       .collect(Collectors.toList());
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
+  }
+
+  public Long getLastId(Long storeId) {
+    return sellGroupRepository.findTop1ByStoreIdOrderByCreatedDateDesc(storeId)
+      .map(SellGroupEntity::getId)
+      .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
+  }
+
+  public Long getLastIdByDate(Long storeId, String fromDate, String toDate) {
+    LocalDate fromLocalDate = LocalDate.parse(fromDate);
+    LocalDateTime fromLocalDateTime = fromLocalDate.atTime(0, 0, 0, 0);
+
+    LocalDate toLocalDate = LocalDate.parse(toDate);
+    LocalDateTime toLocalDateTime = toLocalDate.atTime(23, 59, 59, 999);
+
+    return sellGroupRepository.findTop1ByStoreIdAndCreatedDateBetweenOrderByCreatedDateDesc(storeId, toLocalDateTime, fromLocalDateTime)
+      .map(SellGroupEntity::getId)
+      .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
   }
 }
