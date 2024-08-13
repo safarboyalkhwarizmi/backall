@@ -205,9 +205,9 @@ public class ProfitController {
 
   @GetMapping("/group/lastId/by")
   public ResponseEntity<Long> getLastIdProfitGroupByDate(
-    @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "fromDate") String fromDate,
-    @RequestParam(value = "toDate") String toDate
+    @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "storeId") Long storeId
     ) {
     return ResponseEntity.ok(
       profitGroupService.getLastIdByDate(storeId, fromDate, toDate)

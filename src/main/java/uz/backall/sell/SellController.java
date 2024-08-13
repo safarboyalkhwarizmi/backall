@@ -147,9 +147,9 @@ public class SellController {
 
   @GetMapping("/group/get/by")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroupByDate(
-    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
@@ -172,12 +172,14 @@ public class SellController {
 
   @GetMapping("/group/get/lastId/by")
   public ResponseEntity<Long> getLastIdSellGroup(
-    @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "fromDate") String fromDate,
-    @RequestParam(value = "toDate") String toDate
+    @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "storeId") Long storeId
     ) {
     return ResponseEntity.ok(
-      sellGroupService.getLastIdByDate(storeId, fromDate, toDate)
+      sellGroupService.getLastIdByDate(
+        storeId, fromDate, toDate
+      )
     );
   }
 
@@ -197,9 +199,9 @@ public class SellController {
 
   @GetMapping("/group/get/not/downloaded/by")
   public ResponseEntity<Page<SellGroupResponseDTO>> getInfoSellGroupNotDownloadedByDate(
-    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,
+    @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
     @RequestParam(value = "size", defaultValue = "10") int size
