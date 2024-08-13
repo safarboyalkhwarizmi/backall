@@ -159,6 +159,10 @@ public class ProfitGroupService {
   }
 
   public Page<ProfitGroupResponseDTO> getInfoByDateNotDownloaded(Long lastId, String fromDate, String toDate, Long storeId, int page, int size, User user) {
+    if (!user.getRole().equals(Role.BOSS)) {
+      return Page.empty();
+    }
+
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -176,10 +180,8 @@ public class ProfitGroupService {
         lastId, lastId - size, storeId, toLocalDateTime, fromLocalDateTime, pageable
       );
 
-    List<ProfitGroupResponseDTO> dtoList;
-
-    if (user.getRole().equals(Role.BOSS)) {
-      dtoList = byStoreProductStoreId.getContent().stream()
+    List<ProfitGroupResponseDTO> dtoList =
+      byStoreProductStoreId.getContent().stream()
         .map(profitGroupEntity -> {
           profitGroupEntity.setIsOwnerDownloaded(true);
           repository.save(profitGroupEntity);
@@ -187,12 +189,6 @@ public class ProfitGroupService {
           return mapToDTO(profitGroupEntity);
         })
         .collect(Collectors.toList());
-    }
-    else {
-      dtoList = byStoreProductStoreId.getContent().stream()
-        .map(this::mapToDTO)
-        .collect(Collectors.toList());
-    }
 
     return new PageImpl<>(dtoList, pageable, byStoreProductStoreId.getTotalElements());
   }

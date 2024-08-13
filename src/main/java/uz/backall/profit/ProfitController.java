@@ -135,7 +135,7 @@ public class ProfitController {
   }
 
   @GetMapping("/group/get")
-  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroup(
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupByDate(
     @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "storeId") Long storeId,
     @RequestParam(value = "page", defaultValue = "0") int page,
@@ -148,8 +148,8 @@ public class ProfitController {
     );
   }
 
-  @GetMapping("/group/get")
-  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroup(
+  @GetMapping("/group/get/")
+  public ResponseEntity<Page<ProfitGroupResponseDTO>> getInfoProfitGroupByDate(
     @RequestParam(value = "lastId") Long lastId,
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,

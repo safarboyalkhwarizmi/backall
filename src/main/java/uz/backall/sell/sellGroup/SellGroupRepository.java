@@ -20,13 +20,13 @@ public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long
 
   Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
     Long id, Long id2, Long storeId,
-    LocalDateTime fromLocalDate, LocalDateTime toLocalDate,
+    LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
 
   Page<SellGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalseAndCreatedDateBetween(
     Long id, Long id2, Long storeId,
-    LocalDateTime fromLocalDate, LocalDateTime toLocalDate,
+    LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
 }

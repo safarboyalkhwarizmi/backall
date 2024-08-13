@@ -17,13 +17,13 @@ public interface ProfitGroupRepository extends JpaRepository<ProfitGroupEntity, 
 
   Page<ProfitGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
     Long id, Long id2, Long storeId,
-    LocalDateTime fromLocalDate, LocalDateTime toLocalDate,
+    LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
 
   Page<ProfitGroupEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalseAndCreatedDateBetween(
     Long id, Long id2, Long storeId,
-    LocalDateTime fromLocalDate, LocalDateTime toLocalDate,
+    LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
   Optional<ProfitGroupEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);

@@ -160,7 +160,7 @@ public class SellGroupService {
 
     Page<SellGroupEntity> sellGroupEntities =
       sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndCreatedDateBetween(
-        lastId, lastId - size, storeId, fromLocalDateTime, toLocalDateTime, pageable
+        lastId, lastId - size, storeId, toLocalDateTime, fromLocalDateTime, pageable
       );
 
     List<SellGroupResponseDTO> dtoList;
@@ -208,7 +208,7 @@ public class SellGroupService {
     Pageable pageable = PageRequest.of(page, size);
     Page<SellGroupEntity> byStoreProductStoreId =
       sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalseAndCreatedDateBetween(
-        lastId, lastId - size, storeId, fromLocalDateTime, toLocalDateTime, pageable
+        lastId, lastId - size, storeId, toLocalDateTime, fromLocalDateTime, pageable
       );
 
     List<SellGroupResponseDTO> dtoList = byStoreProductStoreId.getContent().stream()
