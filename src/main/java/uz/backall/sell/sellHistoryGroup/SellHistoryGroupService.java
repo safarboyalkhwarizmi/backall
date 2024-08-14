@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.backall.products.ProductEntity;
+import uz.backall.products.ProductRepository;
 import uz.backall.sell.sellGroup.SellGroupEntity;
 import uz.backall.sell.sellGroup.SellGroupNotFoundException;
 import uz.backall.sell.sellGroup.SellGroupRepository;
@@ -18,6 +20,7 @@ import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
 import uz.backall.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +32,7 @@ public class SellHistoryGroupService {
   private final SellGroupRepository sellGroupRepository;
   private final SellHistoryRepository sellHistoryRepository;
   private final StoreRepository storeRepository;
+  private final ProductRepository productRepository;
 
   public SellHistoryGroupResponseDTO create(SellHistoryGroupCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
@@ -143,5 +147,37 @@ public class SellHistoryGroupService {
     return sellHistoryGroupRepository.findTop1ByStoreIdOrderByIdDesc(storeId)
       .map(SellHistoryGroupEntity::getId)
       .orElseThrow(() -> new SellHistoryGroupNotFoundException("No SellHistoryGroup found for storeId: " + storeId));
+  }
+
+  public List<SellHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
+    List<SellHistoryDetailDTO> sellHistoryDetails = new ArrayList<>();
+
+    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupId(storeId, groupId);
+    for (SellHistoryGroupEntity sellHistoryGroupEntity : byStoreIdAndSellGroupId) {
+      Optional<SellHistoryEntity> sellHistoryById = sellHistoryRepository.findById(sellHistoryGroupEntity.getId());
+      if (sellHistoryById.isEmpty()) {
+        continue;
+      }
+
+      SellHistoryEntity sellHistory = sellHistoryById.get();
+
+      Optional<ProductEntity> productByProductId = productRepository.findById(sellHistory.getProductId());
+      if (productByProductId.isEmpty()) {
+        continue;
+      }
+
+      SellHistoryDetailDTO dto = new SellHistoryDetailDTO();
+      dto.setId(sellHistory.getId());
+      dto.setName(productByProductId.get().getName());
+      dto.setCount_type(productByProductId.get().getType().name());
+      dto.setSaved(sellHistory.getIsOwnerDownloaded());
+      dto.setSelling_price(sellHistory.getSellingPrice());
+      dto.setCount(sellHistory.getCount());
+      dto.setCreated_date(sellHistory.getCreatedDate());
+      dto.setProduct_id(sellHistory.getProductId());
+      sellHistoryDetails.add(dto);
+    }
+
+    return sellHistoryDetails;
   }
 }

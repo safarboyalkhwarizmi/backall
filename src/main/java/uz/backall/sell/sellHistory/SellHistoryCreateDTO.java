@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 public class SellHistoryCreateDTO {
   private Long productId;
   private Long storeId;
-  private Double count;
+  private Long count;
   private String countType;
-  private Double sellingPrice;
+  private Long sellingPrice;
   private LocalDateTime createdDate;
 }

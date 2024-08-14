@@ -17,9 +17,9 @@ public class SellHistoryEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Double count;
+  private Long count;
 
-  private Double sellingPrice;
+  private Long sellingPrice;
 
   private String countType;
 
