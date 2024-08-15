@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 @Setter
 public class ProfitHistoryCreateDTO {
   private Long productId;
-  private Double count;
+  private Long count;
   private String countType;
   private Long storeId;
-  private Double profit;
+  private Long profit;
   private LocalDateTime createdDate;
 }

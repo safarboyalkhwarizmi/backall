@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @Setter
 public class ProfitHistoryResponseDTO {
   private Long id;
-  private Double count;
-  private Double profit;
+  private Long count;
+  private Long profit;
   private String countType;
   private LocalDateTime createdDate;
   private Long productId;
