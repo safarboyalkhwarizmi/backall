@@ -242,7 +242,7 @@ public class ProfitController {
   }
 
   @GetMapping("/history/get/detail/by")
-  public ResponseEntity<List<ProfitHistoryDetailDTO>> getLastIdSellHistory(
+  public ResponseEntity<List<ProfitHistoryDetailDTO>> getProfitHistoriesByProfitGroupGlobalId(
     @RequestParam(value = "groupId") Long groupId,
     @RequestParam(value = "storeId") Long storeId
   ) {

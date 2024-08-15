@@ -241,7 +241,7 @@ public class SellController {
 
 
   @GetMapping("/history/get/detail/by")
-  public ResponseEntity<List<SellHistoryDetailDTO>> getLastIdSellHistory(
+  public ResponseEntity<List<SellHistoryDetailDTO>> getSellHistoriesBySellGroupGlobalId(
     @RequestParam(value = "groupId") Long groupId,
     @RequestParam(value = "storeId") Long storeId
   ) {
