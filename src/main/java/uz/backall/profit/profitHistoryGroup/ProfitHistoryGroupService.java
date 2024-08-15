@@ -6,18 +6,24 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.backall.products.ProductEntity;
+import uz.backall.products.ProductRepository;
 import uz.backall.profit.profitGroup.ProfitGroupEntity;
 import uz.backall.profit.profitGroup.ProfitGroupNotFoundException;
 import uz.backall.profit.profitGroup.ProfitGroupRepository;
 import uz.backall.profit.profitHistory.ProfitHistoryEntity;
 import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
 import uz.backall.profit.profitHistory.ProfitHistoryRepository;
+import uz.backall.sell.sellHistory.SellHistoryEntity;
+import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
+import uz.backall.sell.sellHistoryGroup.SellHistoryGroupEntity;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
 import uz.backall.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +35,7 @@ public class ProfitHistoryGroupService {
   private final ProfitGroupRepository profitGroupRepository;
   private final ProfitHistoryRepository profitHistoryRepository;
   private final StoreRepository storeRepository;
+  private final ProductRepository productRepository;
 
   public ProfitHistoryGroupResponseDTO create(ProfitHistoryGroupCreateDTO dto) {
     Optional<StoreEntity> storeById = storeRepository.findById(dto.getStoreId());
@@ -130,5 +137,38 @@ public class ProfitHistoryGroupService {
       .map(ProfitHistoryGroupEntity::getId)
       .orElseThrow(() -> new ProfitHistoryGroupNotFoundException("No ProfitHistoryGroup found for storeId: " + storeId));
   }
+
+  public List<ProfitHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
+    List<ProfitHistoryDetailDTO> profitHistoryDetails = new ArrayList<>();
+
+    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupId(storeId, groupId);
+    for (ProfitHistoryGroupEntity profitHistoryGroupEntity : byStoreIdAndProfitGroupId) {
+      Optional<ProfitHistoryEntity> profitHistoryById = profitHistoryRepository.findById(profitHistoryGroupEntity.getId());
+      if (profitHistoryById.isEmpty()) {
+        continue;
+      }
+
+      ProfitHistoryEntity profitHistory = profitHistoryById.get();
+
+      Optional<ProductEntity> productByProductId = productRepository.findById(profitHistory.getProductId());
+      if (productByProductId.isEmpty()) {
+        continue;
+      }
+
+      ProfitHistoryDetailDTO dto = new ProfitHistoryDetailDTO();
+      dto.setId(profitHistory.getId());
+      dto.setName(productByProductId.get().getName());
+      dto.setCount_type(productByProductId.get().getType().name());
+      dto.setSaved(profitHistory.getIsOwnerDownloaded());
+      dto.setProfit(profitHistory.getProfit());
+      dto.setCount(profitHistory.getCount());
+      dto.setCreated_date(profitHistory.getCreatedDate());
+      dto.setProduct_id(profitHistory.getProductId());
+      profitHistoryDetails.add(dto);
+    }
+
+    return profitHistoryDetails;
+  }
+
 
 }

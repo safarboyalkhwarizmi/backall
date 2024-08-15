@@ -17,9 +17,9 @@ public class ProfitHistoryEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private Double count;
+  private Long count;
 
-  private Double profit;
+  private Long profit;
 
   private String countType;
 
