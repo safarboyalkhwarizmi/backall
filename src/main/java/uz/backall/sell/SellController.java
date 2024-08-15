@@ -17,10 +17,13 @@ import uz.backall.sell.sellHistory.SellHistoryCreateDTO;
 import uz.backall.sell.sellHistory.SellHistoryInfoDTO;
 import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryService;
+import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupCreateDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupService;
 import uz.backall.user.User;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/store/sell")
@@ -175,7 +178,7 @@ public class SellController {
     @RequestParam(value = "fromDate") String fromDate,
     @RequestParam(value = "toDate") String toDate,
     @RequestParam(value = "storeId") Long storeId
-    ) {
+  ) {
     return ResponseEntity.ok(
       sellGroupService.getLastIdByDate(
         storeId, fromDate, toDate
@@ -235,6 +238,18 @@ public class SellController {
       sellHistoryService.getLastId(storeId)
     );
   }
+
+
+  @GetMapping("/history/get/detail/by")
+  public ResponseEntity<List<SellHistoryDetailDTO>> getLastIdSellHistory(
+    @RequestParam(value = "groupId") Long groupId,
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      sellHistoryGroupService.getDetailByGroupId(groupId, storeId)
+    );
+  }
+
 
   @GetMapping("/history/get/not/downloaded")
   public ResponseEntity<Page<SellHistoryInfoDTO>> getInfoSellHistoryNotDownloaded(
