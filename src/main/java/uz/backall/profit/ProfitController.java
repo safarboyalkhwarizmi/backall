@@ -18,12 +18,10 @@ import uz.backall.profit.profitHistory.ProfitHistoryCreateDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryInfoDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryService;
-import uz.backall.profit.profitHistoryGroup.ProfitHistoryDetailDTO;
-import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupCreateDTO;
-import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupResponseDTO;
-import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupService;
+import uz.backall.profit.profitHistoryGroup.*;
 import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
 import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
+import uz.backall.sell.sellHistoryGroup.SellHistoryLinkInfoDTO;
 import uz.backall.user.User;
 
 import java.util.List;
@@ -275,6 +273,19 @@ public class ProfitController {
     return ResponseEntity.ok(
       profitHistoryGroupService.getInfo(
         lastId, storeId, page, size, getUser()
+      )
+    );
+  }
+
+
+  @GetMapping("/link/info/by")
+  public ResponseEntity<List<ProfitHistoryLinkInfoDTO>> getInfoProfitHistoryGroup(
+    @RequestParam(value = "groupId") Long groupId,
+    @RequestParam(value = "storeId") Long storeId
+  ) {
+    return ResponseEntity.ok(
+      profitHistoryGroupService.getProfitHistoryLinkInfo(
+        groupId, storeId, getUser()
       )
     );
   }

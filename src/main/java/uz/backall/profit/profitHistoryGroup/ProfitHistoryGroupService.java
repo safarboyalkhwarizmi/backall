@@ -14,9 +14,12 @@ import uz.backall.profit.profitGroup.ProfitGroupRepository;
 import uz.backall.profit.profitHistory.ProfitHistoryEntity;
 import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
 import uz.backall.profit.profitHistory.ProfitHistoryRepository;
+import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryEntity;
+import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupEntity;
+import uz.backall.sell.sellHistoryGroup.SellHistoryLinkInfoDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
@@ -171,4 +174,37 @@ public class ProfitHistoryGroupService {
   }
 
 
+  public List<ProfitHistoryLinkInfoDTO> getProfitHistoryLinkInfo(
+    Long groupId,
+    Long storeId,
+    User user
+  ) {
+    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupId(storeId, groupId);
+    List<ProfitHistoryLinkInfoDTO> profitLinkDTOList = new ArrayList<>();
+    for (ProfitHistoryGroupEntity profitHistoryGroupEntity : byStoreIdAndProfitGroupId) {
+      ProfitHistoryLinkInfoDTO profitLinkDTO = new ProfitHistoryLinkInfoDTO();
+      profitLinkDTO.setId(profitHistoryGroupEntity.getId());
+      profitLinkDTO.setProfitHistoryId(profitHistoryGroupEntity.getProfitHistoryId());
+      profitLinkDTO.setProfitGroupId(groupId);
+
+      ProfitHistoryResponseDTO profitHistoryResponseDTO = getProfitHistoryResponseDTO(profitHistoryGroupEntity);
+      profitLinkDTO.setProfitHistory(profitHistoryResponseDTO);
+
+      profitLinkDTOList.add(profitLinkDTO);
+    }
+
+    return profitLinkDTOList;
+  }
+
+  private ProfitHistoryResponseDTO getProfitHistoryResponseDTO(ProfitHistoryGroupEntity profitHistoryGroupEntity) {
+    ProfitHistoryResponseDTO profitHistoryResponseDTO = new ProfitHistoryResponseDTO();
+    profitHistoryResponseDTO.setId(profitHistoryGroupEntity.getProfitHistory().getId());
+    profitHistoryResponseDTO.setCount(profitHistoryGroupEntity.getProfitHistory().getCount());
+    profitHistoryResponseDTO.setProfit(profitHistoryGroupEntity.getProfitHistory().getProfit());
+    profitHistoryResponseDTO.setCountType(profitHistoryGroupEntity.getProfitHistory().getCountType());
+    profitHistoryResponseDTO.setCreatedDate(profitHistoryGroupEntity.getProfitHistory().getCreatedDate());
+    profitHistoryResponseDTO.setProductId(profitHistoryGroupEntity.getProfitHistory().getProductId());
+    profitHistoryResponseDTO.setStoreId(profitHistoryGroupEntity.getProfitHistory().getStoreId());
+    return profitHistoryResponseDTO;
+  }
 }
