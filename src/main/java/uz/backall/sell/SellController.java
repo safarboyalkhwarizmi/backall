@@ -17,10 +17,7 @@ import uz.backall.sell.sellHistory.SellHistoryCreateDTO;
 import uz.backall.sell.sellHistory.SellHistoryInfoDTO;
 import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryService;
-import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryGroupCreateDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryGroupResponseDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryGroupService;
+import uz.backall.sell.sellHistoryGroup.*;
 import uz.backall.user.User;
 
 import java.util.List;
@@ -265,16 +262,14 @@ public class SellController {
     );
   }
 
-  @GetMapping("/link/info")
-  public ResponseEntity<Page<SellHistoryGroupResponseDTO>> getInfoSellHistoryGroup(
-    @RequestParam(value = "lastId") Long lastId,
-    @RequestParam(value = "storeId") Long storeId,
-    @RequestParam(value = "page", defaultValue = "0") int page,
-    @RequestParam(value = "size", defaultValue = "10") int size
+  @GetMapping("/link/info/by")
+  public ResponseEntity<List<SellHistoryLinkInfoDTO>> getInfoSellHistoryGroup(
+    @RequestParam(value = "groupId") Long groupId,
+    @RequestParam(value = "storeId") Long storeId
   ) {
     return ResponseEntity.ok(
-      sellHistoryGroupService.getInfo(
-        lastId, storeId, page, size, getUser()
+      sellHistoryGroupService.getSellHistoryLinkInfo(
+        groupId, storeId, getUser()
       )
     );
   }

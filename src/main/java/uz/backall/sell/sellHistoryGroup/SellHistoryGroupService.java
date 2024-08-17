@@ -14,6 +14,7 @@ import uz.backall.sell.sellGroup.SellGroupRepository;
 import uz.backall.sell.sellHistory.SellHistoryEntity;
 import uz.backall.sell.sellHistory.SellHistoryNotFoundException;
 import uz.backall.sell.sellHistory.SellHistoryRepository;
+import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
@@ -179,5 +180,39 @@ public class SellHistoryGroupService {
     }
 
     return sellHistoryDetails;
+  }
+
+  public List<SellHistoryLinkInfoDTO> getSellHistoryLinkInfo(
+    Long groupId,
+    Long storeId,
+    User user
+  ) {
+    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupId(storeId, groupId);
+    List<SellHistoryLinkInfoDTO> sellLinkDTOList = new ArrayList<>();
+    for (SellHistoryGroupEntity sellHistoryGroupEntity : byStoreIdAndSellGroupId) {
+      SellHistoryLinkInfoDTO sellLinkDTO = new SellHistoryLinkInfoDTO();
+      sellLinkDTO.setId(sellHistoryGroupEntity.getId());
+      sellLinkDTO.setSellHistoryId(sellHistoryGroupEntity.getSellHistoryId());
+      sellLinkDTO.setSellGroupId(groupId);
+
+      SellHistoryResponseDTO sellHistoryResponseDTO = getSellHistoryResponseDTO(sellHistoryGroupEntity);
+      sellLinkDTO.setSellHistory(sellHistoryResponseDTO);
+
+      sellLinkDTOList.add(sellLinkDTO);
+    }
+
+    return sellLinkDTOList;
+  }
+
+  private SellHistoryResponseDTO getSellHistoryResponseDTO(SellHistoryGroupEntity sellHistoryGroupEntity) {
+    SellHistoryResponseDTO sellHistoryResponseDTO = new SellHistoryResponseDTO();
+    sellHistoryResponseDTO.setId(sellHistoryGroupEntity.getSellHistory().getId());
+    sellHistoryResponseDTO.setCount(sellHistoryGroupEntity.getSellHistory().getCount());
+    sellHistoryResponseDTO.setSellingPrice(sellHistoryGroupEntity.getSellHistory().getSellingPrice());
+    sellHistoryResponseDTO.setCountType(sellHistoryGroupEntity.getSellHistory().getCountType());
+    sellHistoryResponseDTO.setCreatedDate(sellHistoryGroupEntity.getSellHistory().getCreatedDate());
+    sellHistoryResponseDTO.setProductId(sellHistoryGroupEntity.getSellHistory().getProductId());
+    sellHistoryResponseDTO.setStoreId(sellHistoryGroupEntity.getSellHistory().getStoreId());
+    return sellHistoryResponseDTO;
   }
 }
