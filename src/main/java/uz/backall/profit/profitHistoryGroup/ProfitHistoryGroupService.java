@@ -141,7 +141,7 @@ public class ProfitHistoryGroupService {
       .orElseThrow(() -> new ProfitHistoryGroupNotFoundException("No ProfitHistoryGroup found for storeId: " + storeId));
   }
 
-  public List<ProfitHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
+  public List<ProfitHistoryDetailDTO> getDetailByGroupId(Long groupId, Long storeId) {
     List<ProfitHistoryDetailDTO> profitHistoryDetails = new ArrayList<>();
 
     List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupId(storeId, groupId);

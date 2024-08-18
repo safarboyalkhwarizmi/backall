@@ -150,7 +150,7 @@ public class SellHistoryGroupService {
       .orElseThrow(() -> new SellHistoryGroupNotFoundException("No SellHistoryGroup found for storeId: " + storeId));
   }
 
-  public List<SellHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
+  public List<SellHistoryDetailDTO> getDetailByGroupId(Long groupId, Long storeId) {
     List<SellHistoryDetailDTO> sellHistoryDetails = new ArrayList<>();
 
     List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupId(storeId, groupId);
