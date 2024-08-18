@@ -144,7 +144,7 @@ public class ProfitHistoryGroupService {
   public List<ProfitHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
     List<ProfitHistoryDetailDTO> profitHistoryDetails = new ArrayList<>();
 
-    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupIdGreaterThan(storeId, groupId);
+    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupId(storeId, groupId);
     for (ProfitHistoryGroupEntity profitHistoryGroupEntity : byStoreIdAndProfitGroupId) {
       Optional<ProfitHistoryEntity> profitHistoryById = profitHistoryRepository.findById(profitHistoryGroupEntity.getId());
       if (profitHistoryById.isEmpty()) {
@@ -179,7 +179,7 @@ public class ProfitHistoryGroupService {
     Long storeId,
     User user
   ) {
-    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupIdGreaterThan(storeId, groupId);
+    List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupIdGreaterThanEqual(storeId, groupId);
     List<ProfitHistoryLinkInfoDTO> profitLinkDTOList = new ArrayList<>();
     for (ProfitHistoryGroupEntity profitHistoryGroupEntity : byStoreIdAndProfitGroupId) {
       ProfitHistoryLinkInfoDTO profitLinkDTO = new ProfitHistoryLinkInfoDTO();

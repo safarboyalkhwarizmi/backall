@@ -153,7 +153,7 @@ public class SellHistoryGroupService {
   public List<SellHistoryDetailDTO> getDetailByGroupId(Long storeId, Long groupId) {
     List<SellHistoryDetailDTO> sellHistoryDetails = new ArrayList<>();
 
-    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupIdGreaterThan(storeId, groupId);
+    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupId(storeId, groupId);
     for (SellHistoryGroupEntity sellHistoryGroupEntity : byStoreIdAndSellGroupId) {
       Optional<SellHistoryEntity> sellHistoryById = sellHistoryRepository.findById(sellHistoryGroupEntity.getId());
       if (sellHistoryById.isEmpty()) {
@@ -187,7 +187,7 @@ public class SellHistoryGroupService {
     Long storeId,
     User user
   ) {
-    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupIdGreaterThan(storeId, groupId);
+    List<SellHistoryGroupEntity> byStoreIdAndSellGroupId = sellHistoryGroupRepository.findByStoreIdAndSellGroupIdGreaterThanEqual(storeId, groupId);
     List<SellHistoryLinkInfoDTO> sellLinkDTOList = new ArrayList<>();
     for (SellHistoryGroupEntity sellHistoryGroupEntity : byStoreIdAndSellGroupId) {
       SellHistoryLinkInfoDTO sellLinkDTO = new SellHistoryLinkInfoDTO();
