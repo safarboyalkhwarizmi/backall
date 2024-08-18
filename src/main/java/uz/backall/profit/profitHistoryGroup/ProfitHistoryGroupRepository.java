@@ -18,5 +18,5 @@ public interface ProfitHistoryGroupRepository extends JpaRepository<ProfitHistor
 
   Optional<ProfitHistoryGroupEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);
 
-  List<ProfitHistoryGroupEntity> findByStoreIdAndProfitGroupId(Long storeId, Long groupId);
+  List<ProfitHistoryGroupEntity> findByStoreIdAndProfitGroupIdGreaterThan(Long storeId, Long groupId);
 }

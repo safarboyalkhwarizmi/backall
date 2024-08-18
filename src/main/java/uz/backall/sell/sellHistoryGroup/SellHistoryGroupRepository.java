@@ -17,5 +17,5 @@ public interface SellHistoryGroupRepository extends JpaRepository<SellHistoryGro
 
   Optional<SellHistoryGroupEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);
 
-  List<SellHistoryGroupEntity> findByStoreIdAndSellGroupId(Long storeId, Long sellGroupId);
+  List<SellHistoryGroupEntity> findByStoreIdAndSellGroupIdGreaterThan(Long storeId, Long sellGroupId);
 }
