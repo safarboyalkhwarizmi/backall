@@ -163,11 +163,12 @@ public class SellController {
 
   @GetMapping("/group/get/by/{global_id}")
   public ResponseEntity<SellGroupResponseDTO> getInfoSellGroupById(
-    @PathVariable Long global_id
+    @PathVariable Long global_id,
+    @RequestParam(value = "storeId") Long storeId
   ) {
     return ResponseEntity.ok(
       sellGroupService.getInfoByDateById(
-        global_id
+        global_id, storeId
       )
     );
   }

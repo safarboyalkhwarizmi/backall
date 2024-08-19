@@ -33,4 +33,6 @@ public interface SellGroupRepository extends JpaRepository<SellGroupEntity, Long
     LocalDateTime toLocalDate, LocalDateTime fromLocalDate,
     Pageable pageable
   );
+
+  Optional<SellGroupEntity> findByIdAndStoreId(Long id, Long storeId);
 }

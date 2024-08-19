@@ -219,11 +219,12 @@ public class ProfitController {
 
   @GetMapping("/group/get/by/{global_id}")
   public ResponseEntity<ProfitGroupResponseDTO> getInfoSellGroupById(
-    @PathVariable Long global_id
+    @PathVariable Long global_id,
+    @RequestParam(value = "storeId") Long storeId
   ) {
     return ResponseEntity.ok(
       profitGroupService.getInfoByDateById(
-        global_id
+        global_id, storeId
       )
     );
   }

@@ -235,8 +235,8 @@ public class SellGroupService {
       .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
   }
 
-  public SellGroupResponseDTO getInfoByDateById(Long id) {
-    Optional<SellGroupEntity> byId = sellGroupRepository.findById(id);
+  public SellGroupResponseDTO getInfoByDateById(Long id, Long storeId) {
+    Optional<SellGroupEntity> byId = sellGroupRepository.findByIdAndStoreId(id, storeId);
     if (byId.isEmpty()) {
       throw new SellGroupNotFound("Sell group not found.");
     }

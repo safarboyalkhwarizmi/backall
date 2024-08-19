@@ -209,8 +209,8 @@ public class ProfitGroupService {
       .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
   }
 
-  public ProfitGroupResponseDTO getInfoByDateById(Long globalId) {
-    Optional<ProfitGroupEntity> byId = repository.findById(globalId);
+  public ProfitGroupResponseDTO getInfoByDateById(Long globalId, Long storeId) {
+    Optional<ProfitGroupEntity> byId = repository.findByIdAndStoreId(globalId, storeId);
     if (byId.isEmpty()) {
       throw new SellGroupNotFound("Sell group not found.");
     }
