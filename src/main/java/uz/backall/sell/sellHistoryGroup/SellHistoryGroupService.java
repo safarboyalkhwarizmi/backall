@@ -167,19 +167,24 @@ public class SellHistoryGroupService {
         continue;
       }
 
-      SellHistoryDetailDTO dto = new SellHistoryDetailDTO();
-      dto.setId(sellHistory.getId());
-      dto.setName(productByProductId.get().getName());
-      dto.setCount_type(productByProductId.get().getType().name());
-      dto.setSaved(sellHistory.getIsOwnerDownloaded());
-      dto.setSelling_price(sellHistory.getSellingPrice());
-      dto.setCount(sellHistory.getCount());
-      dto.setCreated_date(sellHistory.getCreatedDate());
-      dto.setProduct_id(sellHistory.getProductId());
+      SellHistoryDetailDTO dto = getSellHistoryDetailDTO(sellHistory, productByProductId);
       sellHistoryDetails.add(dto);
     }
 
     return sellHistoryDetails;
+  }
+
+  private static SellHistoryDetailDTO getSellHistoryDetailDTO(SellHistoryEntity sellHistory, Optional<ProductEntity> productByProductId) {
+    SellHistoryDetailDTO dto = new SellHistoryDetailDTO();
+    dto.setId(sellHistory.getId());
+    dto.setProductName(productByProductId.get().getBrand().getName() + " " + productByProductId.get().getName());
+    dto.setCount_type(productByProductId.get().getType().name());
+    dto.setSaved(sellHistory.getIsOwnerDownloaded());
+    dto.setSelling_price(sellHistory.getSellingPrice());
+    dto.setCount(sellHistory.getCount());
+    dto.setCreated_date(sellHistory.getCreatedDate());
+    dto.setProduct_id(sellHistory.getProductId());
+    return dto;
   }
 
   public List<SellHistoryLinkInfoDTO> getSellHistoryLinkInfo(

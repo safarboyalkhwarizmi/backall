@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class SellHistoryDetailDTO {
   private Long id;
-  private String name;
+  private String productName;
   private String count_type;
   private Boolean saved;
   private Long selling_price;
