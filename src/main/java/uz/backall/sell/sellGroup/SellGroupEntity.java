@@ -18,7 +18,7 @@ public class SellGroupEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private LocalDateTime createdDate;
-  private Double amount;
+  private Long amount;
 
   @Column(name = "store_id")
   private Long storeId;

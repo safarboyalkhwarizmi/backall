@@ -16,5 +16,5 @@ public class ProfitGroupCreateDTO {
   private Long storeId;
 
   @NotNull
-  private Double profit;
+  private Long profit;
 }

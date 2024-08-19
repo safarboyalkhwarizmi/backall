@@ -16,5 +16,5 @@ public class SellGroupCreateDTO {
   private Long storeId;
 
   @NotNull
-  private Double amount;
+  private Long amount;
 }

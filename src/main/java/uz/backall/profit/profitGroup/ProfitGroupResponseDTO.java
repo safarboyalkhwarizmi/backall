@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 public class ProfitGroupResponseDTO {
   private Long id;
   private LocalDateTime createdDate;
-  private Double profit;
+  private Long profit;
   private Long storeId;
 }

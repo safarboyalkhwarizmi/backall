@@ -17,7 +17,7 @@ public class ProfitGroupEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private LocalDateTime createdDate;
-  private Double profit;
+  private Long profit;
 
   @Column(name = "store_id")
   private Long storeId;
