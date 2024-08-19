@@ -20,6 +20,7 @@ import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryService;
 import uz.backall.profit.profitHistoryGroup.*;
 import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
+import uz.backall.sell.sellGroup.SellGroupResponseDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
 import uz.backall.sell.sellHistoryGroup.SellHistoryLinkInfoDTO;
 import uz.backall.user.User;
@@ -213,6 +214,17 @@ public class ProfitController {
     ) {
     return ResponseEntity.ok(
       profitGroupService.getLastIdByDate(storeId, fromDate, toDate)
+    );
+  }
+
+  @GetMapping("/group/get/by/{global_id}")
+  public ResponseEntity<ProfitGroupResponseDTO> getInfoSellGroupById(
+    @PathVariable Long global_id
+  ) {
+    return ResponseEntity.ok(
+      profitGroupService.getInfoByDateById(
+        global_id
+      )
     );
   }
 

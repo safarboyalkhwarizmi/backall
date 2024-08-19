@@ -234,4 +234,13 @@ public class SellGroupService {
       .map(SellGroupEntity::getId)
       .orElseThrow(() -> new SellGroupNotFoundException("No SellGroup found for storeId: " + storeId));
   }
+
+  public SellGroupResponseDTO getInfoByDateById(Long id) {
+    Optional<SellGroupEntity> byId = sellGroupRepository.findById(id);
+    if (byId.isEmpty()) {
+      throw new SellGroupNotFound("Sell group not found.");
+    }
+
+    return mapToDTO(byId.get());
+  }
 }

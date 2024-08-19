@@ -161,6 +161,17 @@ public class SellController {
     );
   }
 
+  @GetMapping("/group/get/by/{global_id}")
+  public ResponseEntity<SellGroupResponseDTO> getInfoSellGroupById(
+    @PathVariable Long global_id
+  ) {
+    return ResponseEntity.ok(
+      sellGroupService.getInfoByDateById(
+        global_id
+      )
+    );
+  }
+
   @GetMapping("/group/get/lastId")
   public ResponseEntity<Long> getLastIdSellGroup(
     @RequestParam(value = "storeId") Long storeId

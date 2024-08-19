@@ -6,6 +6,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import uz.backall.sell.sellGroup.SellGroupEntity;
+import uz.backall.sell.sellGroup.SellGroupNotFound;
+import uz.backall.sell.sellGroup.SellGroupResponseDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
@@ -204,5 +207,14 @@ public class ProfitGroupService {
       )
       .map(ProfitGroupEntity::getId)
       .orElseThrow(() -> new ProfitGroupNotFoundException("No ProfitGroup found for storeId: " + storeId));
+  }
+
+  public ProfitGroupResponseDTO getInfoByDateById(Long globalId) {
+    Optional<ProfitGroupEntity> byId = repository.findById(globalId);
+    if (byId.isEmpty()) {
+      throw new SellGroupNotFound("Sell group not found.");
+    }
+
+    return mapToDTO(byId.get());
   }
 }
