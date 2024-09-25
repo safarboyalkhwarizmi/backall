@@ -35,7 +35,6 @@ public class SecurityConfiguration {
       .disable()
       .authorizeHttpRequests()
       .requestMatchers(
-        "/api/v1/auth/**",
         "/v2/api-docs",
         "/v3/api-docs",
         "/v3/api-docs/**",
@@ -46,6 +45,7 @@ public class SecurityConfiguration {
         "/swagger-ui/**",
         "/webjars/**",
         "/swagger-ui.html",
+        "/api/v1/auth/**",
         "/payment/get"
       )
       .permitAll()
@@ -69,7 +69,7 @@ public class SecurityConfiguration {
   @Bean
   public AuthenticationEntryPoint authenticationEntryPoint() {
     BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
-    entryPoint.setRealmName("SmileChat");
+    entryPoint.setRealmName("Backall");
     return entryPoint;
   }
 }

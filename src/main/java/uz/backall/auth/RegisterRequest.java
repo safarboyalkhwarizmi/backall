@@ -17,5 +17,4 @@ public class RegisterRequest {
   private String email;
   private String password;
   private String pinCode;
-  private Role role;
 }

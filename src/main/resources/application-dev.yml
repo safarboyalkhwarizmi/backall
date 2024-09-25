@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/backall_db
     username: postgres
-    password: BackAllniBitirsakPitsaYeymiz
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -24,7 +24,7 @@ server:
   port:
     8080
   address:
-    192.168.0.105
+    localhost
 app:
   url:
     http://${server.address}:${server.port}

@@ -1,6 +1,11 @@
 package uz.backall.auth;
 
+import com.google.gson.Gson;
+import io.swagger.v3.core.util.Json;
 import uz.backall.config.jwt.JwtService;
+import uz.backall.idempotencyKey.IdempotencyKeyEntity;
+import uz.backall.idempotencyKey.IdempotencyKeyRepository;
+import uz.backall.idempotencyKey.IdempotencyKeyUsedException;
 import uz.backall.store.StoreService;
 import uz.backall.token.Token;
 import uz.backall.token.TokenRepository;
@@ -13,13 +18,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.backall.util.MD5;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +33,25 @@ public class AuthenticationService {
   private final TokenRepository tokenRepository;
   private final JwtService jwtService;
   private final StoreService storeService;
+  private final IdempotencyKeyRepository idempotencyKeyRepository;
 
-  public AuthenticationResponse register(RegisterRequest request) {
+  public AuthenticationResponse register(String idempotencyKey, RegisterRequest request) {
+    IdempotencyKeyEntity savedKey = idempotencyKeyRepository.findById(idempotencyKey).orElse(null);
+
+    if (savedKey != null) {
+      if (savedKey.getExpiryDate().isBefore(LocalDateTime.now())) {
+        idempotencyKeyRepository.delete(savedKey);
+      } else {
+        Gson gson = new Gson();
+        AuthenticationResponse authenticationResponse = gson.fromJson(savedKey.getResponse(), AuthenticationResponse.class);
+        if (authenticationResponse.getAccessToken() == null) {
+          throw new IdempotencyKeyUsedException("Idempotency-Key used by other process");
+        }
+
+        return authenticationResponse;
+      }
+    }
+
     Optional<User> byEmail = repository.findByEmailAndPinCode(
       request.getEmail(),
       request.getPinCode()
@@ -46,33 +66,31 @@ public class AuthenticationService {
       .email(request.getEmail())
       .password(MD5.md5(request.getPassword()))
       .pinCode(request.getPinCode())
-      .role(request.getRole())
+      .role(Role.SELLER_BOSS)
       .build();
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
 
-    Long storeId;
-    if (request.getRole().equals(Role.BOSS)) {
-      storeId = storeService.create(savedUser.getId(), request.getStoreName());
-    } else {
-      Optional<User> byEmailAndRole = repository.findByEmailAndRole(savedUser.getEmail(), Role.BOSS);
-      if (byEmailAndRole.isEmpty()) {
-        throw new BossNotFoundException("Boss not found");
-      }
-
-      User bossProfile = byEmailAndRole.get();
-      storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
-    }
-
+    Long storeId = storeService.getStoresByUserId(savedUser.getId()).get(0).getId();
     saveUserToken(savedUser, jwtToken);
-
-    return AuthenticationResponse.builder()
+    var response = AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
-      .role(request.getRole())
+      .role(Role.SELLER_BOSS)
       .storeId(storeId)
       .build();
+
+    saveIdempotencyKey(idempotencyKey, Json.pretty(response));
+    return response;
+  }
+
+  private void saveIdempotencyKey(String idempotencyKey, String responseJson) {
+    IdempotencyKeyEntity newKey = new IdempotencyKeyEntity();
+    newKey.setKey(idempotencyKey);
+    newKey.setResponse(responseJson);
+    newKey.setExpiryDate(LocalDateTime.now().plusHours(24)); // 24-hour expiration
+    idempotencyKeyRepository.save(newKey);
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -107,7 +125,6 @@ public class AuthenticationService {
   }
 
   public Boolean check(AuthenticationCheckRequest request) {
-
     System.out.println(MD5.md5(request.getPassword()));
     List<User> byEmailAndPassword = repository.findByEmailAndPassword(
       request.getEmail(), MD5.md5(request.getPassword())
