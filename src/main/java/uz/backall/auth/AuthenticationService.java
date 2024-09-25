@@ -32,13 +32,6 @@ public class AuthenticationService {
   private final StoreService storeService;
 
   public AuthenticationResponse register(RegisterRequest request) {
-//    if (
-//      !request.getRole().equals(Role.ADMIN) &&
-//      owner.getRole().equals(Role.ADMIN)
-//    ) {
-//      throw new RegisterNotAllowedException("Registering is not allowed.");
-//    }
-
     Optional<User> byEmail = repository.findByEmailAndPinCode(
       request.getEmail(),
       request.getPinCode()

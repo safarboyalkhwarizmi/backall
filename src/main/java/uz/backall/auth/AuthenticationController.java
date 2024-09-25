@@ -4,15 +4,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uz.backall.user.User;
 
 import java.io.IOException;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -20,6 +23,14 @@ import java.io.IOException;
 public class AuthenticationController {
   private final AuthenticationService service;
 
+  @Operation(summary = "Register a new user",
+    description = "Registers a new user by accepting their personal details such as firstname, lastname, store name, email, password, and pinCode. Role of the user should also be specified.")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "User registered successfully",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))}),
+    @ApiResponse(responseCode = "400", description = "Invalid input data",
+      content = @Content)
+  })
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
     @RequestBody RegisterRequest request
@@ -27,12 +38,14 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.register(request));
   }
 
-  private User getUser() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    return (User) authentication.getPrincipal();
-  }
-
+  @Operation(summary = "Authenticate user",
+    description = "Authenticates a user by verifying the provided email, password, and pinCode. Returns an authentication token if credentials are valid.")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Authentication successful",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class))}),
+    @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
+      content = @Content)
+  })
   @PostMapping("/authenticate")
   public ResponseEntity<AuthenticationResponse> authenticate(
     @RequestBody AuthenticationRequest request
@@ -40,6 +53,14 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.authenticate(request));
   }
 
+  @Operation(summary = "Check user authentication",
+    description = "Verifies if the provided email and password are valid without returning an authentication token.")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Check completed successfully",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))}),
+    @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
+      content = @Content)
+  })
   @PostMapping("/check")
   public ResponseEntity<Boolean> authenticate(
     @RequestBody AuthenticationCheckRequest request
@@ -47,6 +68,14 @@ public class AuthenticationController {
     return ResponseEntity.ok(service.check(request));
   }
 
+  @Operation(summary = "Refresh authentication token",
+    description = "Refreshes the user's authentication token using the current refresh token. This endpoint does not require a request body.")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Token refreshed successfully",
+      content = @Content),
+    @ApiResponse(responseCode = "401", description = "Unauthorized, invalid refresh token",
+      content = @Content)
+  })
   @PostMapping("/refresh-token")
   public void refreshToken(
     HttpServletRequest request,
