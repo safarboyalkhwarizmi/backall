@@ -63,6 +63,7 @@ public class AuthenticationService {
     var user = User.builder()
       .firstname(request.getFirstname())
       .lastname(request.getLastname())
+      .phone(request.getPhone())
       .email(request.getEmail())
       .password(MD5.md5(request.getPassword()))
       .pinCode(request.getPinCode())
