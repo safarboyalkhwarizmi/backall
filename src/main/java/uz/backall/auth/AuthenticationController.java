@@ -59,11 +59,26 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
       content = @Content)
   })
-  @PostMapping("/check")
-  public ResponseEntity<Boolean> authenticate(
+  @GetMapping("/check")
+  public ResponseEntity<Boolean> checkLogin(
     @RequestBody AuthenticationCheckRequest request
   ) {
-    return ResponseEntity.ok(service.check(request));
+    return ResponseEntity.ok(service.checkLogin(request));
+  }
+
+  @Operation(summary = "Check user email",
+    description = "Verifies if the provided email are valid without returning an authentication token.")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Check completed successfully",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))}),
+    @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
+      content = @Content)
+  })
+  @GetMapping("/check")
+  public ResponseEntity<Boolean> checkEmail(
+    @RequestParam String email
+  ) {
+    return ResponseEntity.ok(service.checkEmail(email));
   }
 
   @Operation(summary = "Refresh authentication token",

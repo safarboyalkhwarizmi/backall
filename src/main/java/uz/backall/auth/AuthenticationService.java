@@ -125,14 +125,6 @@ public class AuthenticationService {
       .build();
   }
 
-  public Boolean check(AuthenticationCheckRequest request) {
-    System.out.println(MD5.md5(request.getPassword()));
-    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
-      request.getEmail(), MD5.md5(request.getPassword())
-    );
-    return !byEmailAndPassword.isEmpty();
-  }
-
   private void saveUserToken(User user, String jwtToken) {
     var token = Token.builder()
       .user(user)
@@ -186,5 +178,18 @@ public class AuthenticationService {
         new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
       }
     }
+  }
+
+  public Boolean checkLogin(AuthenticationCheckRequest request) {
+    System.out.println(MD5.md5(request.getPassword()));
+    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+      request.getEmail(), MD5.md5(request.getPassword())
+    );
+    return !byEmailAndPassword.isEmpty();
+  }
+
+  public Boolean checkEmail(String email) {
+    List<User> byEmailAndPassword = repository.findByEmail(email);
+    return !byEmailAndPassword.isEmpty();
   }
 }
