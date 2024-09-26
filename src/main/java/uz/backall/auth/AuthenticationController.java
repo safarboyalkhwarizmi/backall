@@ -74,7 +74,7 @@ public class AuthenticationController {
     @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
       content = @Content)
   })
-  @GetMapping("/check")
+  @GetMapping("/check/email")
   public ResponseEntity<Boolean> checkEmail(
     @RequestParam String email
   ) {
