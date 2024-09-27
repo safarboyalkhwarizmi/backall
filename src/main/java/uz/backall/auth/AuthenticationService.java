@@ -73,7 +73,7 @@ public class AuthenticationService {
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
 
-    Long storeId = storeService.getStoresByUserId(savedUser.getId()).get(0).getId();
+    Long storeId = storeService.create(savedUser.getId(), request.getStoreName());
     saveUserToken(savedUser, jwtToken);
     var response = AuthenticationResponse.builder()
       .accessToken(jwtToken)
