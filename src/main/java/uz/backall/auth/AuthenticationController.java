@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -61,24 +62,15 @@ public class AuthenticationController {
   })
   @GetMapping("/check")
   public ResponseEntity<Boolean> checkLogin(
-    @RequestBody AuthenticationCheckRequest request
+    @RequestParam(value = "email", required = false) Optional<String> email,
+    @RequestParam(value = "password", required = false) Optional<String> password
   ) {
-    return ResponseEntity.ok(service.checkLogin(request));
-  }
-
-  @Operation(summary = "Check user email",
-    description = "Verifies if the provided email are valid without returning an authentication token.")
-  @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Check completed successfully",
-      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))}),
-    @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials",
-      content = @Content)
-  })
-  @GetMapping("/check/email")
-  public ResponseEntity<Boolean> checkEmail(
-    @RequestParam String email
-  ) {
-    return ResponseEntity.ok(service.checkEmail(email));
+    return ResponseEntity.ok(
+      service.checkLogin(
+        email.orElse(null),
+        password.orElse(null)
+      )
+    );
   }
 
   @Operation(summary = "Refresh authentication token",

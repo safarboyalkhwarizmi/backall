@@ -180,15 +180,14 @@ public class AuthenticationService {
     }
   }
 
-  public Boolean checkLogin(AuthenticationCheckRequest request) {
-    System.out.println(MD5.md5(request.getPassword()));
-    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
-      request.getEmail(), MD5.md5(request.getPassword())
-    );
-    return !byEmailAndPassword.isEmpty();
-  }
+  public Boolean checkLogin(String email, String password) {
+    if (password != null) {
+      List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+        email, MD5.md5(password)
+      );
+      return !byEmailAndPassword.isEmpty();
+    }
 
-  public Boolean checkEmail(String email) {
     List<User> byEmailAndPassword = repository.findByEmail(email);
     return !byEmailAndPassword.isEmpty();
   }
