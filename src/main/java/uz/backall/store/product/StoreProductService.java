@@ -144,7 +144,7 @@ public class StoreProductService {
 
     Pageable pageable = PageRequest.of(page, size);
 
-    Page<StoreProductEntity> productPage = storeProductRepository.findAll(pageable);
+    Page<StoreProductEntity> productPage = storeProductRepository.findByStoreId(storeId, pageable);
 
     return productPage.map(productEntity -> {
         if (user.getRole().equals(Role.BOSS)) {
@@ -180,7 +180,7 @@ public class StoreProductService {
 
     Pageable pageable = PageRequest.of(page, size);
 
-    Page<StoreProductEntity> productPage = storeProductRepository.findByIsOwnerDownloadedFalse(pageable);
+    Page<StoreProductEntity> productPage = storeProductRepository.findByStoreIdAndIsOwnerDownloadedFalse(storeId, pageable);
 
     return productPage.map(productEntity -> {
         productEntity.setIsOwnerDownloaded(true);
