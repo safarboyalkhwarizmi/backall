@@ -84,7 +84,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({SellGroupNotFoundException.class})
   private ResponseEntity<?> handler(SellGroupNotFoundException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
   @ExceptionHandler({SellHistoryNotFoundException.class})
@@ -99,12 +99,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({SellAmountDateNotFoundException.class})
   private ResponseEntity<?> handler(SellAmountDateNotFoundException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
   @ExceptionHandler({ProfitGroupNotFoundException.class})
   private ResponseEntity<?> handler(ProfitGroupNotFoundException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
   @ExceptionHandler({ProfitHistoryNotFoundException.class})
