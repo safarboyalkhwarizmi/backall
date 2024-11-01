@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uz.backall.auth.UserAlreadyExistsException;
+import uz.backall.cardOperation.card.CardNotFoundException;
+import uz.backall.cardOperation.card.CodeIsWrongException;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
@@ -25,6 +27,7 @@ import uz.backall.sell.sellHistory.SellingPriceException;
 import uz.backall.sell.sellHistoryGroup.SellHistoryGroupNotFoundException;
 import uz.backall.store.StoreAlreadyExistsException;
 import uz.backall.store.StoreNotFoundException;
+import uz.backall.util.PaymeServerErrorException;
 
 
 import java.util.*;
@@ -119,6 +122,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({ProfitAmountNotFoundException.class})
   private ResponseEntity<?> handler(ProfitAmountNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({CardNotFoundException.class})
+  private ResponseEntity<?> handler(CardNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+  }
+
+  @ExceptionHandler({PaymeServerErrorException.class})
+  private ResponseEntity<?> handler(PaymeServerErrorException e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+  }
+
+  @ExceptionHandler({CodeIsWrongException.class})
+  private ResponseEntity<?> handler(CodeIsWrongException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
 }

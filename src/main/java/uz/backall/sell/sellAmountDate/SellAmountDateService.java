@@ -6,13 +6,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import uz.backall.sell.sellGroup.SellGroupEntity;
-import uz.backall.sell.sellGroup.SellGroupResponseDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -45,7 +43,7 @@ public class SellAmountDateService {
   }
 
   public Page<SellAmountDateResponse> getInfo(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -58,7 +56,7 @@ public class SellAmountDateService {
     );
     List<SellAmountDateResponse> dtoList;
 
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = byStoreProductStoreId.getContent().stream()
         .map(sellAmountDateEntity -> {
           sellAmountDateEntity.setIsOwnerDownloaded(true);
@@ -108,9 +106,9 @@ public class SellAmountDateService {
     Long storeId,
     int page,
     int size,
-    User user
+    UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

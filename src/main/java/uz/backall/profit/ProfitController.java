@@ -8,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateCreateDTO;
-import uz.backall.profit.profitAmountDate.ProfitAmountDateRepository;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateResponse;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateService;
 import uz.backall.profit.profitGroup.ProfitGroupCreateDTO;
@@ -19,11 +18,7 @@ import uz.backall.profit.profitHistory.ProfitHistoryInfoDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
 import uz.backall.profit.profitHistory.ProfitHistoryService;
 import uz.backall.profit.profitHistoryGroup.*;
-import uz.backall.sell.sellAmountDate.SellAmountDateResponse;
-import uz.backall.sell.sellGroup.SellGroupResponseDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryLinkInfoDTO;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.List;
 
@@ -326,9 +321,9 @@ public class ProfitController {
     );
   }
 
-  private User getUser() {
+  private UserEntity getUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    return (User) authentication.getPrincipal();
+    return (UserEntity) authentication.getPrincipal();
   }
 }

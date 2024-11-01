@@ -16,7 +16,7 @@ import uz.backall.store.StoreRepository;
 import uz.backall.store.product.StoreProductEntity;
 import uz.backall.store.product.StoreProductRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -87,7 +87,7 @@ public class SellHistoryService {
     return sellHistoryResponseDTO;
   }
 
-  public Page<SellHistoryInfoDTO> getInfo(Long lastId, Long storeId, int page, int size, User user) {
+  public Page<SellHistoryInfoDTO> getInfo(Long lastId, Long storeId, int page, int size, UserEntity userEntity) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
       throw new StoreNotFoundException("Store not found");
@@ -98,7 +98,7 @@ public class SellHistoryService {
 
     List<SellHistoryInfoDTO> dtoList;
 
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = byStoreProductStoreId.getContent().stream()
         .map(sellHistoryEntity -> {
           sellHistoryEntity.setIsOwnerDownloaded(true);
@@ -117,9 +117,9 @@ public class SellHistoryService {
   }
 
   public Page<SellHistoryInfoDTO> getInfoNotDownloaded(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

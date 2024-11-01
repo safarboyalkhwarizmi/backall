@@ -1,6 +1,6 @@
 package uz.backall.token;
 
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +25,7 @@ public class Token {
   @GeneratedValue
   public Integer id;
 
-  @Column(unique = true)
+  @Column(columnDefinition="text", length=10485760)
   public String token;
 
   @Enumerated(EnumType.STRING)
@@ -37,5 +37,5 @@ public class Token {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
-  public User user;
+  public UserEntity userEntity;
 }

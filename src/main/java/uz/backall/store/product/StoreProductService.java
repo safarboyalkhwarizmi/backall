@@ -13,7 +13,7 @@ import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.Optional;
 
@@ -135,7 +135,7 @@ public class StoreProductService {
   }
 
   public Page<StoreProductResponseDTO> getInfo(
-    Long storeId, Integer page, Integer size, User user
+    Long storeId, Integer page, Integer size, UserEntity userEntity
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -147,7 +147,7 @@ public class StoreProductService {
     Page<StoreProductEntity> productPage = storeProductRepository.findByStoreId(storeId, pageable);
 
     return productPage.map(productEntity -> {
-        if (user.getRole().equals(Role.BOSS)) {
+        if (userEntity.getRole().equals(Role.BOSS)) {
           productEntity.setIsOwnerDownloaded(true);
           storeProductRepository.save(productEntity);
         }
@@ -167,9 +167,9 @@ public class StoreProductService {
   }
 
   public Page<StoreProductResponseDTO> getInfoNotDownloaded(
-    Long storeId, Integer page, Integer size, User user
+    Long storeId, Integer page, Integer size, UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

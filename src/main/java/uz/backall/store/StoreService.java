@@ -2,7 +2,7 @@ package uz.backall.store;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 import uz.backall.user.UserRepository;
 
 import java.util.LinkedList;
@@ -16,7 +16,7 @@ public class StoreService {
   private final UserRepository userRepository;
 
   public Long create(Long userId, String storeName) {
-    Optional<User> byId = userRepository.findById(userId);
+    Optional<UserEntity> byId = userRepository.findById(userId);
     if (byId.isEmpty()) {
       throw new StoreAlreadyExistsException("Store already exists");
     }
@@ -42,17 +42,17 @@ public class StoreService {
     return result;
   }
 
-  public List<StoreResponseDTO> getStoresByUserEmail(String email) {
-    List<StoreEntity> byUserId = storeRepository.getByUser_Email(email);
-
-    List<StoreResponseDTO> result = new LinkedList<>();
-    for (StoreEntity store : byUserId) {
-      StoreResponseDTO response = new StoreResponseDTO();
-      response.setId(store.getId());
-      response.setName(store.getName());
-      result.add(response);
-    }
-
-    return result;
-  }
+//  public List<StoreResponseDTO> getStoresByUserEmail(String email) {
+//    List<StoreEntity> byUserId = storeRepository.getByUser_Email(email);
+//
+//    List<StoreResponseDTO> result = new LinkedList<>();
+//    for (StoreEntity store : byUserId) {
+//      StoreResponseDTO response = new StoreResponseDTO();
+//      response.setId(store.getId());
+//      response.setName(store.getName());
+//      result.add(response);
+//    }
+//
+//    return result;
+//  }
 }

@@ -10,7 +10,7 @@ import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +46,7 @@ public class SellGroupService {
     Long storeId,
     int page,
     int size,
-    User user
+    UserEntity userEntity
   ) {
     // Retrieve the store by ID
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
@@ -60,7 +60,7 @@ public class SellGroupService {
       sellGroupRepository.findByIdLessThanAndIdGreaterThanAndStoreId(lastId, lastId - size, storeId, pageable);
 
     List<SellGroupResponseDTO> dtoList;
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = sellGroupEntities.getContent().stream()
         .map(sellGroupEntity -> {
           sellGroupEntity.setIsOwnerDownloaded(true);
@@ -82,9 +82,9 @@ public class SellGroupService {
     Long storeId,
     int page,
     int size,
-    User user
+    UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 
@@ -136,7 +136,7 @@ public class SellGroupService {
     Long storeId,
     int page,
     int size,
-    User user
+    UserEntity userEntity
   ) {
     // Retrieve the store by ID
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
@@ -158,7 +158,7 @@ public class SellGroupService {
       );
 
     List<SellGroupResponseDTO> dtoList;
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = sellGroupEntities.getContent().stream()
         .map(sellGroupEntity -> {
           sellGroupEntity.setIsOwnerDownloaded(true);
@@ -182,9 +182,9 @@ public class SellGroupService {
     Long storeId,
     int page,
     int size,
-    User user
+    UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

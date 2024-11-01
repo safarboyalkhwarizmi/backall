@@ -18,7 +18,7 @@ import uz.backall.sell.sellHistory.SellHistoryInfoDTO;
 import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
 import uz.backall.sell.sellHistory.SellHistoryService;
 import uz.backall.sell.sellHistoryGroup.*;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.List;
 
@@ -309,9 +309,9 @@ public class SellController {
     );
   }
 
-  private User getUser() {
+  private UserEntity getUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    return (User) authentication.getPrincipal();
+    return (UserEntity) authentication.getPrincipal();
   }
 }

@@ -1,6 +1,5 @@
 package uz.backall.profit.profitHistory;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,10 +12,8 @@ import uz.backall.products.ProductRepository;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
-import uz.backall.store.product.StoreProductEntity;
-import uz.backall.store.product.StoreProductRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +64,7 @@ public class ProfitHistoryService {
   }
 
   public Page<ProfitHistoryInfoDTO> getInfo(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -81,7 +78,7 @@ public class ProfitHistoryService {
       );
 
     List<ProfitHistoryInfoDTO> dtoList;
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = byStoreProductStoreId.getContent().stream()
         .map(profitHistoryEntity -> {
           profitHistoryEntity.setIsOwnerDownloaded(true);
@@ -100,9 +97,9 @@ public class ProfitHistoryService {
   }
 
   public Page<ProfitHistoryInfoDTO> getInfoNotDownloaded(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

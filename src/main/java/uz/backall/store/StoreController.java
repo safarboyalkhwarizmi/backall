@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.List;
 
@@ -22,8 +22,8 @@ public class StoreController {
 
   private Long getUserId() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    User user = (User) authentication.getPrincipal();
+    UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
-    return user.getId();
+    return userEntity.getId();
   }
 }

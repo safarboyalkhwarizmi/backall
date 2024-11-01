@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -61,9 +61,9 @@ public class ProductController {
     );
   }
 
-  private User getUser() {
+  private UserEntity getUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    return (User) authentication.getPrincipal();
+    return (UserEntity) authentication.getPrincipal();
   }
 }

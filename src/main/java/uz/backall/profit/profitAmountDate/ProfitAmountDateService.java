@@ -10,7 +10,7 @@ import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ProfitAmountDateService {
   }
 
   public Page<ProfitAmountDateResponse> getInfo(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -61,7 +61,7 @@ public class ProfitAmountDateService {
       );
 
     List<ProfitAmountDateResponse> dtoList;
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = byStoreProductStoreId.getContent().stream()
         .map(profitAmountDateEntity -> {
           profitAmountDateEntity.setIsOwnerDownloaded(true);
@@ -80,9 +80,9 @@ public class ProfitAmountDateService {
   }
 
   public Page<ProfitAmountDateResponse> getInfoNotDownloaded(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 

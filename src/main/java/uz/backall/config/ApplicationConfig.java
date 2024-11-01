@@ -1,7 +1,6 @@
 package uz.backall.config;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.backall.user.User;
 import uz.backall.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

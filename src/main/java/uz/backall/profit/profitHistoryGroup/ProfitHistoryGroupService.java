@@ -15,16 +15,11 @@ import uz.backall.profit.profitHistory.ProfitHistoryEntity;
 import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
 import uz.backall.profit.profitHistory.ProfitHistoryRepository;
 import uz.backall.profit.profitHistory.ProfitHistoryResponseDTO;
-import uz.backall.sell.sellHistory.SellHistoryEntity;
-import uz.backall.sell.sellHistory.SellHistoryResponseDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryDetailDTO;
-import uz.backall.sell.sellHistoryGroup.SellHistoryGroupEntity;
-import uz.backall.sell.sellHistoryGroup.SellHistoryLinkInfoDTO;
 import uz.backall.store.StoreEntity;
 import uz.backall.store.StoreNotFoundException;
 import uz.backall.store.StoreRepository;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +67,7 @@ public class ProfitHistoryGroupService {
   }
 
   public Page<ProfitHistoryGroupResponseDTO> getInfo(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
     Optional<StoreEntity> storeById = storeRepository.findById(storeId);
     if (storeById.isEmpty()) {
@@ -86,7 +81,7 @@ public class ProfitHistoryGroupService {
       );
 
     List<ProfitHistoryGroupResponseDTO> dtoList;
-    if (user.getRole().equals(Role.BOSS)) {
+    if (userEntity.getRole().equals(Role.BOSS)) {
       dtoList = byStoreId.getContent().stream()
         .map(profitHistoryGroupEntity -> {
           profitHistoryGroupEntity.setIsOwnerDownloaded(true);
@@ -105,9 +100,9 @@ public class ProfitHistoryGroupService {
   }
 
   public Page<ProfitHistoryGroupResponseDTO> getInfoNotDownloaded(
-    Long lastId, Long storeId, int page, int size, User user
+    Long lastId, Long storeId, int page, int size, UserEntity userEntity
   ) {
-    if (!user.getRole().equals(Role.BOSS)) {
+    if (!userEntity.getRole().equals(Role.BOSS)) {
       return Page.empty();
     }
 
@@ -177,7 +172,7 @@ public class ProfitHistoryGroupService {
   public List<ProfitHistoryLinkInfoDTO> getProfitHistoryLinkInfo(
     Long groupId,
     Long storeId,
-    User user
+    UserEntity userEntity
   ) {
     List<ProfitHistoryGroupEntity> byStoreIdAndProfitGroupId = profitHistoryGroupRepository.findByStoreIdAndProfitGroupIdGreaterThanEqual(storeId, groupId);
     List<ProfitHistoryLinkInfoDTO> profitLinkDTOList = new ArrayList<>();

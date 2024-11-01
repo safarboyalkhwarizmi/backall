@@ -11,7 +11,7 @@ import uz.backall.token.Token;
 import uz.backall.token.TokenRepository;
 import uz.backall.token.TokenType;
 import uz.backall.user.Role;
-import uz.backall.user.User;
+import uz.backall.user.UserEntity;
 import uz.backall.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ public class AuthenticationService {
       }
     }
 
-    Optional<User> byEmail = repository.findByEmailAndPinCode(
+    Optional<UserEntity> byEmail = repository.findByEmailAndPinCode(
       request.getEmail(),
       request.getPinCode()
     );
@@ -60,7 +60,7 @@ public class AuthenticationService {
       throw new UserAlreadyExistsException("User already exists.");
     }
 
-    var user = User.builder()
+    var user = UserEntity.builder()
       .firstname(request.getFirstname())
       .lastname(request.getLastname())
       .phone(request.getPhone())
@@ -95,7 +95,7 @@ public class AuthenticationService {
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
-    List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+    List<UserEntity> byEmailAndPassword = repository.findByEmailAndPassword(
       request.getEmail(), MD5.md5(request.getPassword())
     );
     if (byEmailAndPassword.isEmpty()) {
@@ -105,12 +105,12 @@ public class AuthenticationService {
     var user = repository.findByEmailAndPinCode(request.getEmail(), request.getPinCode())
       .orElseThrow();
 
-    Optional<User> byEmailAndRole = repository.findByEmailAndRole(user.getEmail(), Role.BOSS);
+    Optional<UserEntity> byEmailAndRole = repository.findByEmailAndRole(user.getEmail(), Role.BOSS);
     if (byEmailAndRole.isEmpty()) {
       throw new BossNotFoundException("Boss not found");
     }
 
-    User bossProfile = byEmailAndRole.get();
+    UserEntity bossProfile = byEmailAndRole.get();
     Long storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
 
     var jwtToken = jwtService.generateToken(user);
@@ -125,9 +125,9 @@ public class AuthenticationService {
       .build();
   }
 
-  private void saveUserToken(User user, String jwtToken) {
+  private void saveUserToken(UserEntity userEntity, String jwtToken) {
     var token = Token.builder()
-      .user(user)
+      .userEntity(userEntity)
       .token(jwtToken)
       .tokenType(TokenType.BEARER)
       .expired(false)
@@ -136,8 +136,8 @@ public class AuthenticationService {
     tokenRepository.save(token);
   }
 
-  private void revokeAllUserTokens(User user) {
-    var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+  private void revokeAllUserTokens(UserEntity userEntity) {
+    var validUserTokens = tokenRepository.findAllValidTokenByUser(userEntity.getId());
     if (validUserTokens.isEmpty())
       return;
     validUserTokens.forEach(token -> {
@@ -182,13 +182,13 @@ public class AuthenticationService {
 
   public Boolean checkLogin(String email, String password) {
     if (password != null) {
-      List<User> byEmailAndPassword = repository.findByEmailAndPassword(
+      List<UserEntity> byEmailAndPassword = repository.findByEmailAndPassword(
         email, MD5.md5(password)
       );
       return !byEmailAndPassword.isEmpty();
     }
 
-    List<User> byEmailAndPassword = repository.findByEmail(email);
+    List<UserEntity> byEmailAndPassword = repository.findByEmail(email);
     return !byEmailAndPassword.isEmpty();
   }
 }
