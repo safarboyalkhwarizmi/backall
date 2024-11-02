@@ -17,7 +17,7 @@ public interface ProfitAmountDateRepository extends JpaRepository<ProfitAmountDa
 
   Page<ProfitAmountDateEntity> findByIdLessThanAndIdGreaterThanAndStoreIdAndIsOwnerDownloadedFalse(Long id, Long id2, Long storeId, Pageable pageable);
 
-  ProfitAmountDateEntity findTop1ByStoreIdOrderByIdDesc(Long storeId);
+  Optional<ProfitAmountDateEntity> findTop1ByStoreIdOrderByIdDesc(Long storeId);
 
   Optional<ProfitAmountDateEntity> findByStoreIdAndDate(Long storeId, String date);
 

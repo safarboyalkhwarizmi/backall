@@ -105,13 +105,13 @@ public class AuthenticationService {
     var user = repository.findByEmailAndPinCode(request.getEmail(), request.getPinCode())
       .orElseThrow();
 
-    Optional<UserEntity> byEmailAndRole = repository.findByEmailAndRole(user.getEmail(), Role.BOSS);
-    if (byEmailAndRole.isEmpty()) {
-      throw new BossNotFoundException("Boss not found");
-    }
+//    Optional<UserEntity> byEmailAndRole = repository.findByEmailAndRole(user.getEmail(), Role.BOSS);
+//    if (byEmailAndRole.isEmpty()) {
+//      throw new BossNotFoundException("Boss not found");
+//    }
 
-    UserEntity bossProfile = byEmailAndRole.get();
-    Long storeId = storeService.getStoresByUserId(bossProfile.getId()).get(0).getId();
+//    UserEntity bossProfile = byEmailAndRole.get();
+    Long storeId = storeService.getStoresByUserId(user.getId()).get(0).getId();
 
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);

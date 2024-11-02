@@ -16,7 +16,7 @@ import uz.backall.cardOperation.card.CodeIsWrongException;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
-import uz.backall.profit.profitAmountDate.ProfitAmountNotFoundException;
+import uz.backall.profit.profitAmountDate.ProfitAmountDateNotFoundException;
 import uz.backall.profit.profitGroup.ProfitGroupNotFoundException;
 import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
 import uz.backall.profit.profitHistoryGroup.ProfitHistoryGroupNotFoundException;
@@ -120,9 +120,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
 
-  @ExceptionHandler({ProfitAmountNotFoundException.class})
-  private ResponseEntity<?> handler(ProfitAmountNotFoundException e) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  @ExceptionHandler({ProfitAmountDateNotFoundException.class})
+  private ResponseEntity<?> handler(ProfitAmountDateNotFoundException e) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
   @ExceptionHandler({CardNotFoundException.class})

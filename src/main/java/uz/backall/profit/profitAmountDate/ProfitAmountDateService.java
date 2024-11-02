@@ -118,14 +118,15 @@ public class ProfitAmountDateService {
   }
 
   public Long getLastId(Long storeId) {
-    return profitAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId).getId();
+    Optional<ProfitAmountDateEntity> top1ByStoreIdOrderByIdDesc = profitAmountDateRepository.findTop1ByStoreIdOrderByIdDesc(storeId);
+    return top1ByStoreIdOrderByIdDesc.map(ProfitAmountDateEntity::getId).orElseThrow(() -> new ProfitAmountDateNotFoundException("No ProfitAmountDate found for storeId: " + storeId));
   }
 
   public ProfitAmountDateResponse getInfoByDate(String date, Long storeId) {
     Optional<ProfitAmountDateEntity> byStoreIdAndDate =
       profitAmountDateRepository.findByStoreIdAndDate(storeId, date);
     if (byStoreIdAndDate.isEmpty()) {
-      throw new ProfitAmountNotFoundException("Profit amount not found");
+      throw new ProfitAmountDateNotFoundException("Profit amount not found");
     }
 
     ProfitAmountDateEntity profitAmountDate = byStoreIdAndDate.get();
