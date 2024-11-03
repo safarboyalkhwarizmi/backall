@@ -23,24 +23,27 @@ public class PaymentService {
     return paymentRepository.findByEmailAndMonthYear(email, monthYear).isPresent();
   }
 
-  public String make(CardCreateRequestDTO dto, Long userId) {
+  public PaymentMakeResponseDTO make(CardCreateRequestDTO dto, Long userId) {
     // SAVING
     Long cardId = cardOperationService.createCard(dto, userId);
 
     // TODO CREATE CARD REQUEST FROM PAYME
     //...
-    String token =
+    String tokenFromCreateCardRequest =
       createCard(dto.getNumber(), dto.getExpire(), cardId, authToken);
-    cardOperationService.createCardToken(cardId, token);
+    cardOperationService.createCardToken(cardId, tokenFromCreateCardRequest);
 
-    getVerifyCode(token, cardId, authToken);
-    return token;
+    String phoneNumberFromVerifyCodeRequest = getVerifyCode(tokenFromCreateCardRequest, cardId, authToken);
+    PaymentMakeResponseDTO response = new PaymentMakeResponseDTO();
+    response.setToken(tokenFromCreateCardRequest);
+    response.setPhone(phoneNumberFromVerifyCodeRequest);
+    return response;
   }
 
-  public Boolean verify(String token, String code, String email) {
+  public Boolean verify(PaymentVerifyRequestDTO dto, String email) {
     // TODO MAKE PAYMENT WITH THAT TOKEN
     //....
-    Boolean isCodeAndTokenValid = verifyCard(token, code, 123, authToken);
+    Boolean isCodeAndTokenValid = verifyCard(dto.getToken(), dto.getCode(), 123, authToken);
     if (isCodeAndTokenValid.equals(false)) {
       throw new CodeIsWrongException("Code is wrong");
     }
@@ -48,7 +51,7 @@ public class PaymentService {
     String productId =
       createReceipt(500000, 12333, "Наименование услуги или товара", 250000, 2, "02001001005034001", 12, "1397132");
 
-    payReceipt(productId, token);
+    payReceipt(productId, dto.getToken());
 
     // SAVE PAYMENT DATA
     PaymentEntity payment = new PaymentEntity();

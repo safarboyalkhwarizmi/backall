@@ -23,7 +23,7 @@ public class PaymentController {
   }
 
   @PostMapping("/make")
-  public ResponseEntity<String> make(
+  public ResponseEntity<PaymentMakeResponseDTO> make(
     @RequestBody CardCreateRequestDTO dto
   ) {
     return ResponseEntity.ok(paymentService.make(dto, getUser().getId()));
@@ -31,10 +31,9 @@ public class PaymentController {
 
   @PostMapping("/verify")
   public ResponseEntity<Boolean> make(
-    @RequestParam String token,
-    @RequestParam String code
+    @RequestBody PaymentVerifyRequestDTO paymentVerifyRequestDTO
   ) {
-    return ResponseEntity.ok(paymentService.verify(token, code, getUser().getEmail()));
+    return ResponseEntity.ok(paymentService.verify(paymentVerifyRequestDTO, getUser().getEmail()));
   }
 
   private UserEntity getUser() {
