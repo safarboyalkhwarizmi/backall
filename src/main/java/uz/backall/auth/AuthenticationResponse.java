@@ -21,4 +21,6 @@ public class AuthenticationResponse {
   private Role role;
 
   private Long storeId;
+
+  private Boolean isNewUser;
 }

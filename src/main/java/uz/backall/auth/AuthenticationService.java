@@ -6,6 +6,7 @@ import uz.backall.config.jwt.JwtService;
 import uz.backall.idempotencyKey.IdempotencyKeyEntity;
 import uz.backall.idempotencyKey.IdempotencyKeyRepository;
 import uz.backall.idempotencyKey.IdempotencyKeyUsedException;
+import uz.backall.payment.PaymentRepository;
 import uz.backall.store.StoreService;
 import uz.backall.token.Token;
 import uz.backall.token.TokenRepository;
@@ -34,6 +35,7 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final StoreService storeService;
   private final IdempotencyKeyRepository idempotencyKeyRepository;
+  private final PaymentRepository paymentRepository;
 
   public AuthenticationResponse register(String idempotencyKey, RegisterRequest request) {
     IdempotencyKeyEntity savedKey = idempotencyKeyRepository.findById(idempotencyKey).orElse(null);
@@ -117,11 +119,14 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     revokeAllUserTokens(user);
     saveUserToken(user, jwtToken);
+    Long countByEmail = paymentRepository.countByEmail(user.getEmail());
+
     return AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
       .role(user.getRole())
       .storeId(storeId)
+      .isNewUser(countByEmail == 0)
       .build();
   }
 
