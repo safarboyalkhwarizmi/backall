@@ -1,6 +1,7 @@
 package uz.backall.products;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import uz.backall.user.UserEntity;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class ProductController {
   public ResponseEntity<ProductResponseDTO> create(
     @RequestBody ProductCreateDTO dto
   ) {
+    log.info("/product/create, Request: {}", dto);
     return ResponseEntity.ok(
       service.create(dto)
     );

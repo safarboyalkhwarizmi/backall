@@ -1,6 +1,7 @@
 package uz.backall.sell;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/store/sell")
 @RequiredArgsConstructor
+@Slf4j
 public class SellController {
   private final SellGroupService sellGroupService;
   private final SellHistoryService sellHistoryService;
@@ -36,6 +38,8 @@ public class SellController {
   public ResponseEntity<SellGroupResponseDTO> createSellGroup(
     @RequestBody SellGroupCreateDTO dto
   ) {
+    log.info("/sell/group/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       sellGroupService.create(dto)
     );
@@ -46,6 +50,8 @@ public class SellController {
   public ResponseEntity<SellHistoryResponseDTO> createSellHistory(
     @RequestBody SellHistoryCreateDTO dto
   ) {
+    log.info("/sell/history/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       sellHistoryService.create(dto)
     );
@@ -56,6 +62,8 @@ public class SellController {
   public ResponseEntity<SellHistoryGroupResponseDTO> createSellHistory(
     @RequestBody SellHistoryGroupCreateDTO dto
   ) {
+    log.info("/sell/link/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       sellHistoryGroupService.create(dto)
     );
@@ -66,6 +74,8 @@ public class SellController {
   public ResponseEntity<SellAmountDateResponse> createSellAmountDate(
     @RequestBody SellAmountDateCreateDTO dto
   ) {
+    log.info("/sell/amount/date/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       sellAmountDateService.create(dto)
     );

@@ -1,6 +1,7 @@
 package uz.backall.payment;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,6 +12,7 @@ import uz.backall.user.UserEntity;
 @RestController
 @RequestMapping("/payment")
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentController {
   private final PaymentService paymentService;
 
@@ -26,6 +28,8 @@ public class PaymentController {
   public ResponseEntity<PaymentMakeResponseDTO> make(
     @RequestBody CardCreateRequestDTO dto
   ) {
+    log.info("/payment/make, Request: {}", dto);
+
     return ResponseEntity.ok(paymentService.make(dto, getUser().getId()));
   }
 

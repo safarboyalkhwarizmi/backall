@@ -24,6 +24,7 @@ public class StoreProductService {
   private final ProductRepository productRepository;
   private final StoreRepository storeRepository;
 
+//  {"count": 308, "countType": "dona", "nds": false, "percentage": null, "price": 12000, "productId": 1, "sellingPrice": 13000, "storeId": 1}
   public StoreProductResponseDTO create(StoreProductCreateDTO dto) {
     Optional<ProductEntity> byProductId = productRepository.findById(dto.getProductId());
     Optional<StoreEntity> byStoreId = storeRepository.findById(dto.getStoreId());
@@ -52,23 +53,17 @@ public class StoreProductService {
         storeProduct.setIsOwnerDownloaded(false);
 
         if (dto.getPercentage() == null && dto.getSellingPrice() != null) {
-          if (dto.getPrice() > dto.getSellingPrice()) {
-            throw new SellingPriceException("Price is more than selling price!");
-          }
-
           storeProduct.setSellingPrice(dto.getSellingPrice());
           double percentage = (double) (
             (dto.getSellingPrice() - dto.getPrice()) / dto.getPrice()) * 100;
           storeProduct.setPercentage(percentage);
-        } else if (dto.getPercentage() != null && dto.getSellingPrice() == null) {
+        }
+        else if (dto.getPercentage() != null && dto.getSellingPrice() == null) {
           storeProduct.setPercentage(dto.getPercentage());
           double sellingPrice = ((dto.getPrice() / 100) * dto.getPercentage()) + dto.getPrice();
-
-          if (dto.getPrice() > sellingPrice) {
-            throw new SellingPriceException("Price is more than selling price!");
-          }
           storeProduct.setSellingPrice(sellingPrice);
-        } else {
+        }
+        else {
           throw new SellingPriceException("Something must be null!");
         }
       }
@@ -99,10 +94,6 @@ public class StoreProductService {
     storeProduct.setPrice(dto.getPrice());
 
     if (dto.getPercentage() == null && dto.getSellingPrice() != null) {
-      if (dto.getPrice() > dto.getSellingPrice()) {
-        throw new SellingPriceException("Price is more than selling price!");
-      }
-
       storeProduct.setSellingPrice(dto.getSellingPrice());
       double percentage = (double) (
         (dto.getSellingPrice() - dto.getPrice()) / dto.getPrice()) * 100;
@@ -110,10 +101,6 @@ public class StoreProductService {
     } else if (dto.getPercentage() != null && dto.getSellingPrice() == null) {
       storeProduct.setPercentage(dto.getPercentage());
       double sellingPrice = ((dto.getPrice() / 100) * dto.getPercentage()) + dto.getPrice();
-
-      if (dto.getPrice() > sellingPrice) {
-        throw new SellingPriceException("Price is more than selling price!");
-      }
       storeProduct.setSellingPrice(sellingPrice);
     } else {
       throw new SellingPriceException("Something must be null!");

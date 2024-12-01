@@ -16,6 +16,7 @@ import uz.backall.cardOperation.card.CodeIsWrongException;
 import uz.backall.config.jwt.JwtParseException;
 import uz.backall.config.jwt.JwtUsernameException;
 import uz.backall.products.ProductNotFoundException;
+import uz.backall.products.SerialAlreadyExistException;
 import uz.backall.profit.profitAmountDate.ProfitAmountDateNotFoundException;
 import uz.backall.profit.profitGroup.ProfitGroupNotFoundException;
 import uz.backall.profit.profitHistory.ProfitHistoryNotFoundException;
@@ -137,6 +138,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({CodeIsWrongException.class})
   private ResponseEntity<?> handler(CodeIsWrongException e) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+  }
+
+  @ExceptionHandler({SerialAlreadyExistException.class})
+  private ResponseEntity<?> handler(SerialAlreadyExistException e) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
   }
 }

@@ -77,11 +77,13 @@ public class AuthenticationService {
 
     Long storeId = storeService.create(savedUser.getId(), request.getStoreName());
     saveUserToken(savedUser, jwtToken);
+
     var response = AuthenticationResponse.builder()
       .accessToken(jwtToken)
       .refreshToken(refreshToken)
       .role(Role.SELLER_BOSS)
       .storeId(storeId)
+      .isNewUser(true)
       .build();
 
     saveIdempotencyKey(idempotencyKey, Json.pretty(response));

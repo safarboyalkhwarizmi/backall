@@ -2,9 +2,11 @@ package uz.backall.store.product;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
+@ToString
 @Getter
 @Setter
 public class StoreProductCreateDTO {

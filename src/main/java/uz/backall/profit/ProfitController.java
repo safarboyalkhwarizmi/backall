@@ -1,6 +1,7 @@
 package uz.backall.profit;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/store/profit")
 @RequiredArgsConstructor
+@Slf4j
 public class ProfitController {
   private final ProfitGroupService profitGroupService;
   private final ProfitHistoryService profitHistoryService;
@@ -36,6 +38,8 @@ public class ProfitController {
   public ResponseEntity<ProfitGroupResponseDTO> createProfitGroup(
     @RequestBody ProfitGroupCreateDTO dto
   ) {
+    log.info("/profit/group/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       profitGroupService.create(dto)
     );
@@ -46,6 +50,8 @@ public class ProfitController {
   public ResponseEntity<ProfitHistoryResponseDTO> createProfitHistory(
     @RequestBody ProfitHistoryCreateDTO dto
   ) {
+    log.info("/profit/history/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       profitHistoryService.create(dto)
     );
@@ -56,6 +62,8 @@ public class ProfitController {
   public ResponseEntity<ProfitHistoryGroupResponseDTO> createProfitHistory(
     @RequestBody ProfitHistoryGroupCreateDTO dto
   ) {
+    log.info("/profit/link/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       profitHistoryGroupService.create(dto)
     );
@@ -66,6 +74,8 @@ public class ProfitController {
   public ResponseEntity<ProfitAmountDateResponse> createProfitHistory(
     @RequestBody ProfitAmountDateCreateDTO dto
   ) {
+    log.info("/profit/amount/date/create, Request: {}", dto);
+
     return ResponseEntity.ok(
       profitAmountDateService.create(dto)
     );

@@ -51,16 +51,10 @@ public class ProductService {
       brand = byBrandName.get();
     }
 
-    List<ProductEntity> bySerialNumber = productRepository.findBySerialNumber(dto.getSerialNumber());
-    if (bySerialNumber.size() == 2) {
-      throw new SerialAlreadyExistException("Serial already exist.");
-    }
 
-    if (!bySerialNumber.isEmpty()) {
-      ProductEntity productEntity = bySerialNumber.get(0);
-      if (productEntity.getType() == dto.getType()) {
-        throw new SerialAlreadyExistException("Serial already exist.");
-      }
+    List<LocalStoreProductEntity> byProductSerialNumber = localStoreProductRepository.findByProduct_SerialNumber(dto.getSerialNumber());
+    if (byProductSerialNumber.size() > 1) {
+      throw new SerialAlreadyExistException("Serial already exist.");
     }
 
     ProductEntity product = new ProductEntity();

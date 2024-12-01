@@ -1,6 +1,7 @@
 package uz.backall.store.product;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import uz.backall.user.UserEntity;
 @RestController
 @RequestMapping("/api/v1/store/product")
 @RequiredArgsConstructor
+@Slf4j
 public class StoreProductController {
   private final StoreProductService service;
 
@@ -19,6 +21,7 @@ public class StoreProductController {
   public ResponseEntity<StoreProductResponseDTO> create(
     @RequestBody StoreProductCreateDTO dto
   ) {
+    log.info("/store/product/create, Request: {}", dto);
     return ResponseEntity.ok(service.create(dto));
   }
 
